@@ -1,0 +1,27 @@
+{
+  "name": "modrinth-bot",
+  "version": "1.0.0",
+  "description": "Search Modrinth for projects and get notified when a project gets updated.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node .",
+    "deploy": "node deploy-commands.js",
+	"global-deploy": "node global-deploy-commands.js",
+    "lint": "eslint .",
+    "dbInit": "node dbInit.js",
+    "dbReset": "node dbInit.js -f"
+  },
+  "author": "beansquared",
+  "license": "ISC",
+  "dependencies": {
+    "dayjs": "^1.11.2",
+    "discord.js": "^13.6.0",
+    "sequelize": "^6.19.2",
+    "sqlite3": "^5.0.8",
+    "undici": "^5.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.13.0"
+  }
+}
