@@ -15,6 +15,7 @@
   "author": "beansquared",
   "license": "ISC",
   "dependencies": {
+    "@discordjs/rest": "^0.4.1",
     "dayjs": "^1.11.2",
     "discord.js": "^13.6.0",
     "pino": "^7.0.0-rc.9",
