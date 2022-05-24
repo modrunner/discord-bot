@@ -18,7 +18,6 @@ const rest = new REST({ version: '9' }).setToken(token);
 		console.log('Started reloading application slash commands.');
 
 		for (const guildId of guildIds) {
-			console.log(`guildId: ${guildId}`);
 			await rest.put(
 				Routes.applicationGuildCommands(clientId, guildId),
 				{ body: commands },
