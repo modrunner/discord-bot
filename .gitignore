@@ -1,6 +1,8 @@
+/.vscode
 /node_modules
 /production
 
 .eslintrc.json
+bot.log
 config.json
 database.sqlite

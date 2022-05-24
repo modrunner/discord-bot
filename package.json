@@ -5,18 +5,20 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node .",
-    "deploy": "node deploy-commands.js",
-	"global-deploy": "node global-deploy-commands.js",
+    "start": "node . | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
+    "deploy": "node deploy-commands.js | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
+    "global-deploy": "node global-deploy-commands.js | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
     "lint": "eslint .",
-    "dbInit": "node dbInit.js",
-    "dbReset": "node dbInit.js -f"
+    "dbInit": "node dbInit.js | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
+    "dbReset": "node dbInit.js -f | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss"
   },
   "author": "beansquared",
   "license": "ISC",
   "dependencies": {
     "dayjs": "^1.11.2",
     "discord.js": "^13.6.0",
+    "pino": "^7.0.0-rc.9",
+    "pino-pretty": "^7.6.1",
     "sequelize": "^6.19.2",
     "sqlite3": "^5.0.8",
     "undici": "^5.2.0"

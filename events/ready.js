@@ -1,34 +1,39 @@
 const { Projects } = require('./../dbObjects');
 const { request } = require('undici');
 const { MessageEmbed } = require('discord.js');
-const Project = require('../models/Project');
+const logger = require('./../logger');
 
 module.exports = {
 	name: 'ready',
 	async execute(client) {
 		console.log(`Bot online, logged in as ${client.user.tag}`);
+		logger.info(`Bot online, logged in as ${client.user.tag}`);
 
-		// 15m = 900,000ms
-		setInterval(doUpdateCheck, 900000);
+		// 10m = 600,000ms
+		doUpdateCheck();
+		setInterval(doUpdateCheck, 600000);
 
 		async function doUpdateCheck() {
+			logger.info('Checking for updates for projects in tracking...');
 
 			const projects = await Projects.findAll();
-			const guilds = client.guilds.cache;
+			const guilds = client.guilds.cache.clone();
 
 			for (const project of projects) {
 				const apiRequest = await request(`https://api.modrinth.com/v2/project/${project.project_id}`);
 				const fetchedProject = await getJSONResponse(apiRequest.body);
 
-				if (project.date_modified === fetchedProject.updated) return;
+				const fetchedProjectUpdatedDate = new Date(fetchedProject.updated);
+				if (project.date_modified.getTime() === fetchedProjectUpdatedDate.getTime()) continue;
 
-				console.log(`Update detected for ${fetchedProject.title}`);
-				await Project.update({
-					date_modified: fetchedProject.updated,
-					where: {
-						project_id: fetchedProject.id,
-					},
-				});
+				console.log(`Update detected for project: ${fetchedProject.title}`);
+				logger.info(`Update detected for project: ${fetchedProject.title}`);
+				await Projects.update({ date_modified: fetchedProject.updated },
+					{
+						where: {
+							project_id: fetchedProject.id,
+						},
+					});
 
 				for (const guild of guilds) {
 					if (guild.id === project.guild_id) {
