@@ -14,7 +14,7 @@ module.exports = {
 				interaction.reply({ content: 'There was an error while executing this command.', ephemeral: true });
 			}
 		} else if (interaction.isButton()) {
-			interaction.reply('click');
+			0;
 		}
 	},
 };

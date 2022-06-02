@@ -1,6 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { request } = require('undici');
+const { verifyMemberPermission } = require('../util/verifyPermissions');
+const { getJSONResponse } = require('./../util/getJSONResponse');
 const { Projects } = require('./../dbObjects');
+const { Permissions } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -21,21 +24,15 @@ module.exports = {
 				.setRequired(true),
 		),
 	async execute(interaction) {
+		if (!verifyMemberPermission(Permissions.FLAGS.MANAGE_CHANNELS, interaction.member)) return await interaction.reply('You must be able to manage channels in this server to track projects.');
+
 		await interaction.deferReply();
+		await this.trackProject(interaction, interaction.options.getChannel('channel'), interaction.options.getString('projectid'));
+	},
+	async trackProject(interaction, channel, projectid) {
+		const postChannel = channel;
 
-		async function getJSONResponse(body) {
-			let fullBody = '';
-
-			for await (const data of body) {
-				fullBody += data.toString();
-			}
-
-			return JSON.parse(fullBody);
-		}
-
-		const postChannel = interaction.options.getChannel('channel');
-
-		const projectId = interaction.options.getString('projectid');
+		const projectId = projectid;
 		const apiRequest = await request(`https://api.modrinth.com/v2/project/${projectId}`);
 		const fetchedProject = await getJSONResponse(apiRequest.body);
 

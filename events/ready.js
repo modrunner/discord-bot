@@ -14,6 +14,7 @@ module.exports = {
 		setInterval(doUpdateCheck, 600000);
 
 		async function doUpdateCheck() {
+			console.log('Checking for updates for projects in tracking...');
 			logger.info('Checking for updates for projects in tracking...');
 
 			const projects = await Projects.findAll();
@@ -35,7 +36,8 @@ module.exports = {
 						},
 					});
 
-				for (const guild of guilds) {
+				for (let i = 0; i < guilds.size; i++) {
+					const guild = guilds.at(i);
 					if (guild.id === project.guild_id) {
 						sendUpdateMessage(project, fetchedProject, guild);
 					}

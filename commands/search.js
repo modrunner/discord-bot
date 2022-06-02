@@ -2,6 +2,8 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const { request } = require('undici');
 const dayjs = require('dayjs');
+const { trackProject } = require('./track');
+const { getJSONResponse } = require('./../util/getJSONResponse');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -15,16 +17,6 @@ module.exports = {
 		),
 	async execute(interaction) {
 		await interaction.deferReply();
-
-		async function getJSONResponse(body) {
-			let fullBody = '';
-
-			for await (const data of body) {
-				fullBody += data.toString();
-			}
-
-			return JSON.parse(fullBody);
-		}
 
 		const query = interaction.options.getString('project');
 		const searchTerm = new URLSearchParams({ query });
@@ -61,5 +53,18 @@ module.exports = {
 					.setStyle('LINK'),
 			);
 		await interaction.editReply({ embeds: [ embed ], components: [ row ] });
+
+		const filter = i => i.customId.startsWith('track');
+		const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
+		console.log('Started new button collector.');
+		collector.on('collect', async i => {
+			if (i.customId.startsWith('track')) {
+				await i.update({ content: 'Project Tracked', components: [] });
+				trackProject(interaction, interaction.channel, hits[0].project_id);
+			}
+		});
+		collector.on('end', collected => {
+			console.log(`Collection ended. Size: ${collected.size}`);
+		});
 	},
 };
