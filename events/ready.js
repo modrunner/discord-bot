@@ -65,7 +65,7 @@ module.exports = {
 					{ name: 'Version Name', value: `${fetchedVersion.name}` },
 					{ name: 'Version Number', value: `${fetchedVersion.version_number}` },
 					{ name: 'Release Type', value: `${fetchedVersion.version_type}` },
-					{ name: 'Date Published', value: `${dayjs(fetchedVersion.date_published).format('MMM D, YYYY H:mm')}` },
+					{ name: 'Date Published', value: `${dayjs(fetchedVersion.date_published).format('MMM D, YYYY h:mm A')}` },
 				)
 				.setTimestamp();
 			await guild.channels.cache.find(element => element.id === project.post_channel).send({ embeds: [ update ] });
