@@ -62,10 +62,10 @@ module.exports = {
 				.setDescription(`A new version is available for ${fetchedProject.title}.`)
 				.setThumbnail(`${fetchedProject.icon_url}`)
 				.setFields(
-					{ name: 'Version Name', value: `${fetchedVersion.name}` },
-					{ name: 'Version Number', value: `${fetchedVersion.version_number}` },
-					{ name: 'Release Type', value: `${fetchedVersion.version_type}` },
-					{ name: 'Date Published', value: `${dayjs(fetchedVersion.date_published).format('MMM D, YYYY h:mm A')}` },
+					{ name: 'Version Name', value: `${fetchedVersion[0].name}` },
+					{ name: 'Version Number', value: `${fetchedVersion[0].version_number}` },
+					{ name: 'Release Type', value: `${fetchedVersion[0].version_type}` },
+					{ name: 'Date Published', value: `${dayjs(fetchedVersion[0].date_published).format('MMM D, YYYY h:mm A')}` },
 				)
 				.setTimestamp();
 			await guild.channels.cache.find(element => element.id === project.post_channel).send({ embeds: [ update ] });
