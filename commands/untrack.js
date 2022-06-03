@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { verifyMemberPermission } = require('../util/verifyPermissions');
 const { Projects } = require('./../dbObjects');
+const { Permissions } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -12,6 +14,7 @@ module.exports = {
 				.setRequired(true),
 		),
 	async execute(interaction) {
+		if (!verifyMemberPermission(Permissions.FLAGS.MANAGE_CHANNELS, interaction.member)) return await interaction.reply({ content: 'You can only remove projects from tracking if you have the \'Manage Channels\' permission.', ephemeral: true });
 		const projectId = interaction.options.getString('projectid');
 
 		const deleted = await Projects.destroy({

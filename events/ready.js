@@ -2,6 +2,7 @@ const { Projects } = require('./../dbObjects');
 const { request } = require('undici');
 const { MessageEmbed } = require('discord.js');
 const logger = require('./../logger');
+const dayjs = require('dayjs');
 
 module.exports = {
 	name: 'ready',
@@ -21,8 +22,14 @@ module.exports = {
 			const guilds = client.guilds.cache.clone();
 
 			for (const project of projects) {
-				const apiRequest = await request(`https://api.modrinth.com/v2/project/${project.project_id}`);
-				const fetchedProject = await getJSONResponse(apiRequest.body);
+				try {
+					const apiRequest = await request(`https://api.modrinth.com/v2/project/${project.project_id}`);
+					var fetchedProject = await getJSONResponse(apiRequest.body);
+				} catch (error) {
+					console.log(error);
+					logger.error(error);
+					continue;
+				}
 
 				const fetchedProjectUpdatedDate = new Date(fetchedProject.updated);
 				if (project.date_modified.getTime() === fetchedProjectUpdatedDate.getTime()) continue;
@@ -46,12 +53,19 @@ module.exports = {
 		}
 
 		async function sendUpdateMessage(project, fetchedProject, guild) {
+			const apiRequest = await request(`https://api.modrinth.com/v2/project/${fetchedProject.id}/version`);
+			const fetchedVersion = await getJSONResponse(apiRequest.body);
+
 			const update = new MessageEmbed()
 				.setColor('DARK_GREEN')
-				.setTitle(fetchedProject.title)
+				.setTitle(`${fetchedProject.title} has been updated`)
 				.setDescription(`A new version is available for ${fetchedProject.title}.`)
+				.setThumbnail(`${fetchedProject.icon_url}`)
 				.setFields(
-					{ name: 'New Version', value: 'new version number goes here but that requires another api request and it\'s really late so fuck that rn' },
+					{ name: 'Version Name', value: `${fetchedVersion.name}` },
+					{ name: 'Version Number', value: `${fetchedVersion.version_number}` },
+					{ name: 'Release Type', value: `${fetchedVersion.version_type}` },
+					{ name: 'Date Published', value: `${dayjs(fetchedVersion.date_published).format('MMM D, YYYY H:mm')}` },
 				)
 				.setTimestamp();
 			await guild.channels.cache.find(element => element.id === project.post_channel).send({ embeds: [ update ] });

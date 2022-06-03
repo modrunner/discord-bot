@@ -24,7 +24,7 @@ module.exports = {
 				.setRequired(true),
 		),
 	async execute(interaction) {
-		if (!verifyMemberPermission(Permissions.FLAGS.MANAGE_CHANNELS, interaction.member)) return await interaction.reply('You must be able to manage channels in this server to track projects.');
+		if (!verifyMemberPermission(Permissions.FLAGS.MANAGE_CHANNELS, interaction.member)) return await interaction.reply({ content: 'You can only add projects to tracking if you have the \'Manage Channels\' permission.', ephemeral: true });
 
 		await interaction.deferReply();
 		await this.trackProject(interaction, interaction.options.getChannel('channel'), interaction.options.getString('projectid'));
