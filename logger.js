@@ -3,6 +3,7 @@ const { loggerLevel } = require('./config.json');
 const transport = pino.transport({
 	target: 'pino-pretty',
 	options: {
+		append: false,
 		colorize: false,
 		destination: './bot.log',
 		ignore: 'pid,hostname',
