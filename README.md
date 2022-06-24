@@ -22,8 +22,6 @@ Modrunner is currently in **open beta**. This means that while most of the bot's
 Here's some of the features that are completed or mostly completed:
 - Modrinth search: find projects on Modrinth and get basic information on them, posted right into Discord
 - Modrinth tracking: add Modrinth projects to tracking and get notified whenever the authors of these projects upload new files
-
-Here's some of the features that are in partially complete or have not had work done on them yet:
 - CurseForge search: find projects on CurseForge and get basic information on them, posted right into Discord
 - CurseForge tracking: add CurseForge projects to tracking and get notified whenever the authors of these projects upload new files
 
