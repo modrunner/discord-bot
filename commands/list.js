@@ -23,6 +23,6 @@ module.exports = {
 
 		if (list === '') return await interaction.reply(`No projects are currently in tracking. Add some by using the ${inlineCode('/track')} command or by clicking the "Track Project" button when using the ${inlineCode('/search')} command.`);
 
-		await interaction.editReply(`List of Modrinth projects currently in tracking:\n${list}`);
+		await interaction.editReply(`List of projects currently in tracking:\n${list}`);
 	},
 };

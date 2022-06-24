@@ -1,6 +1,14 @@
 const pino = require('pino');
-const { loggerLevel } = require('./config.json');
-const transport = pino.transport({
+const { env } = require('./config.json');
+
+const outputToConsole = pino.transport({
+	target: 'pino-pretty',
+	options: {
+		ignore: 'pid,hostname',
+		translateTime: 'yyyy-mm-dd HH:MM:ss',
+	},
+});
+const outputToFile = pino.transport({
 	target: 'pino-pretty',
 	options: {
 		append: false,
@@ -10,6 +18,8 @@ const transport = pino.transport({
 		translateTime: 'yyyy-mm-dd HH:MM:ss',
 	},
 });
-const logger = pino(transport);
-logger.level = loggerLevel;
+
+const logger = pino((env === 'dev') ? outputToConsole : outputToFile);
+logger.level = (env === 'dev') ? 'trace' : 'info';
+
 module.exports = logger;
