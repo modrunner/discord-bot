@@ -13,6 +13,8 @@ module.exports = {
 			},
 		});
 
+		if (!projects.length) return await interaction.editReply(`No projects are currently in tracking. Add some by using the ${inlineCode('/track')} command or by clicking the "Track Project" button when using the ${inlineCode('/search')} command.`);
+
 		let list = '';
 		for (const project of projects) {
 			list += `**Title:** ${inlineCode(project.project_title)} | **ID:** ${inlineCode(project.project_id)} | **Updates Channel:** ${interaction.guild.channels.cache.find(element => element.id === project.post_channel)}\n`;
@@ -20,8 +22,6 @@ module.exports = {
 
 		const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
 		list = trim(list, 1900);
-
-		if (list === '') return await interaction.reply(`No projects are currently in tracking. Add some by using the ${inlineCode('/track')} command or by clicking the "Track Project" button when using the ${inlineCode('/search')} command.`);
 
 		await interaction.editReply(`List of projects currently in tracking:\n${list}`);
 	},
