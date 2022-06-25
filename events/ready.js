@@ -11,6 +11,16 @@ module.exports = {
 	async execute(client) {
 		logger.info(`Bot online, logged in as ${client.user.tag}`);
 
+		async function updatePresenceData(projects) {
+			client.user.setPresence({
+				activities: [{
+					type: 'PLAYING',
+					name: `Monitoring ${projects.length} projects for updates in ${client.guilds.cache.size} servers.`,
+				}],
+				status: 'online',
+			});
+		}
+
 		// 10m = 600,000ms
 		doUpdateCheck();
 		setInterval(doUpdateCheck, 600000);
@@ -20,6 +30,8 @@ module.exports = {
 
 			const projects = await Projects.findAll();
 			const guilds = client.guilds.cache.clone();
+
+			updatePresenceData(projects);
 
 			for (const project of projects) {
 				let fetchedProject = 0;
