@@ -17,32 +17,59 @@ module.exports = {
 
 		let isUpdateFound = false;
 
+		async function fetchCurseForgeProject(project, fetchAttempts) {
+			if (fetchAttempts > 10) {
+				const channel = client.channels.cache.find(element => element.id === project.post_channel);
+				channel.send(`⚠️ An error has occured while requesting data on ${project.project_title} (${project.project_id}) from CurseForge.\nIf this issue persists, please contact the developer of this application.`);
+				return null;
+			}
+
+			try {
+				fetchAttempts++;
+				const apiRequest = await request(`https://api.curseforge.com/v1/mods/${project.project_id}`, { headers: { 'x-api-key': cf_api_key } });
+				const fetchedProject = await getJSONResponse(apiRequest.body);
+				return fetchedProject.data;
+			} catch (error) {
+				logger.warn(`An error occured while requesting data on ${project.project_title} (${project.project_id}) from CurseForge.`);
+				logger.error(error);
+
+				await fetchCurseForgeProject(project, client, fetchAttempts);
+			}
+		}
+
+		async function fetchModrinthProject(project, fetchAttempts) {
+			if (fetchAttempts > 10) {
+				const channel = client.channels.cache.find(element => element.id === project.post_channel);
+				channel.send(`⚠️ An error has occured while requesting data on ${project.project_title} (${project.project_id}) from Modrinth.\nIf this issue persists, please contact the developer of this application.`);
+				return null;
+			}
+
+			try {
+				fetchAttempts++;
+				const apiRequest = await request(`https://api.modrinth.com/v2/project/${project.project_id}`);
+				const fetchedProject = await getJSONResponse(apiRequest.body);
+				return fetchedProject;
+			} catch (error) {
+				logger.warn(`An error occured while requesting data on ${project.project_title} (${project.project_id}) from Modrinth.`);
+				logger.error(error);
+
+				await fetchModrinthProject(project, client, fetchAttempts);
+			}
+		}
+
 		for (const project of projects) {
 			const projectPlatform = project.project_id.match(/[A-z]/) ? 'modrinth' : 'curseforge';
 
 			let fetchedProject = null;
 			switch (projectPlatform) {
 			case 'curseforge': {
-				try {
-					const apiRequest = await request(`https://api.curseforge.com/v1/mods/${project.project_id}`, { headers: { 'x-api-key': cf_api_key } });
-					fetchedProject = await getJSONResponse(apiRequest.body);
-					fetchedProject = fetchedProject.data;
-				} catch (error) {
-					logger.warn(`An error occured while requesting data on ${project.project_title} (${project.project_id}) from CurseForge.`);
-					logger.error(error);
-					continue;
-				}
+				fetchedProject = await fetchCurseForgeProject(project, client, 0);
+				if (!fetchedProject) continue;
 				break;
 			}
 			case 'modrinth': {
-				try {
-					const apiRequest = await request(`https://api.modrinth.com/v2/project/${project.project_id}`);
-					fetchedProject = await getJSONResponse(apiRequest.body);
-				} catch (error) {
-					logger.warn(`An error occured while requesting data on ${project.project_title} (${project.project_id}) from Modrinth.`);
-					logger.error(error);
-					continue;
-				}
+				fetchedProject = await fetchModrinthProject(project, client, 0);
+				if (!fetchedProject) continue;
 				break;
 			}
 			}
