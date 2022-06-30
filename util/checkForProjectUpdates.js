@@ -2,6 +2,7 @@ const { Projects } = require('../dbObjects');
 const { getJSONResponse } = require('../util/getJSONResponse');
 const { request } = require('undici');
 const { sendUpdateMessage } = require('../util/sendUpdateMessage');
+const { updatePresenceData } = require('../util/updatePresenceData');
 const { cf_api_key, env } = require('../config.json');
 const logger = require('../logger');
 
@@ -11,6 +12,8 @@ module.exports = {
 
 		const projects = await Projects.findAll();
 		const guilds = client.guilds.cache.clone();
+
+		updatePresenceData(client, projects.length);
 
 		let isUpdateFound = false;
 
