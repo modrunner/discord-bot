@@ -1,12 +1,10 @@
 const { verifyMemberPermission } = require('../util/verifyPermissions');
 const { Permissions, MessageEmbed } = require('discord.js');
 const { trackProject } = require('../commands/track');
-const { request } = require('undici');
-const { getJSONResponse } = require('../util/getJSONResponse');
+const getJSONResponse = require('../api/getJSONResponse');
 const { classIdToString } = require('../util/classIdToString');
 const { inlineCode } = require('@discordjs/builders');
-const { cf_api_key } = require('../config.json');
-const logger = require('../logger');
+const { searchMods, searchProjects } = require('../api/apiMethods');
 
 module.exports = {
 	name: 'interactionCreate',
@@ -39,66 +37,62 @@ module.exports = {
 			} else if (interaction.customId.startsWith('more:')) {
 				await interaction.deferReply();
 
-				try {
-					const query = interaction.customId.substring(5);
-					const searchTerm = new URLSearchParams({ query });
-					const searchResult = await request(`https://api.modrinth.com/v2/search?${searchTerm}`);
-					var { hits } = await getJSONResponse(searchResult.body);
-				} catch (error) {
-					logger.error(error);
+				const query = interaction.customId.substring(5);
+				const responseData = await searchProjects(query, 5);
+				if (!responseData) {
 					const errorEmbed = new MessageEmbed()
 						.setColor('RED')
-						.setTitle('⚠️ An error occured while processing your query.')
-						.setDescription(`${error.message}`)
-						.setFooter({ text: `${error.name}` });
+						.setDescription('⚠️ A connection to Modrinth could not be established.\nIf this happens frequently, please contact the developer of this application.')
+						.setTimestamp();
 					return await interaction.editReply({ embeds: [ errorEmbed ] });
 				}
+
+				const searchResults = await getJSONResponse(responseData.body);
 
 				const resultsList = new MessageEmbed()
 					.setColor('DARK_GREEN')
 					.setAuthor({ name: 'From modrinth.com', iconURL: 'https://i.imgur.com/2XDguyk.png', url: 'https://modrinth.com' })
 					.setTitle(`Results for ${inlineCode(interaction.customId.substring(5))}`)
-					.setDescription(`${hits.length} total results`)
+					.setDescription(`${searchResults.hits.length} total results`)
 					.setFooter({ text: 'NOTE: To see more than 25 results, or if you don\'t see what you\'re trying to find here, try searching on Modrinth\'s website.' });
 
-				for (let i = 0; i < hits.length; i++) {
+				for (let i = 0; i < searchResults.hits.length; i++) {
 					if (i > 25) return interaction.editReply({ embeds: [ resultsList ] });
 
-					resultsList.addFields({ name: `${hits[i].title}`, value: `[[View](https://modrinth.com/${hits[i].project_type}/${hits[i].slug})] ${hits[i].project_type}, ${hits[i].downloads} downloads` });
+					resultsList.addFields({ name: `${searchResults.hits[i].title}`, value: `[[View](https://modrinth.com/${searchResults.hits[i].project_type}/${searchResults.hits[i].slug})] ${searchResults.hits[i].project_type}, ${searchResults.hits[i].downloads} downloads` });
 				}
 
 				return await interaction.editReply({ embeds: [ resultsList ] });
+
 			} else if (interaction.customId.startsWith('cf_more:')) {
 				await interaction.deferReply();
 
-				try {
-					const query = interaction.customId.substring(8);
-					const searchTerm = new URLSearchParams({ query });
-					const searchResult = await request(`https://api.curseforge.com/v1/mods/search?gameId=432&searchFilter=${searchTerm}`, { headers: { 'x-api-key': cf_api_key } });
-					var results = await getJSONResponse(searchResult.body);
-				} catch (error) {
-					logger.error(error);
+				const query = interaction.customId.substring(8);
+
+				const responseData = await searchMods(query, 5);
+				if (!responseData) {
 					const errorEmbed = new MessageEmbed()
 						.setColor('RED')
-						.setTitle('⚠️ An error occured while processing your query.')
-						.setDescription(`${error.message}`)
-						.setFooter({ text: `${error.name}` });
+						.setDescription('⚠️ A connection to CurseForge could not be established.\nIf this happens frequently, please contact the developer of this application.')
+						.setTimestamp();
 					return await interaction.editReply({ embeds: [ errorEmbed ] });
 				}
+
+				const searchResults = await getJSONResponse(responseData.body);
 
 				const resultsList = new MessageEmbed()
 					.setColor('#f87a1b')
 					.setAuthor({ name: 'From curseforge.com', iconURL: 'https://i.imgur.com/uA9lFcz.png', url: 'https://curseforge.com' })
 					.setTitle(`Results for ${inlineCode(interaction.customId.substring(8))}`)
-					.setDescription(`${results.data.length} total results`)
+					.setDescription(`${searchResults.data.length} total results`)
 					.setFooter({ text: 'NOTE: To see more than 25 results, or if you don\'t see what you\'re trying to find here, try searching on CurseForge\'s website.' });
 
 				let num = 0;
-				for (let i = results.data.length - 1; i >= 0; i--) {
+				for (let i = searchResults.data.length - 1; i >= 0; i--) {
 					num++;
 					if (num > 25) return interaction.editReply({ embeds: [ resultsList ] });
 
-					resultsList.addFields({ name: `${results.data[i].name}`, value: `[[View](${results.data[i].links.websiteUrl})] ${classIdToString(results.data[i].classId)}, ${results.data[i].downloadCount} downloads` });
+					resultsList.addFields({ name: `${searchResults.data[i].name}`, value: `[[View](${searchResults.data[i].links.websiteUrl})] ${classIdToString(searchResults.data[i].classId)}, ${searchResults.data[i].downloadCount} downloads` });
 				}
 
 				return await interaction.editReply({ embeds: [ resultsList ] });

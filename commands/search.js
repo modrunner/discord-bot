@@ -1,11 +1,9 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, inlineCode } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
-const { request } = require('undici');
 const dayjs = require('dayjs');
-const { getJSONResponse } = require('./../util/getJSONResponse');
+const getJSONResponse = require('../api/getJSONResponse');
 const { classIdToString } = require('../util/classIdToString');
-const { cf_api_key } = require('./../config.json');
-const logger = require('../logger');
+const { searchMods, searchProjects } = require('../api/apiMethods');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -18,7 +16,7 @@ module.exports = {
 				.addStringOption(option =>
 					option
 						.setName('query')
-						.setDescription('The query to search for')
+						.setDescription('The project to search for')
 						.setRequired(true),
 				),
 		)
@@ -29,7 +27,7 @@ module.exports = {
 				.addStringOption(option =>
 					option
 						.setName('query')
-						.setDescription('The query to search for')
+						.setDescription('The project to search for')
 						.setRequired(true),
 				),
 		),
@@ -38,23 +36,20 @@ module.exports = {
 			await interaction.deferReply();
 
 			const query = interaction.options.getString('query');
-			const searchTerm = new URLSearchParams({ query });
 
-			try {
-				const searchResult = await request(`https://api.curseforge.com/v1/mods/search?gameId=432&searchFilter=${searchTerm}`, { headers: { 'x-api-key': cf_api_key } });
-				var results = await getJSONResponse(searchResult.body);
-			} catch (error) {
-				logger.error(error);
+			const searchResults = await searchMods(query, 5);
+			if (!searchResults) {
 				const errorEmbed = new MessageEmbed()
 					.setColor('RED')
-					.setTitle('⚠️ An error occured while processing your query.')
-					.setDescription(`${error.message}`)
-					.setFooter({ text: `${error.name}` });
+					.setDescription('⚠️ A connection to CurseForge could not be established.\nIf this happens frequently, please contact the developer of this application.')
+					.setTimestamp();
 				return await interaction.editReply({ embeds: [ errorEmbed ] });
 			}
 
+			const results = await getJSONResponse(searchResults.body);
+
 			if (!results.data.length) {
-				return interaction.editReply(`No results found for **${query}**`);
+				return interaction.editReply(`❌ No results found for **${inlineCode(query)}**`);
 			}
 
 			const result = results.data[results.data.length - 1];
@@ -93,23 +88,20 @@ module.exports = {
 			await interaction.deferReply();
 
 			const query = interaction.options.getString('query');
-			const searchTerm = new URLSearchParams({ query });
 
-			try {
-				const searchResult = await request(`https://api.modrinth.com/v2/search?${searchTerm}`);
-				var { hits } = await getJSONResponse(searchResult.body);
-			} catch (error) {
-				logger.error(error);
+			const searchResults = await searchProjects(query, 5);
+			if (!searchResults) {
 				const errorEmbed = new MessageEmbed()
 					.setColor('RED')
-					.setTitle('⚠️ An error occured while processing your query.')
-					.setDescription(`${error.message}`)
-					.setFooter({ text: `${error.name}` });
+					.setDescription('⚠️ A connection to Modrinth could not be established.\nIf this happens frequently, please contact the developer of this application.')
+					.setTimestamp();
 				return await interaction.editReply({ embeds: [ errorEmbed ] });
 			}
 
+			const { hits } = await getJSONResponse(searchResults.body);
+
 			if (!hits.length) {
-				return await interaction.editReply(`No results found for **${query}**`);
+				return await interaction.editReply(`❌ No results found for **${inlineCode(query)}**`);
 			}
 
 			const result = hits[0];

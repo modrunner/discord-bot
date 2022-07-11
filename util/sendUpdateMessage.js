@@ -1,8 +1,9 @@
-const { MessageEmbed } = require('discord.js');
-const { getJSONResponse } = require('../util/getJSONResponse');
+const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
 const { releaseTypeToString } = require('../util/releaseTypeToString');
-const { request } = require('undici');
+const { listProjectVersions } = require('../api/apiMethods');
 const dayjs = require('dayjs');
+const getJSONResponse = require('../api/getJSONResponse');
+const classIdToUrlString = require('../util/classIdToUrlString');
 
 module.exports = {
 	async sendUpdateMessage(fetchedProject, guild, channel, fetchedProjectPlatform) {
@@ -21,12 +22,19 @@ module.exports = {
 					{ name: 'Date Published', value: `${dayjs(fetchedProject.dateReleased).format('MMM D, YYYY h:mm A')}` },
 				)
 				.setTimestamp();
-			await guild.channels.cache.find(element => element.id === channel).send({ embeds: [ update ] });
+
+			const viewButton = new MessageButton()
+				.setURL(`https://www.curseforge.com/minecraft/${classIdToUrlString(fetchedProject.classId)}/${fetchedProject.slug}/files/${fetchedProject.latestFilesIndexes[0].fileId}`)
+				.setLabel('View on CurseForge')
+				.setStyle('LINK');
+			const row = new MessageActionRow().addComponents(viewButton);
+
+			await guild.channels.cache.find(element => element.id === channel).send({ embeds: [ update ], components: [ row ] });
 			break;
 		}
 		case 'modrinth': {
-			const apiRequest = await request(`https://api.modrinth.com/v2/project/${fetchedProject.id}/version`);
-			var fetchedVersion = await getJSONResponse(apiRequest.body);
+			const versions = await listProjectVersions(fetchedProject.id);
+			const fetchedVersion = await getJSONResponse(versions.body);
 
 			const update = new MessageEmbed()
 				.setColor('DARK_GREEN')
@@ -41,7 +49,14 @@ module.exports = {
 					{ name: 'Date Published', value: `${dayjs(fetchedVersion[0].date_published).format('MMM D, YYYY h:mm A')}` },
 				)
 				.setTimestamp();
-			await guild.channels.cache.find(element => element.id === channel).send({ embeds: [ update ] });
+
+			const viewButton = new MessageButton()
+				.setURL(`https://modrinth.com/${fetchedProject.project_type}/${fetchedProject.slug}/version/${fetchedVersion[0].version_number}`)
+				.setLabel('View on Modrinth')
+				.setStyle('LINK');
+			const row = new MessageActionRow().addComponents(viewButton);
+
+			await guild.channels.cache.find(element => element.id === channel).send({ embeds: [ update ], components: [ row ] });
 			break;
 		}
 		}
