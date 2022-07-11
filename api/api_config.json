@@ -1,6 +1,0 @@
-{
-	"cf_base_url": "https://api.curseforge.com/v1",
-	"cf_api_key": "$2a$10$GXCtdOwwPf0asvQWq/mUbeezFA3TMh82xIVmL6aNHTCOijs1957Pa",
-	"modrinth_base_url": "https://api.modrinth.com/v2",
-	"modrinth_user_agent": "beans-squared/modrunner-bot/1.0.0 (modrunner.net)"
-}
