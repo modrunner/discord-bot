@@ -37,8 +37,8 @@ module.exports = {
 
 			const query = interaction.options.getString('query');
 
-			const searchResults = await searchMods(query, 5);
-			if (!searchResults) {
+			const responseData = await searchMods(query, 5);
+			if (!responseData) {
 				const errorEmbed = new MessageEmbed()
 					.setColor('RED')
 					.setDescription('⚠️ A connection to CurseForge could not be established.\nIf this happens frequently, please contact the developer of this application.')
@@ -46,7 +46,7 @@ module.exports = {
 				return await interaction.editReply({ embeds: [ errorEmbed ] });
 			}
 
-			const results = await getJSONResponse(searchResults.body);
+			const results = await getJSONResponse(responseData.body);
 
 			if (!results.data.length) {
 				return interaction.editReply(`❌ No results found for **${inlineCode(query)}**`);
@@ -89,8 +89,8 @@ module.exports = {
 
 			const query = interaction.options.getString('query');
 
-			const searchResults = await searchProjects(query, 5);
-			if (!searchResults) {
+			const responseData = await searchProjects(query, 5);
+			if (!responseData) {
 				const errorEmbed = new MessageEmbed()
 					.setColor('RED')
 					.setDescription('⚠️ A connection to Modrinth could not be established.\nIf this happens frequently, please contact the developer of this application.')
@@ -98,7 +98,7 @@ module.exports = {
 				return await interaction.editReply({ embeds: [ errorEmbed ] });
 			}
 
-			const { hits } = await getJSONResponse(searchResults.body);
+			const { hits } = await getJSONResponse(responseData.body);
 
 			if (!hits.length) {
 				return await interaction.editReply(`❌ No results found for **${inlineCode(query)}**`);
