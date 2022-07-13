@@ -4,7 +4,7 @@ const logger = require('../../logger');
 
 module.exports = async (modId, maxAttempts) => {
 	if (maxAttempts === 0) {
-		logger.warn('A getMod API request to CurseForge has failed.');
+		logger.warn('Modrunner was unable to establish a connection to CurseForge\'s API.\nRequest type: Get Mod');
 		return null;
 	}
 
@@ -16,8 +16,7 @@ module.exports = async (modId, maxAttempts) => {
 		});
 		return responseData;
 	} catch (error) {
-		logger.warn('An error occured while performing an API request to CurseForge.');
-		logger.error(error);
+		logger.info(`An ${error.name} occured while performing an API request to CurseForge.`);
 		maxAttempts--;
 		await this.getMod(modId, maxAttempts);
 	}
