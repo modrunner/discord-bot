@@ -16,8 +16,8 @@ module.exports = async (id, maxAttempts) => {
 		});
 		return responseData;
 	} catch (error) {
-		logger.warn(`An ${error.name} occured while performing an API request to Modrinth.`);
+		logger.info(`An ${error.name} occured while performing an API request to Modrinth.`);
 		maxAttempts--;
-		await this.getProject(id, maxAttempts);
+		await this(id, maxAttempts);
 	}
 };
