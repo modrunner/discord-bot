@@ -18,6 +18,6 @@ module.exports = async (modId, maxAttempts) => {
 	} catch (error) {
 		logger.info(`An ${error.name} occured while performing an API request to CurseForge.`);
 		maxAttempts--;
-		await this.getMod(modId, maxAttempts);
+		await this(modId, maxAttempts);
 	}
 };

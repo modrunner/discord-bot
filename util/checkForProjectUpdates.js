@@ -63,5 +63,6 @@ module.exports = {
 		}
 
 		if (!isUpdateFound) logger.debug('No updates found.');
+		logger.debug('Update check completed.');
 	},
 };
