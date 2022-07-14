@@ -2,7 +2,7 @@ const { cf_base_url, cf_api_key } = require('../api_config.json');
 const { request } = require('undici');
 const logger = require('../../logger');
 
-module.exports = async (modId, maxAttempts) => {
+async function getMod(modId, maxAttempts) {
 	if (maxAttempts === 0) {
 		logger.warn('Modrunner was unable to establish a connection to CurseForge\'s API.\nRequest type: Get Mod');
 		return null;
@@ -18,6 +18,8 @@ module.exports = async (modId, maxAttempts) => {
 	} catch (error) {
 		logger.info(`An ${error.name} occured while performing an API request to CurseForge.`);
 		maxAttempts--;
-		await this(modId, maxAttempts);
+		await getMod(modId, maxAttempts);
 	}
-};
+}
+
+module.exports = { getMod };
