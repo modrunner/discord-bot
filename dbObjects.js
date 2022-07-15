@@ -7,6 +7,7 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 	storage: 'database.sqlite',
 });
 
+const GuildSettings = require('./models/GuildSettings')(sequelize, Sequelize.DataTypes);
 const Projects = require('./models/Project')(sequelize, Sequelize.DataTypes);
 
-module.exports = { Projects };
+module.exports = { GuildSettings, Projects };

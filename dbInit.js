@@ -7,6 +7,7 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 	storage: 'database.sqlite',
 });
 
+require('./models/GuildSettings')(sequelize, Sequelize.DataTypes);
 require('./models/Project')(sequelize, Sequelize.DataTypes);
 
 const force = process.argv.includes('--force') || process.argv.includes('-f');
