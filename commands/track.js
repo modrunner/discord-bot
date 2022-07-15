@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, inlineCode } = require('@discordjs/builders');
+const { ChannelType } = require('discord-api-types/v10');
 const { verifyMemberPermission } = require('../util/verifyPermissions');
 const { Projects } = require('./../dbObjects');
 const { Permissions } = require('discord.js');
@@ -20,8 +21,10 @@ module.exports = {
 			option
 				.setName('channel')
 				.setDescription('The channel you want project update notifications posted to.')
-				.addChannelType(0)
-				.addChannelType(5)
+				.addChannelTypes(
+					ChannelType.GuildText,
+					ChannelType.GuildNews,
+				)
 				.setRequired(true),
 		),
 	async execute(interaction) {

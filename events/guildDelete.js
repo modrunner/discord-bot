@@ -1,4 +1,4 @@
-const { Projects } = require('../dbObjects');
+const { GuildSettings, Projects } = require('../dbObjects');
 const logger = require('../logger');
 
 module.exports = {
@@ -9,6 +9,11 @@ module.exports = {
 				guild_id: guild.id,
 			},
 		});
-		logger.info(`Client was kicked from guild ${guild.name} (${guild.id}) or was guild was deleted. Removed ${deletedProjects} projects from tracking.`);
+		await GuildSettings.destroy({
+			where: {
+				guild_id: guild.id,
+			},
+		});
+		logger.info(`Client was kicked from guild ${guild.name} (${guild.id}) or was guild was deleted. Removed ${deletedProjects} projects from tracking and removed all settings.`);
 	},
 };
