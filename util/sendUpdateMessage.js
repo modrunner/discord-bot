@@ -1,6 +1,7 @@
 const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
+const { codeBlock } = require('@discordjs/builders');
 const { releaseTypeToString } = require('../util/releaseTypeToString');
-const { listProjectVersions } = require('../api/apiMethods');
+const { listProjectVersions, getModFileChangelog } = require('../api/apiMethods');
 const dayjs = require('dayjs');
 const getJSONResponse = require('../api/getJSONResponse');
 const classIdToUrlString = require('../util/classIdToUrlString');
@@ -9,11 +10,20 @@ module.exports = {
 	async sendUpdateMessage(fetchedProject, guild, channel, fetchedProjectPlatform) {
 		switch (fetchedProjectPlatform) {
 		case 'curseforge': {
+			const responseData = await getModFileChangelog(fetchedProject.id, fetchedProject.latestFilesIndexes[0].fileId, 5);
+			let changelog = await getJSONResponse(responseData.body);
+			changelog = changelog.data;
+
+			const changelogNoHTML = changelog.replace(/<br>/g, '\n').replace(/<.*?>/g, '');
+
+			const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
+			const trimmedChangelog = trim(changelogNoHTML, 4000);
+
 			const update = new MessageEmbed()
 				.setColor('#f87a1b')
 				.setAuthor({ name: 'From curseforge.com', iconURL: 'https://i.imgur.com/uA9lFcz.png', url: 'https://curseforge.com' })
 				.setTitle(`${fetchedProject.name} has been updated`)
-				.setDescription(`A new version is available for ${fetchedProject.name}.`)
+				.setDescription(`**Changelog:** ${codeBlock(trimmedChangelog)}`)
 				.setThumbnail(`${fetchedProject.logo.url}`)
 				.setFields(
 					{ name: 'Version Name', value: `${fetchedProject.latestFilesIndexes[0].filename}` },
@@ -36,11 +46,14 @@ module.exports = {
 			const versions = await listProjectVersions(fetchedProject.id);
 			const fetchedVersion = await getJSONResponse(versions.body);
 
+			const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
+			const trimmedDescription = trim(fetchedVersion[0].changelog, 4000);
+
 			const update = new MessageEmbed()
 				.setColor('DARK_GREEN')
 				.setAuthor({ name: 'From modrinth.com', iconURL: 'https://i.imgur.com/2XDguyk.png', url: 'https://modrinth.com' })
 				.setTitle(`${fetchedProject.title} has been updated`)
-				.setDescription(`A new version is available for ${fetchedProject.title}.`)
+				.setDescription(`**Changelog:** ${codeBlock(trimmedDescription)}`)
 				.setThumbnail(`${fetchedProject.icon_url}`)
 				.setFields(
 					{ name: 'Version Name', value: `${fetchedVersion[0].name}` },
