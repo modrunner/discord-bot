@@ -15,7 +15,7 @@
   "author": "beansquared",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/builders": "^0.15.0",
+    "@discordjs/builders": "^1.0.0",
     "@discordjs/rest": "^1.0.0",
     "dayjs": "^1.11.3",
     "discord-api-types": "^0.36.1",
