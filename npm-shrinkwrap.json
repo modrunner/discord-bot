@@ -19,7 +19,7 @@
         "pino-pretty": "^7.6.1",
         "sequelize": "^6.19.2",
         "sqlite3": "^5.0.8",
-        "undici": "^5.2.0"
+        "undici": "^5.7.0"
       },
       "devDependencies": {
         "eslint": "^8.13.0"
@@ -2429,9 +2429,9 @@
       }
     },
     "node_modules/undici": {
-      "version": "5.5.1",
-      "resolved": "https://registry.npmjs.org/undici/-/undici-5.5.1.tgz",
-      "integrity": "sha512-MEvryPLf18HvlCbLSzCW0U00IMftKGI5udnjrQbC5D4P0Hodwffhv+iGfWuJwg16Y/TK11ZFK8i+BPVW2z/eAw==",
+      "version": "5.7.0",
+      "resolved": "https://registry.npmjs.org/undici/-/undici-5.7.0.tgz",
+      "integrity": "sha512-ORgxwDkiPS+gK2VxE7iyVeR7JliVn5DqhZ4LgQqYLBXsuK+lwOEmnJ66dhvlpLM0tC3fC7eYF1Bti2frbw2eAA==",
       "engines": {
         "node": ">=12.18"
       }
@@ -4426,9 +4426,9 @@
       "dev": true
     },
     "undici": {
-      "version": "5.5.1",
-      "resolved": "https://registry.npmjs.org/undici/-/undici-5.5.1.tgz",
-      "integrity": "sha512-MEvryPLf18HvlCbLSzCW0U00IMftKGI5udnjrQbC5D4P0Hodwffhv+iGfWuJwg16Y/TK11ZFK8i+BPVW2z/eAw=="
+      "version": "5.7.0",
+      "resolved": "https://registry.npmjs.org/undici/-/undici-5.7.0.tgz",
+      "integrity": "sha512-ORgxwDkiPS+gK2VxE7iyVeR7JliVn5DqhZ4LgQqYLBXsuK+lwOEmnJ66dhvlpLM0tC3fC7eYF1Bti2frbw2eAA=="
     },
     "unique-filename": {
       "version": "1.1.1",
