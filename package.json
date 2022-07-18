@@ -17,7 +17,7 @@
   "dependencies": {
     "@discordjs/builders": "^0.15.0",
     "@discordjs/rest": "^0.5.0",
-    "dayjs": "^1.11.2",
+    "dayjs": "^1.11.3",
     "discord-api-types": "^0.36.1",
     "discord.js": "^13.8.1",
     "ms": "^2.1.3",
