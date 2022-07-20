@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="css/index.css">
+
+		<title>{{ .Title }}</title>
+	</head>
+	<body>
+		<header>
+			<img src="{{ .Site.BaseURL }}/images/modrunner_logo.png">
+			<div class="header-links">
+				<a href="{{ .Params.inviteLink }}"><h1>Add to Server</h1></a>
+				<a href="{{ .Params.wikiLink }}"><h1>Official Wiki</h1></a>
+				<a href="{{ .Params.supportLink }}"><h1>Feedback and Support</h1></a>
+			</div>
+		</header>
+		<div class="body-content">
+			<div class="body-text">
+				<h1>The bot for</h1>
+				<h2 id="audience-text">audience group name</h2>
+				<script>
+					const audienceText = document.getElementById('audience-text');
+
+					const audiences = [
+						'Mod Authors',
+						'Mod Users',
+						'Modpack Creators',
+						'Modpack Players',
+						'Resource Pack Artists',
+						'Resource Pack Users',
+						'Shader Pack Creators',
+						'Shader Pack Users',
+					];
+
+					let index = 0;
+					changeAudience();
+					setInterval(changeAudience, 3000);
+
+					function changeAudience() {
+						audienceText.innerHTML = audiences[index];
+						index++;
+						if (index >= audiences.length) index = 0;
+					}
+				</script>
+				<p>
+					Modrunner makes it super easy to <strong>find and share information</strong> 
+					about your favorite mods, modpacks and other related projects, without ever 
+					leaving Discord.
+				</p>
+				<br>
+				<p>
+					<strong>Track projects and get notifications</strong> from Discord 
+					whenever a new version is uploaded to your platform of choice, so that 
+					you never miss an important update.
+				</p>
+				<div class="body-buttons">
+					<a href="{{ .Params.inviteLink }}"><h3>Add to Server</h3></a>
+					<a href="{{ .Params.wikiLink }}"><h3>Official Wiki</h3></a>
+				</div>
+			</div>
+			<div class="body-image">
+				<img src="{{ .Site.BaseURL }}/images/modrunner_ex.png">
+			</div>
+		</div>
+	</body>
+</html>
