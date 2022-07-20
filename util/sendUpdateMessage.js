@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
+const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
 const { codeBlock } = require('@discordjs/builders');
 const { releaseTypeToString } = require('../util/releaseTypeToString');
 const { listProjectVersions, getModFileChangelog } = require('../api/apiMethods');
@@ -19,7 +19,7 @@ module.exports = {
 			if (!guildSettings) guildSettings = await GuildSettings.create({ guild_id: guild.id });
 
 			if (guildSettings.is_lightweight_mode_enabled) {
-				const update = new MessageEmbed()
+				const update = new EmbedBuilder()
 					.setColor('#f87a1b')
 					.setTitle(`${fetchedProject.name} ${fetchedProject.latestFilesIndexes[0].filename}`)
 					.setURL(`https://www.curseforge.com/minecraft/${classIdToUrlString(fetchedProject.classId)}/${fetchedProject.slug}/files/${fetchedProject.latestFilesIndexes[0].fileId}`)
@@ -37,7 +37,7 @@ module.exports = {
 				const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
 				const trimmedChangelog = trim(changelogNoHTML, 4000);
 
-				const update = new MessageEmbed()
+				const update = new EmbedBuilder()
 					.setColor('#f87a1b')
 					.setAuthor({ name: 'From curseforge.com', iconURL: 'https://i.imgur.com/uA9lFcz.png', url: 'https://curseforge.com' })
 					.setTitle(`${fetchedProject.name} has been updated`)
@@ -51,11 +51,11 @@ module.exports = {
 					)
 					.setTimestamp();
 
-				const viewButton = new MessageButton()
+				const viewButton = new ButtonBuilder()
 					.setURL(`https://www.curseforge.com/minecraft/${classIdToUrlString(fetchedProject.classId)}/${fetchedProject.slug}/files/${fetchedProject.latestFilesIndexes[0].fileId}`)
 					.setLabel('View on CurseForge')
-					.setStyle('LINK');
-				const row = new MessageActionRow().addComponents(viewButton);
+					.setStyle(ButtonStyle.Link);
+				const row = new ActionRowBuilder().addComponents(viewButton);
 
 				return await guild.channels.cache.find(element => element.id === channel).send({ embeds: [ update ], components: [ row ] });
 			}
@@ -72,7 +72,7 @@ module.exports = {
 			if (!guildSettings) guildSettings = await GuildSettings.create({ guild_id: guild.id });
 
 			if (guildSettings.is_lightweight_mode_enabled) {
-				const update = new MessageEmbed()
+				const update = new EmbedBuilder()
 					.setColor('DARK_GREEN')
 					.setTitle(`${fetchedProject.title} ${fetchedVersion[0].version_number}`)
 					.setURL(`https://modrinth.com/${fetchedProject.project_type}/${fetchedProject.slug}/version/${fetchedVersion[0].version_number}`)
@@ -84,8 +84,8 @@ module.exports = {
 				const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
 				const trimmedDescription = trim(fetchedVersion[0].changelog, 4000);
 
-				const update = new MessageEmbed()
-					.setColor('DARK_GREEN')
+				const update = new EmbedBuilder()
+					.setColor('DarkGreen')
 					.setAuthor({ name: 'From modrinth.com', iconURL: 'https://i.imgur.com/2XDguyk.png', url: 'https://modrinth.com' })
 					.setTitle(`${fetchedProject.title} has been updated`)
 					.setDescription(`**Changelog:** ${codeBlock(trimmedDescription)}`)
@@ -98,11 +98,11 @@ module.exports = {
 					)
 					.setTimestamp();
 
-				const viewButton = new MessageButton()
+				const viewButton = new ButtonBuilder()
 					.setURL(`https://modrinth.com/${fetchedProject.project_type}/${fetchedProject.slug}/version/${fetchedVersion[0].version_number}`)
 					.setLabel('View on Modrinth')
-					.setStyle('LINK');
-				const row = new MessageActionRow().addComponents(viewButton);
+					.setStyle(ButtonStyle.Link);
+				const row = new ActionRowBuilder().addComponents(viewButton);
 
 				return await guild.channels.cache.find(element => element.id === channel).send({ embeds: [ update ], components: [ row ] });
 			}
