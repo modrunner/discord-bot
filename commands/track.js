@@ -2,7 +2,7 @@ const { SlashCommandBuilder, inlineCode } = require('@discordjs/builders');
 const { ChannelType } = require('discord-api-types/v10');
 const { verifyMemberPermission } = require('../util/verifyPermissions');
 const { Projects } = require('./../dbObjects');
-const { Permissions } = require('discord.js');
+const { PermissionsBitField } = require('discord.js');
 const { classIdToString } = require('../util/classIdToString');
 const { getMod, getProject } = require('../api/apiMethods');
 const getJSONResponse = require('../api/getJSONResponse');
@@ -28,7 +28,7 @@ module.exports = {
 				.setRequired(true),
 		),
 	async execute(interaction) {
-		if (!verifyMemberPermission(Permissions.FLAGS.MANAGE_CHANNELS, interaction.member)) return await interaction.reply({ content: 'You can only add projects to tracking if you have the \'Manage Channels\' permission.', ephemeral: true });
+		if (!verifyMemberPermission(PermissionsBitField.Flags.ManageChannels, interaction.member)) return await interaction.reply({ content: 'You can only add projects to tracking if you have the \'Manage Channels\' permission.', ephemeral: true });
 
 		await interaction.deferReply();
 		const trackRequest = await this.trackProject(interaction, interaction.options.getChannel('channel'), interaction.options.getString('projectid'));

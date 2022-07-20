@@ -1,16 +1,17 @@
 const { verifyMemberPermission } = require('../util/verifyPermissions');
-const { Permissions, MessageEmbed } = require('discord.js');
+const { PermissionsBitField, ApplicationCommandType, ComponentType, EmbedBuilder } = require('discord.js');
 const { trackProject } = require('../commands/track');
 const getJSONResponse = require('../api/getJSONResponse');
 const { classIdToString } = require('../util/classIdToString');
 const { inlineCode } = require('@discordjs/builders');
 const { searchMods, searchProjects } = require('../api/apiMethods');
+const logger = require('../logger');
 
 module.exports = {
 	name: 'interactionCreate',
 	async execute(interaction) {
 		// Slash command interactions
-		if (interaction.isCommand()) {
+		if (interaction.commandType === ApplicationCommandType.ChatInput) {
 			const command = interaction.client.commands.get(interaction.commandName);
 
 			if (!command) return;
@@ -18,18 +19,18 @@ module.exports = {
 			try {
 				command.execute(interaction);
 			} catch (error) {
-				console.error(error);
+				logger.error(error);
 				await interaction.reply({ content: 'There was an error while executing this command.', ephemeral: true });
 			}
-		} else if (interaction.isButton()) {
+		} else if (interaction.componentType === ComponentType.Button) {
 			if (interaction.customId.startsWith('track:')) {
-				if (!verifyMemberPermission(Permissions.FLAGS.MANAGE_CHANNELS, interaction.member)) return await interaction.reply({ content: 'You can only add projects to tracking if you have the \'Manage Channels\' permission.', ephemeral: true });
+				if (!verifyMemberPermission(PermissionsBitField.Flags.ManageChannels, interaction.member)) return await interaction.reply({ content: 'You can only add projects to tracking if you have the \'Manage Channels\' permission.', ephemeral: true });
 
 				const projectId = interaction.customId.substring(6);
 				await interaction.deferReply();
 				trackProject(interaction, interaction.guild.channels.cache.find(element => element.id === interaction.channel.id), projectId);
 			} else if (interaction.customId.startsWith('cf_track:')) {
-				if (!verifyMemberPermission(Permissions.FLAGS.MANAGE_CHANNELS, interaction.member)) return await interaction.reply({ content: 'You can only add projects to tracking if you have the \'Manage Channels\' permission.', ephemeral: true });
+				if (!verifyMemberPermission(PermissionsBitField.Flags.ManageChannels, interaction.member)) return await interaction.reply({ content: 'You can only add projects to tracking if you have the \'Manage Channels\' permission.', ephemeral: true });
 
 				const projectId = interaction.customId.substring(9);
 				await interaction.deferReply();
@@ -40,7 +41,7 @@ module.exports = {
 				const query = interaction.customId.substring(5);
 				const responseData = await searchProjects(query, 5);
 				if (!responseData) {
-					const errorEmbed = new MessageEmbed()
+					const errorEmbed = new EmbedBuilder()
 						.setColor('RED')
 						.setDescription('⚠️ A connection to Modrinth could not be established.\nIf this happens frequently, please contact the developer of this application.')
 						.setTimestamp();
@@ -49,7 +50,7 @@ module.exports = {
 
 				const searchResults = await getJSONResponse(responseData.body);
 
-				const resultsList = new MessageEmbed()
+				const resultsList = new EmbedBuilder()
 					.setColor('DARK_GREEN')
 					.setAuthor({ name: 'From modrinth.com', iconURL: 'https://i.imgur.com/2XDguyk.png', url: 'https://modrinth.com' })
 					.setTitle(`Results for ${inlineCode(interaction.customId.substring(5))}`)
@@ -71,7 +72,7 @@ module.exports = {
 
 				const responseData = await searchMods(query, 5);
 				if (!responseData) {
-					const errorEmbed = new MessageEmbed()
+					const errorEmbed = new EmbedBuilder()
 						.setColor('RED')
 						.setDescription('⚠️ A connection to CurseForge could not be established.\nIf this happens frequently, please contact the developer of this application.')
 						.setTimestamp();
@@ -80,7 +81,7 @@ module.exports = {
 
 				const searchResults = await getJSONResponse(responseData.body);
 
-				const resultsList = new MessageEmbed()
+				const resultsList = new EmbedBuilder()
 					.setColor('#f87a1b')
 					.setAuthor({ name: 'From curseforge.com', iconURL: 'https://i.imgur.com/uA9lFcz.png', url: 'https://curseforge.com' })
 					.setTitle(`Results for ${inlineCode(interaction.customId.substring(8))}`)

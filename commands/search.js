@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, inlineCode } = require('@discordjs/builders');
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
 const dayjs = require('dayjs');
 const getJSONResponse = require('../api/getJSONResponse');
 const { classIdToString } = require('../util/classIdToString');
@@ -39,7 +39,7 @@ module.exports = {
 
 			const responseData = await searchMods(query, 5);
 			if (!responseData) {
-				const errorEmbed = new MessageEmbed()
+				const errorEmbed = new EmbedBuilder()
 					.setColor('RED')
 					.setDescription('⚠️ A connection to CurseForge could not be established.\nIf this happens frequently, please contact the developer of this application.')
 					.setTimestamp();
@@ -53,7 +53,7 @@ module.exports = {
 			}
 
 			const result = results.data[results.data.length - 1];
-			const embed = new MessageEmbed()
+			const embed = new EmbedBuilder()
 				.setColor('#f87a1b')
 				.setAuthor({ name: 'From curseforge.com', iconURL: 'https://i.imgur.com/uA9lFcz.png', url: 'https://curseforge.com' })
 				.setTitle(result.name)
@@ -68,19 +68,19 @@ module.exports = {
 				);
 			if (result.screenshots.length) embed.setImage(result.screenshots[Math.floor(Math.random() * result.screenshots.length)].url);
 
-			const trackButton = new MessageButton()
+			const trackButton = new ButtonBuilder()
 				.setCustomId(`cf_track:${result.id}`)
 				.setLabel('Track Project')
-				.setStyle('PRIMARY');
-			const moreResultsButton = new MessageButton()
+				.setStyle(ButtonStyle.Primary);
+			const moreResultsButton = new ButtonBuilder()
 				.setCustomId(`cf_more:${query}`)
 				.setLabel('View More Results')
-				.setStyle('SUCCESS');
-			const viewButton = new MessageButton()
+				.setStyle(ButtonStyle.Success);
+			const viewButton = new ButtonBuilder()
 				.setURL(result.links.websiteUrl)
 				.setLabel('View on CurseForge')
-				.setStyle('LINK');
-			const row = new MessageActionRow().addComponents(trackButton, moreResultsButton, viewButton);
+				.setStyle(ButtonStyle.Link);
+			const row = new ActionRowBuilder().addComponents(trackButton, moreResultsButton, viewButton);
 
 			await interaction.editReply({ embeds: [ embed ], components: [ row ] });
 
@@ -91,7 +91,7 @@ module.exports = {
 
 			const responseData = await searchProjects(query, 5);
 			if (!responseData) {
-				const errorEmbed = new MessageEmbed()
+				const errorEmbed = new EmbedBuilder()
 					.setColor('RED')
 					.setDescription('⚠️ A connection to Modrinth could not be established.\nIf this happens frequently, please contact the developer of this application.')
 					.setTimestamp();
@@ -105,7 +105,7 @@ module.exports = {
 			}
 
 			const result = hits[0];
-			const embed = new MessageEmbed()
+			const embed = new EmbedBuilder()
 				.setColor('DARK_GREEN')
 				.setAuthor({ name: 'From modrinth.com', iconURL: 'https://i.imgur.com/2XDguyk.png', url: 'https://modrinth.com' })
 				.setTitle(result.title)
@@ -119,19 +119,19 @@ module.exports = {
 					{ name: 'Last Updated', value: `${dayjs(hits[0].date_modified).format('MMM D, YYYY')}` },
 					{ name: 'Project ID', value: `${result.project_id}` },
 				);
-			const trackButton = new MessageButton()
+			const trackButton = new ButtonBuilder()
 				.setCustomId(`track:${result.project_id}`)
 				.setLabel('Track Project')
-				.setStyle('PRIMARY');
-			const moreResultsButton = new MessageButton()
+				.setStyle(ButtonStyle.Primary);
+			const moreResultsButton = new ButtonBuilder()
 				.setCustomId(`more:${query}`)
 				.setLabel('View More Results')
-				.setStyle('SUCCESS');
-			const viewButton = new MessageButton()
+				.setStyle(ButtonStyle.Success);
+			const viewButton = new ButtonBuilder()
 				.setURL(`https://modrinth.com/${hits[0].project_type}/${hits[0].slug}`)
 				.setLabel('View on Modrinth')
-				.setStyle('LINK');
-			const row = new MessageActionRow().addComponents(trackButton, moreResultsButton, viewButton);
+				.setStyle(ButtonStyle.Link);
+			const row = new ActionRowBuilder().addComponents(trackButton, moreResultsButton, viewButton);
 
 			await interaction.editReply({ embeds: [ embed ], components: [ row ] });
 		}
