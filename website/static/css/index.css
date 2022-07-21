@@ -5,12 +5,12 @@
 
 @font-face {
 	font-family: 'Bungee';
-	src: url('/fonts/Bungee-Regular.ttf') format('truetype');
+	src: url('../fonts/Bungee-Regular.ttf') format('truetype');
 }
 
 @font-face {
 	font-family: 'Cabin';
-	src: url('/fonts/Cabin-VariableFont_wdth,wght.ttf') format('truetype');
+	src: url('../fonts/Cabin-VariableFont_wdth,wght.ttf') format('truetype');
 }
 
 body {

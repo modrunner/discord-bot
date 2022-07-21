@@ -1,3 +1,4 @@
 baseURL = 'https://beans-squared.github.io/modrunner-bot'
 languageCode = 'en-us'
 title = 'My New Hugo Site'
+publishDir = '../docs'
