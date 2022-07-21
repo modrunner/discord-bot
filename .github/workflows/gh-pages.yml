@@ -3,7 +3,9 @@ name: github pages
 on:
   push:
     branches:
-      - main/**
+      - main
+    paths:
+      - ./docs/public
   pull_request:
 
 jobs:
