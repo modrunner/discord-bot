@@ -17,7 +17,7 @@
         "pino": "^8.2.0",
         "pino-pretty": "^8.1.0",
         "sequelize": "^6.21.3",
-        "sqlite3": "^5.0.9",
+        "sqlite3": "^5.0.11",
         "undici": "^5.8.0"
       },
       "devDependencies": {
@@ -2256,9 +2256,9 @@
       }
     },
     "node_modules/sqlite3": {
-      "version": "5.0.9",
-      "resolved": "https://registry.npmjs.org/sqlite3/-/sqlite3-5.0.9.tgz",
-      "integrity": "sha512-e2lEKevUF65UJu4IIuuFytgW7yNMkmCkfyn66jXWeb7OcdHvRo7nXhF+IQ25iW6x2grB0DyKdGCpx8Rd8EkA2Q==",
+      "version": "5.0.11",
+      "resolved": "https://registry.npmjs.org/sqlite3/-/sqlite3-5.0.11.tgz",
+      "integrity": "sha512-4akFOr7u9lJEeAWLJxmwiV43DJcGV7w3ab7SjQFAFaTVyknY3rZjvXTKIVtWqUoY4xwhjwoHKYs2HDW2SoHVsA==",
       "hasInstallScript": true,
       "dependencies": {
         "@mapbox/node-pre-gyp": "^1.0.0",
@@ -4299,9 +4299,9 @@
       "integrity": "sha512-VBiJxFkxiXRlUIeyMQi8s4hgvKCSjtknJv/LVYbrgALPwf5zSKmEwV9Lst25AkvMDnvxODugjdl6KZgwKM1WYQ=="
     },
     "sqlite3": {
-      "version": "5.0.9",
-      "resolved": "https://registry.npmjs.org/sqlite3/-/sqlite3-5.0.9.tgz",
-      "integrity": "sha512-e2lEKevUF65UJu4IIuuFytgW7yNMkmCkfyn66jXWeb7OcdHvRo7nXhF+IQ25iW6x2grB0DyKdGCpx8Rd8EkA2Q==",
+      "version": "5.0.11",
+      "resolved": "https://registry.npmjs.org/sqlite3/-/sqlite3-5.0.11.tgz",
+      "integrity": "sha512-4akFOr7u9lJEeAWLJxmwiV43DJcGV7w3ab7SjQFAFaTVyknY3rZjvXTKIVtWqUoY4xwhjwoHKYs2HDW2SoHVsA==",
       "requires": {
         "@mapbox/node-pre-gyp": "^1.0.0",
         "node-addon-api": "^4.2.0",
