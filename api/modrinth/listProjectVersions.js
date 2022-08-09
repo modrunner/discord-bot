@@ -1,25 +1,24 @@
-const { modrinth_base_url, modrinth_user_agent } = require('../api_config.json');
+const { api_max_retries, modrinth_base_url, modrinth_user_agent } = require('../api_config.json');
 const { request } = require('undici');
 const logger = require('../../logger');
+const { ApiCallManager } = require('../apiCallManager');
 
-async function listProjectVersions(id, maxAttempts) {
-	if (maxAttempts === 0) {
-		logger.warn('Modrunner was unable to establish a connection to Modrinth\'s API.\nRequest type: List Project Versions');
-		return null;
+async function listProjectVersions(projectId) {
+	for (let i = api_max_retries; i > 0; i--) {
+		ApiCallManager.trackCall('modrinth');
+		try {
+			const responseData = await request(`${modrinth_base_url}/project/${projectId}/version`, {
+				method: 'GET',
+				headers: {
+					'user-agent': modrinth_user_agent,
+				},
+			});
+			return responseData;
+		} catch (error) {
+			logger.error(`A ${ error.name } has occured while requesting data from Modrinth (List Project Versions)`);
+		}
 	}
-
-	try {
-		const responseData = await request(`${modrinth_base_url}/project/${id}/version`, {
-			headers: {
-				'User-Agent': modrinth_user_agent,
-			},
-		});
-		return responseData;
-	} catch (error) {
-		logger.info(`An ${error.name} occured while performing an API request to Modrinth.`);
-		maxAttempts--;
-		await listProjectVersions(id, maxAttempts);
-	}
+	return null;
 }
 
 module.exports = { listProjectVersions };

@@ -2,7 +2,6 @@ const { SlashCommandBuilder, inlineCode } = require('@discordjs/builders');
 const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
 const dayjs = require('dayjs');
 const getJSONResponse = require('../api/getJSONResponse');
-const { classIdToString } = require('../util/classIdToString');
 const { searchMods, searchProjects } = require('../api/apiMethods');
 
 module.exports = {
@@ -37,7 +36,7 @@ module.exports = {
 
 			const query = interaction.options.getString('query');
 
-			const responseData = await searchMods(query, 5);
+			const responseData = await searchMods(query);
 			if (!responseData) {
 				const errorEmbed = new EmbedBuilder()
 					.setColor('RED')
@@ -89,7 +88,7 @@ module.exports = {
 
 			const query = interaction.options.getString('query');
 
-			const responseData = await searchProjects(query, 5);
+			const responseData = await searchProjects(query);
 			if (!responseData) {
 				const errorEmbed = new EmbedBuilder()
 					.setColor('RED')
@@ -106,7 +105,7 @@ module.exports = {
 
 			const result = hits[0];
 			const embed = new EmbedBuilder()
-				.setColor('DARK_GREEN')
+				.setColor('DarkGreen')
 				.setAuthor({ name: 'From modrinth.com', iconURL: 'https://i.imgur.com/2XDguyk.png', url: 'https://modrinth.com' })
 				.setTitle(result.title)
 				.setDescription(result.description)
@@ -137,3 +136,24 @@ module.exports = {
 		}
 	},
 };
+
+function classIdToString(classId) {
+	switch (classId) {
+	case 5:
+		return 'Bukkit Plugin';
+	case 6:
+		return 'Mod';
+	case 12:
+		return 'Resource Pack';
+	case 17:
+		return 'World';
+	case 4471:
+		return 'Modpack';
+	case 4546:
+		return 'Customization';
+	case 4559:
+		return 'Addon';
+	default:
+		return 'Unknown';
+	}
+}

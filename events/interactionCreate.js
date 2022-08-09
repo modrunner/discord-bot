@@ -1,8 +1,6 @@
-const { verifyMemberPermission } = require('../util/verifyPermissions');
 const { PermissionsBitField, ApplicationCommandType, ComponentType, EmbedBuilder } = require('discord.js');
 const { trackProject } = require('../commands/track');
 const getJSONResponse = require('../api/getJSONResponse');
-const { classIdToString } = require('../util/classIdToString');
 const { inlineCode } = require('@discordjs/builders');
 const { searchMods, searchProjects } = require('../api/apiMethods');
 const logger = require('../logger');
@@ -24,22 +22,68 @@ module.exports = {
 			}
 		} else if (interaction.componentType === ComponentType.Button) {
 			if (interaction.customId.startsWith('track:')) {
-				if (!verifyMemberPermission(PermissionsBitField.Flags.ManageChannels, interaction.member)) return await interaction.reply({ content: 'You can only add projects to tracking if you have the \'Manage Channels\' permission.', ephemeral: true });
+				if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) return await interaction.reply({ content: 'You can only add projects to tracking if you have the \'Manage Channels\' permission.', ephemeral: true });
 
 				const projectId = interaction.customId.substring(6);
+				const channel = interaction.guild.channels.cache.find(element => element.id === interaction.channel.id);
 				await interaction.deferReply();
-				trackProject(interaction, interaction.guild.channels.cache.find(element => element.id === interaction.channel.id), projectId);
+				const trackRequest = await trackProject(projectId, channel.id, interaction.guild.id);
+
+				if (trackRequest.success) {
+					switch (trackRequest.reason) {
+					case 'new_database_entry_added':
+						return await interaction.editReply(`✅ Project **${trackRequest.projectTitle}** added to tracking. Updates will be posted in ${channel}.`);
+					case 'new_guild_added':
+						return await interaction.editReply(`✅ Project **${trackRequest.projectTitle}** added to tracking. Updates will be posted in ${channel}.`);
+					case 'new_channel_added':
+						return await interaction.editReply(`✅ Project **${trackRequest.projectTitle}** will now additionally have updates posted in ${channel}.`);
+					}
+				} else {
+					switch (trackRequest.reason) {
+					case 'project_already_tracked_in_channel':
+						return await interaction.editReply(`⚠️ Project **${trackRequest.projectTitle}** is already posting updates to channel ${channel}.`);
+					case 'file_not_found':
+						return await interaction.editReply(`⚠️ No project exists with ID **${projectId}**.`);
+					case 'api_error':
+						return await interaction.editReply('❌ An error occured, please try again.\nIf this issue persists, please contact the developer of this application. `(API_ERROR)`');
+					case 'api_failure':
+						return await interaction.editReply('❌ An error occured, please try again.\nIf this issue persists, please contact the developer of this application. `(API_FAILURE)`');
+					}
+				}
 			} else if (interaction.customId.startsWith('cf_track:')) {
-				if (!verifyMemberPermission(PermissionsBitField.Flags.ManageChannels, interaction.member)) return await interaction.reply({ content: 'You can only add projects to tracking if you have the \'Manage Channels\' permission.', ephemeral: true });
+				if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) return await interaction.reply({ content: 'You can only add projects to tracking if you have the \'Manage Channels\' permission.', ephemeral: true });
 
 				const projectId = interaction.customId.substring(9);
+				const channel = interaction.guild.channels.cache.find(element => element.id === interaction.channel.id);
 				await interaction.deferReply();
-				trackProject(interaction, interaction.guild.channels.cache.find(element => element.id === interaction.channel.id), projectId);
+				const trackRequest = await trackProject(projectId, channel.id, interaction.guild.id);
+
+				if (trackRequest.success) {
+					switch (trackRequest.reason) {
+					case 'new_database_entry_added':
+						return await interaction.editReply(`✅ Project **${trackRequest.projectTitle}** added to tracking. Updates will be posted in ${channel}.`);
+					case 'new_guild_added':
+						return await interaction.editReply(`✅ Project **${trackRequest.projectTitle}** added to tracking. Updates will be posted in ${channel}.`);
+					case 'new_channel_added':
+						return await interaction.editReply(`✅ Project **${trackRequest.projectTitle}** will now additionally have updates posted in ${channel}.`);
+					}
+				} else {
+					switch (trackRequest.reason) {
+					case 'project_already_tracked_in_channel':
+						return await interaction.editReply(`⚠️ Project **${trackRequest.projectTitle}** is already posting updates to channel ${channel}.`);
+					case 'file_not_found':
+						return await interaction.editReply(`⚠️ No project exists with ID **${projectId}**.`);
+					case 'api_error':
+						return await interaction.editReply('❌ An error occured, please try again.\nIf this issue persists, please contact the developer of this application. `(API_ERROR)`');
+					case 'api_failure':
+						return await interaction.editReply('❌ An error occured, please try again.\nIf this issue persists, please contact the developer of this application. `(API_FAILURE)`');
+					}
+				}
 			} else if (interaction.customId.startsWith('more:')) {
 				await interaction.deferReply();
 
 				const query = interaction.customId.substring(5);
-				const responseData = await searchProjects(query, 5);
+				const responseData = await searchProjects(query);
 				if (!responseData) {
 					const errorEmbed = new EmbedBuilder()
 						.setColor('RED')
@@ -70,7 +114,7 @@ module.exports = {
 
 				const query = interaction.customId.substring(8);
 
-				const responseData = await searchMods(query, 5);
+				const responseData = await searchMods(query);
 				if (!responseData) {
 					const errorEmbed = new EmbedBuilder()
 						.setColor('RED')
@@ -102,3 +146,24 @@ module.exports = {
 	},
 
 };
+
+function classIdToString(classId) {
+	switch (classId) {
+	case 5:
+		return 'Bukkit Plugin';
+	case 6:
+		return 'Mod';
+	case 12:
+		return 'Resource Pack';
+	case 17:
+		return 'World';
+	case 4471:
+		return 'Modpack';
+	case 4546:
+		return 'Customization';
+	case 4559:
+		return 'Addon';
+	default:
+		return 'Unknown';
+	}
+}
