@@ -1,5 +1,6 @@
-const { SlashCommandBuilder, inlineCode } = require('@discordjs/builders');
-const { Projects } = require('../dbObjects');
+const { SlashCommandBuilder, EmbedBuilder, inlineCode } = require('discord.js');
+const { TrackedProjects } = require('../dbObjects');
+const logger = require('../logger');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -7,22 +8,61 @@ module.exports = {
 		.setDescription('Get a list of all the projects currently in tracking.'),
 	async execute(interaction) {
 		await interaction.deferReply();
-		const projects = await Projects.findAll({
-			where: {
-				guild_id: interaction.guild.id,
-			},
-		});
 
-		if (!projects.length) return await interaction.editReply(`No projects are currently in tracking. Add some by using the ${inlineCode('/track')} command or by clicking the "Track Project" button when using the ${inlineCode('/search')} command.`);
+		const projects = await TrackedProjects.findAll();
+		const guildProjects = new Array;
 
-		let list = '';
 		for (const project of projects) {
-			list += `**Title:** ${inlineCode(project.project_title)} | **ID:** ${inlineCode(project.project_id)} | **Updates Channel:** ${interaction.guild.channels.cache.find(element => element.id === project.post_channel)}\n`;
+			for (let i = 0; i < project.guild_data.guilds.length; i++) {
+				if (project.guild_data.guilds.at(i).id === interaction.guild.id) {
+					guildProjects.push(project);
+				}
+			}
 		}
+		logger.debug(`guild has ${guildProjects.length} projects`);
 
-		const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
-		list = trim(list, 1900);
+		const page1 = new EmbedBuilder()
+			.setColor('DarkGreen')
+			.setTitle(`Projects currently being tracked in ${interaction.guild.name}`)
+			.setDescription(`Projects are not listed in any particular order.\nTo manage your tracked projects, use the ${inlineCode('/track')} and ${inlineCode('/untrack')} commands.`)
+			.setFooter({ text: 'Page 1' });
 
-		await interaction.editReply(`List of projects currently in tracking:\n${list}`);
+		const page2 = new EmbedBuilder().setColor('DarkGreen').setFooter({ text: 'Page 2' });
+		const page3 = new EmbedBuilder().setColor('DarkGreen').setFooter({ text: 'Page 3' });
+		const page4 = new EmbedBuilder().setColor('DarkGreen').setFooter({ text: 'Page 4' });
+
+		for (let i = 0; i < guildProjects.length; i++) {
+			const channels = new Array;
+			for (let j = 0; j < guildProjects.at(i).guild_data.guilds.length; j++) {
+				if (guildProjects.at(i).guild_data.guilds.at(j).id === interaction.guild.id) {
+					for (const channel of guildProjects.at(i).guild_data.guilds.at(j).channels) {
+						channels.push(channel);
+					}
+				}
+			}
+
+			let listChannels = new Array;
+			for (const channel of channels) {
+				const listChannel = interaction.guild.channels.cache.get(channel);
+				listChannels.push(listChannel);
+			}
+			listChannels = listChannels.join(', ');
+			const field = { name: `${guildProjects.at(i).title} (${guildProjects.at(i).id})`, value: `${listChannels}`, inline: false };
+
+			if (i >= 0 && i < 25) {
+				page1.addFields(field);
+			} else if (i >= 25 && i < 50) {
+				page2.addFields(field);
+			} else if (i >= 50 && i < 75) {
+				page3.addFields(field);
+			} else if (i >= 75 && i < 100) {
+				page4.addFields(field);
+			}
+		}
+		const pages = { embeds: [ page1 ] };
+		if (guildProjects.length > 25) pages.embeds.push(page2);
+		if (guildProjects.length > 50) pages.embeds.push(page3);
+		if (guildProjects.length > 75) pages.embeds.push(page4);
+		return await interaction.editReply(pages);
 	},
 };

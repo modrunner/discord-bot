@@ -1,10 +1,12 @@
 const { SlashCommandBuilder, inlineCode } = require('@discordjs/builders');
+const { PermissionsBitField } = require('discord.js');
 const { GuildSettings } = require('../dbObjects');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('mode')
 		.setDescription('Set the display mode for project update notifications.')
+		.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
 		.addStringOption(option =>
 			option
 				.setName('mode')
