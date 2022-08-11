@@ -43,8 +43,7 @@ As an Bisect Hosting partner, when you purchase a server using my affiliate code
 ![GitHub](https://img.shields.io/github/license/beans-squared/modrunner-bot?style=for-the-badge)
 
 Modrunner is licensed under the **Apache License 2.0**. This means you can use the source for commercial use, modify it, distribute it, etc. The main conditions are:
-- You cannot use the name 'Modrunner', the Modrunner logo, or related Modrunner branding and artwork to title or describe your spinoff work, you must use your own branding or trademarks,
-- You must license your spinoff work under the same license (Apache 2.0), and
+- You cannot use the name 'Modrunner', the Modrunner logo, or related Modrunner branding and artwork to title or describe your spinoff work, you must use your own branding or trademarks, and
 - You must document any major changes to the original work (a commit history in a publicly available repo would work)
 
 Also if you do use these source for your own projects, I'd love to hear about it!
