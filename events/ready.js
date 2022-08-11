@@ -166,7 +166,7 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
 
 		const viewButton = new ButtonBuilder()
 			.setURL(`https://www.curseforge.com/minecraft/${classIdToUrlString(requestedProject.classId)}/${requestedProject.slug}/files/${requestedProject.latestFilesIndexes[0].fileId}`)
-			.setLabel('View on Curseforge')
+			.setLabel('View on CurseForge')
 			.setStyle(ButtonStyle.Link);
 		buttonRow = new ActionRowBuilder().addComponents(viewButton);
 
