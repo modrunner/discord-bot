@@ -4,7 +4,7 @@ const ms = require('ms');
 const dayjs = require('dayjs');
 const { TrackedProjects, GuildSettings } = require('../dbObjects');
 const getJSONResponse = require('../api/getJSONResponse');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, codeBlock } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, codeBlock, ActivityType } = require('discord.js');
 const { ApiCallManager } = require('../api/apiCallManager');
 
 module.exports = {
@@ -12,8 +12,8 @@ module.exports = {
 	async execute(client) {
 		logger.info(`Bot online, logged in as ${client.user.tag}`);
 
-		checkForProjectUpdates(client);
-		updatePresenceData(client);
+		await checkForProjectUpdates(client);
+		await updatePresenceData(client);
 
 		setInterval(runUpdateCheck, ms('1m'));
 		setInterval(runUpdatePresence, ms('10m'));
@@ -86,7 +86,7 @@ async function checkForProjectUpdates(client) {
 	if (dbCurseforgeProjects.length) {
 		for (const dbProject of dbCurseforgeProjects) {
 			const requestedMod = requestedMods.data.find(element => element.id.toString() === dbProject.id);
-			if (dbProject.date_updated.getTime() != new Date(requestedMod.dateReleased).getTime()) {
+			if (dbProject.date_updated.getTime() !== new Date(requestedMod.dateReleased).getTime()) {
 				logger.debug(`Update detected for CurseForge project ${ dbProject.title } (${ dbProject.id })`);
 
 				await TrackedProjects.update({ date_updated: requestedMod.dateReleased }, {
@@ -95,7 +95,7 @@ async function checkForProjectUpdates(client) {
 					},
 				});
 
-				sendUpdateEmbed(requestedMod, dbProject, client);
+				await sendUpdateEmbed(requestedMod, dbProject, client);
 			}
 		}
 	}
@@ -104,7 +104,7 @@ async function checkForProjectUpdates(client) {
 	if (dbModrinthProjects.length) {
 		for (const dbProject of dbModrinthProjects) {
 			const requestedProject = requestedProjects.find(project => project.id === dbProject.id);
-			if (dbProject.date_updated.getTime() != new Date(requestedProject.updated).getTime()) {
+			if (dbProject.date_updated.getTime() !== new Date(requestedProject.updated).getTime()) {
 				logger.debug(`Update detected for Modrinth project ${ dbProject.title } (${ dbProject.id })`);
 
 				await TrackedProjects.update({ date_updated: requestedProject.updated }, {
@@ -113,7 +113,7 @@ async function checkForProjectUpdates(client) {
 					},
 				});
 
-				sendUpdateEmbed(requestedProject, dbProject, client);
+				await sendUpdateEmbed(requestedProject, dbProject, client);
 			}
 		}
 	}
@@ -228,19 +228,24 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
 		for (const dbChannel of dbGuild.channels) {
 			const channel = guild.channels.cache.find(element => element.id === dbChannel);
 			const dbGuildSettings = await GuildSettings.findOne({ where: { guild_id: guild.id } });
-			if (dbGuildSettings.is_lightweight_mode_enabled) await channel.send({ embeds: [ compactEmbed ] });
-			await channel.send({ embeds: [ normalEmbed ], components: [ buttonRow ] });
+			if (dbGuildSettings.is_lightweight_mode_enabled) {
+				await channel.send({ embeds: [compactEmbed] });
+			} else {
+				await channel.send({ embeds: [normalEmbed], components: [buttonRow] });
+			}
 		}
 	}
 }
 
 async function updatePresenceData(client) {
+	logger.debug('Updating presence data...');
+
 	const dbProjects = await TrackedProjects.findAll();
 
 	client.user.setPresence({
 		activities: [{
-			type: 'PLAYING',
-			name: `Watching ${dbProjects.length} unique projects for updates in ${client.guilds.cache.size} servers.`,
+			type: ActivityType.Playing,
+			name: `Watching ${dbProjects.length} projects for updates in ${client.guilds.cache.size} servers.`,
 		}],
 		status: 'online',
 	});
