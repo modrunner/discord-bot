@@ -74,7 +74,7 @@ Any contributions, big or small, are welcome! To get started:
    - `clientId` is the ID of your bot's account. You can copy this from the `General Information` tab in the developer portal.
    - `guildIds` is an array of guild IDs that you wish to use for testing commands. You more than likely will not need to list more than one.
    - `token` is your bot's secret token used by your bot to authenticate and log into Discord. To get a token, navigate to the `Bot` tab in the developer portal, and click `Reset Token`. This will generate a new token that you can then copy over. **Be sure to keep this token a secret!**
-   - `env` is used to determine the bot's logging level and output location. When set to `dev` it will output logs to the console and run at `trace` level. When set to `prod` it will output to the `bot.log` file in the root directory and run at `info` level. For more information see [](https://getpino.io/#/docs/api?id=logger-level).
+   - `env` is used to determine the bot's logging level and output location. When set to `dev` it will output logs to the console and run at `trace` level. When set to `prod` it will output to the `bot.log` file in the root directory and run at `info` level. For more information see the [Pino documentation](https://getpino.io/#/docs/api?id=logger-level).
 5. For testing API calls, you will also need to create an `api_config.json` under `/api`, formatted like so:
     ```
    {
