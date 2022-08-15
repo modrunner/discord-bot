@@ -4,8 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ."
+    "start": "node .",
+    "register": "node scripts/register-commands.js",
+    "register-globally": "node scripts/register-commands.js -g",
+    "dbInit": "node scripts/initialize-database.js",
+    "dbReset": "node scripts/initialize-database.js -f",
+    "dbAlter": "node scripts/initialize-database.js -a"
   },
   "author": "beansquared",
   "license": "Apache-2.0",
