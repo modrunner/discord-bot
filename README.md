@@ -51,12 +51,13 @@ Also if you do use these source for your own projects, I'd love to hear about it
 ## Contributing
 ![GitHub last commit](https://img.shields.io/github/last-commit/beans-squared/modrunner-bot?style=for-the-badge)
 
-Any contributions, big or small, are welcome! To get started:
+Any contributions, big or small, are welcome! To get started ensure you have [Node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.com/) installed.
 
 1. Fork the repository to your own GitHub account by using the `Fork` button in the top right (you will need your own GitHub account for this, obviously).
 2. Clone the fork to your local machine and open it in your editor or IDE of choice. Visual Studio Code is a great choice.
-3. Make any desired changes to the code and save it.
-4. To test your changes, you will need your own Discord bot client application, as well as a couple of `.json` files that are not included with the repository by default due to security reasons.
+3. Install the required dependencies by running `npm install` in your console.
+4. Make any desired changes to the code and save it.
+5. To test your changes, you will need your own Discord bot client application, as well as a couple of `.json` files that are not included with the repository by default due to security reasons.
     1. Log into the [Discord Developer Portal](https://discord.com/developers).
     2. Create a new application. Give a name like `Testing Bot`.
     3. Head to the `Bot` tab and click `Add Bot`.
@@ -75,7 +76,7 @@ Any contributions, big or small, are welcome! To get started:
    - `guildIds` is an array of guild IDs that you wish to use for testing commands. You more than likely will not need to list more than one.
    - `token` is your bot's secret token used by your bot to authenticate and log into Discord. To get a token, navigate to the `Bot` tab in the developer portal, and click `Reset Token`. This will generate a new token that you can then copy over. **Be sure to keep this token a secret!**
    - `env` is used to determine the bot's logging level and output location. When set to `dev` it will output logs to the console and run at `trace` level. When set to `prod` it will output to the `bot.log` file in the root directory and run at `info` level. For more information see the [Pino documentation](https://getpino.io/#/docs/api?id=logger-level).
-5. For testing API calls, you will also need to create an `api_config.json` under `/api`, formatted like so:
+6. For testing API calls, you will also need to create an `api_config.json` under `/api`, formatted like so:
     ```
    {
 		"api_max_retries": 3,
@@ -89,10 +90,10 @@ Any contributions, big or small, are welcome! To get started:
    - `cf_base_url` and `modrinth_base_url` controls which versions of the APIs to use for CurseForge and Modrinth. Don't change these unless you know what you are doing.
    - `cf_api_key` is the API key used to gain access to CurseForge's API. To get your own, visit the [CurseForge Core Console](https://console.curseforge.com/#/), log in or create an account, head to the `API Keys` tab and copy the key listed under your username.
    - `modrinth_user_agent` is used to identify the bot's traffic to Modrinth. Set this to `<github-username>/modrunner-bot/<version> (modrunner.net)`. If you don't know the version you can just omit that part.
-6. Now you're ready to being testing your changes! Here's a quick overview of the npm scripts.
+7. Now you're ready to being testing your changes! Here's a quick overview of the npm scripts.
     1. Before starting the bot for the first time, type `npm run register` and `npm run dbInit` into your console. This will register the bot's commands to all guilds listed under `guildIds` in your `config.json`, and will create the `database.sqlite` file in the project's root directory.
     2. Now you can run `npm run start`. This will start the bot and log it into Discord.
-7. Once you're satisfied with your changes, commit your changes and open a pull request to `beans-squared/modrunner-bot` to merge your changes.
+8. Once you're satisfied with your changes, commit your changes and open a pull request to `beans-squared/modrunner-bot` to merge your changes.
 
 If you have any questions, come talk to us in our [Discord](https://discord.gg/HZMCRNUd5Z).
 If you need ideas, check out the [Trello board](https://trello.com/b/tNrFYngk).
