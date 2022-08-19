@@ -62,30 +62,30 @@ Any contributions, big or small, are welcome! To get started ensure you have [No
     2. Create a new application. Give a name like `Testing Bot`.
     3. Head to the `Bot` tab and click `Add Bot`.
     4. Return to your editor and create a file named `config.json` in the root directory. It will need to formatted like this:
-    ```
-   {
-		"clientId": "<YOUR-BOT'S-CLIENT-ID>",
-		"guildIds": [
-			<LIST-OF-GUILD-IDS>
-		],
-		"token": "<YOUR-BOT'S-SECRET-TOKEN>",
-		"env": "dev"
-    }
-   ```
+```JSON
+{
+	"clientId": "YOUR-BOT'S-CLIENT-ID",
+	"guildIds": [
+		"LIST-OF-GUILD-IDS"
+	],
+	"token": "YOUR-BOT'S-SECRET-TOKEN",
+	"env": "dev"
+}
+```
    - `clientId` is the ID of your bot's account. You can copy this from the `General Information` tab in the developer portal.
    - `guildIds` is an array of guild IDs that you wish to use for testing commands. You more than likely will not need to list more than one.
    - `token` is your bot's secret token used by your bot to authenticate and log into Discord. To get a token, navigate to the `Bot` tab in the developer portal, and click `Reset Token`. This will generate a new token that you can then copy over. **Be sure to keep this token a secret!**
    - `env` is used to determine the bot's logging level and output location. When set to `dev` it will output logs to the console and run at `trace` level. When set to `prod` it will output to the `bot.log` file in the root directory and run at `info` level. For more information see the [Pino documentation](https://getpino.io/#/docs/api?id=logger-level).
 6. For testing API calls, you will also need to create an `api_config.json` under `/api`, formatted like so:
-    ```
-   {
-		"api_max_retries": 3,
-		"cf_base_url": "https://api.curseforge.com/v1",
-		"cf_api_key": "<YOUR-CURSEFORGE-API-KEY>",
-		"modrinth_base_url": "https://api.modrinth.com/v2",
-		"modrinth_user_agent": "<github-username>/modrunner-bot/<version> (modrunner.net)"
-    }
-   ```
+```JSON
+{
+	"api_max_retries": 3,
+	"cf_base_url": "https://api.curseforge.com/v1",
+	"cf_api_key": "YOUR-CURSEFORGE-API-KEY",
+	"modrinth_base_url": "https://api.modrinth.com/v2",
+	"modrinth_user_agent": "<github-username>/modrunner-bot/<version> (modrunner.net)"
+}
+```
    - `api_max_retries` controls how many times the bot will retry a failed API call. Leave this at `3` unless you have a good reason to change it.
    - `cf_base_url` and `modrinth_base_url` controls which versions of the APIs to use for CurseForge and Modrinth. Don't change these unless you know what you are doing.
    - `cf_api_key` is the API key used to gain access to CurseForge's API. To get your own, visit the [CurseForge Core Console](https://console.curseforge.com/#/), log in or create an account, head to the `API Keys` tab and copy the key listed under your username.
