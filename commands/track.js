@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { ChannelType } = require('discord-api-types/v10');
 const { TrackedProjects } = require('./../dbObjects');
 const { PermissionsBitField } = require('discord.js');
-const { getMod, getProject } = require('../api/apiMethods');
+const { getMod, getProject, validateIdOrSlug } = require('../api/apiMethods');
 const getJSONResponse = require('../api/getJSONResponse');
 const logger = require('../logger');
 
@@ -62,14 +62,23 @@ module.exports = {
 	async trackProject(projectId, updateChannelId, guildId) {
 		if (projectId.match(/[A-z]/)) {
 			// Modrinth
-			const responseData = await getProject(projectId);
+			// this is fucked but whatever
+			const a = await validateIdOrSlug(projectId);
+			let validatedId;
+			if (a.statusCode === 200) {
+				const responseData = await getJSONResponse(a.body);
+				validatedId = responseData.id;
+			} else {
+				return { success: false, reason: 'file_not_found' };
+			}
+			const responseData = await getProject(validatedId);
 			if (responseData) {
 				if (responseData.statusCode === 200) {
 					var requestedProject = await getJSONResponse(responseData.body);
 
 					const dbProject = await TrackedProjects.findOne({
 						where: {
-							id: projectId,
+							id: validatedId,
 						},
 					});
 
@@ -86,7 +95,7 @@ module.exports = {
 									guild_data: newData,
 								}, {
 									where: {
-										id: projectId,
+										id: validatedId,
 									},
 								});
 
@@ -106,7 +115,7 @@ module.exports = {
 								guild_data: newData,
 							}, {
 								where: {
-									id: projectId,
+									id: validatedId,
 								},
 							});
 
@@ -114,7 +123,7 @@ module.exports = {
 						}
 					} else {
 						await TrackedProjects.create({
-							id: projectId,
+							id: validatedId,
 							title: requestedProject.title,
 							platform: 'modrinth',
 							date_updated: requestedProject.updated,

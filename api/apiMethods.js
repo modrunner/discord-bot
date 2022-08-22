@@ -8,5 +8,6 @@ const { getProject } = require('../api/modrinth/getProject');
 const { getProjects } = require('../api/modrinth/getProjects');
 const { listProjectVersions } = require('../api/modrinth/listProjectVersions');
 const { searchProjects } = require('../api/modrinth/searchProjects');
+const { validateIdOrSlug } = require('../api/modrinth/validateIdOrSlug');
 
-module.exports = { getMod, getModFileChangelog, getModFileDownloadUrl, getMods, searchMods, getProject, getProjects, listProjectVersions, searchProjects };
+module.exports = { getMod, getModFileChangelog, getModFileDownloadUrl, getMods, searchMods, getProject, getProjects, listProjectVersions, searchProjects, validateIdOrSlug };
