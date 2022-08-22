@@ -86,10 +86,13 @@ async function checkForProjectUpdates(client) {
 	if (dbCurseforgeProjects.length) {
 		for (const dbProject of dbCurseforgeProjects) {
 			const requestedMod = requestedMods.data.find(element => element.id.toString() === dbProject.id);
-			if (dbProject.date_updated.getTime() !== new Date(requestedMod.dateReleased).getTime()) {
+			if (dbProject.date_updated.getTime() !== new Date(requestedMod.dateReleased).getTime() && requestedMod.latestFiles[requestedMod.latestFiles.length - 1].fileStatus === 4 && dbProject.latest_file_id !== requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id.toString()) {
 				logger.debug(`Update detected for CurseForge project ${ dbProject.title } (${ dbProject.id })`);
 
-				await TrackedProjects.update({ date_updated: requestedMod.dateReleased }, {
+				await TrackedProjects.update({
+					date_updated: requestedMod.dateReleased,
+					latest_file_id: requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id,
+				}, {
 					where: {
 						id: dbProject.id,
 					},
@@ -198,7 +201,7 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
 			.setFields(
 				{ name: 'Version Name', value: `${latestVersion.name}` },
 				{ name: 'Version Number', value: `${latestVersion.version_number}` },
-				{ name: 'Release Type', value: `${latestVersion.version_type}` },
+				{ name: 'Release Type', value: `${capitalize(latestVersion.version_type)}` },
 				{ name: 'Date Published', value: `<t:${dayjs(latestVersion.date_published).unix()}:f>` },
 			)
 			.setTimestamp();
@@ -283,4 +286,7 @@ function releaseTypeToString(releaseType) {
 	default:
 		return 'UnknownReleaseType';
 	}
+}
+function capitalize(string) {
+	return string.replace(string.charAt(0), String.fromCharCode(string.charCodeAt(0) - 32));
 }
