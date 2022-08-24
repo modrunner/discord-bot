@@ -86,7 +86,9 @@ async function checkForProjectUpdates(client) {
 	if (dbCurseforgeProjects.length) {
 		for (const dbProject of dbCurseforgeProjects) {
 			const requestedMod = requestedMods.data.find(element => element.id.toString() === dbProject.id);
-			if (dbProject.date_updated.getTime() !== new Date(requestedMod.dateReleased).getTime() && requestedMod.latestFiles[requestedMod.latestFiles.length - 1].fileStatus === 4 && dbProject.latest_file_id !== requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id.toString()) {
+			if (dbProject.date_updated.getTime() !== new Date(requestedMod.dateReleased).getTime()) {
+				if (requestedMod.latestFiles[requestedMod.latestFiles.length - 1].fileStatus !== 4) continue;
+				if (dbProject.latest_file_id === requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id.toString()) continue;
 				logger.debug(`Update detected for CurseForge project ${ dbProject.title } (${ dbProject.id })`);
 
 				await TrackedProjects.update({
@@ -230,7 +232,14 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
 		const guild = client.guilds.cache.find(element => element.id === dbGuild.id);
 		for (const dbChannel of dbGuild.channels) {
 			const channel = guild.channels.cache.find(element => element.id === dbChannel);
-			const dbGuildSettings = await GuildSettings.findOne({ where: { guild_id: guild.id } });
+			const dbGuildSettings = await GuildSettings.findOrCreate({
+				where: {
+					guild_id: guild.id,
+				},
+				defaults: {
+					guild_id: guild.id,
+				},
+			});
 			if (dbGuildSettings.is_lightweight_mode_enabled) {
 				await channel.send({ embeds: [compactEmbed] });
 			} else {
