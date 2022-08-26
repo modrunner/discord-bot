@@ -212,7 +212,7 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
 			.setColor('DarkGreen')
 			.setTitle(`${requestedProject.title} ${latestVersion.name}`)
 			.setURL(`https://modrinth.com/${requestedProject.project_type}/${requestedProject.slug}/version/${latestVersion.version_number}`)
-			.setDescription(`${latestVersion.version_number} (${latestVersion.version_type})`)
+			.setDescription(`${latestVersion.version_number} (${capitalize(latestVersion.version_type)})`)
 			.setFooter({ text: `${dayjs(latestVersion.date_published).format('MMM D, YYYY')}`, iconURL: 'https://i.imgur.com/2XDguyk.png' });
 
 		const viewButton = new ButtonBuilder()
@@ -232,7 +232,8 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
 		const guild = client.guilds.cache.find(element => element.id === dbGuild.id);
 		for (const dbChannel of dbGuild.channels) {
 			const channel = guild.channels.cache.find(element => element.id === dbChannel);
-			const dbGuildSettings = await GuildSettings.findOrCreate({
+			// eslint-disable-next-line no-unused-vars
+			const [dbGuildSettings, isCreated] = await GuildSettings.findOrCreate({
 				where: {
 					guild_id: guild.id,
 				},
@@ -261,6 +262,7 @@ async function updatePresenceData(client) {
 		}],
 		status: 'online',
 	});
+	logger.debug('Presence updated.');
 }
 
 function classIdToUrlString(classId) {

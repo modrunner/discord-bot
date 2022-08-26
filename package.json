@@ -9,7 +9,8 @@
     "register-globally": "node scripts/register-commands.js -g",
     "dbInit": "node scripts/initialize-database.js",
     "dbReset": "node scripts/initialize-database.js -f",
-    "dbAlter": "node scripts/initialize-database.js -a"
+    "dbAlter": "node scripts/initialize-database.js -a",
+    "update": "git pull && pm2 restart modrunner-bot"
   },
   "author": "beansquared",
   "license": "Apache-2.0",
