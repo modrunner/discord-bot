@@ -87,7 +87,7 @@ async function checkForProjectUpdates(client) {
 		for (const dbProject of dbCurseforgeProjects) {
 			const requestedMod = requestedMods.data.find(element => element.id.toString() === dbProject.id);
 			if (dbProject.date_updated.getTime() !== new Date(requestedMod.dateReleased).getTime()) {
-				logger.info(`Project ${requestedMod.name} has updated its releaseDate`);
+				logger.info(`Project ${requestedMod.name} has updated its release date from ${dayjs(dbProject.date_updated).format('YYYY-MM-DD HH:mm:ss')} to ${dayjs(requestedMod.dateReleased).format('YYYY-MM-DD HH:mm:ss')}`);
 				if (requestedMod.latestFiles[requestedMod.latestFiles.length - 1].fileStatus !== 4) {
 					logger.info(`Project latest file status is not 4. It's ${requestedMod.latestFiles[requestedMod.latestFiles.length - 1].fileStatus}. Aborting update check.`);
 					continue;
