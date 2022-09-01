@@ -94,6 +94,15 @@ async function checkForProjectUpdates(client) {
 				}
 				if (dbProject.latest_file_id === requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id.toString()) {
 					logger.info(`Project latest file id matches database. It's ${requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id.toString()} (database is ${dbProject.latest_file_id}). Aborting update check.`);
+
+					await TrackedProjects.update({
+						date_updated: requestedMod.dateReleased,
+					}, {
+						where: {
+							id: dbProject.id,
+						},
+					});
+
 					continue;
 				}
 				logger.info(`Update detected for CurseForge project ${ dbProject.title } (${ dbProject.id })`);
