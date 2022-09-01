@@ -87,9 +87,16 @@ async function checkForProjectUpdates(client) {
 		for (const dbProject of dbCurseforgeProjects) {
 			const requestedMod = requestedMods.data.find(element => element.id.toString() === dbProject.id);
 			if (dbProject.date_updated.getTime() !== new Date(requestedMod.dateReleased).getTime()) {
-				if (requestedMod.latestFiles[requestedMod.latestFiles.length - 1].fileStatus !== 4) continue;
-				if (dbProject.latest_file_id === requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id.toString()) continue;
-				logger.debug(`Update detected for CurseForge project ${ dbProject.title } (${ dbProject.id })`);
+				logger.info(`Project ${requestedMod.name} has updated its releaseDate`);
+				if (requestedMod.latestFiles[requestedMod.latestFiles.length - 1].fileStatus !== 4) {
+					logger.info(`Project latest file status is not 4. It's ${requestedMod.latestFiles[requestedMod.latestFiles.length - 1].fileStatus}. Aborting update check.`);
+					continue;
+				}
+				if (dbProject.latest_file_id === requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id.toString()) {
+					logger.info(`Project latest file id matches database. It's ${requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id.toString()} (database is ${dbProject.latest_file_id}). Aborting update check.`);
+					continue;
+				}
+				logger.info(`Update detected for CurseForge project ${ dbProject.title } (${ dbProject.id })`);
 
 				await TrackedProjects.update({
 					date_updated: requestedMod.dateReleased,
@@ -147,6 +154,16 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
 		const trimmedChangelog = trim(changelogNoHTML, 4000);
 
 		const latestFile = requestedProject.latestFiles[requestedProject.latestFiles.length - 1];
+
+		logger.info(`
+		${requestedProject.name} latest file info:
+		id: ${latestFile.id}
+		displayName: ${latestFile.displayName}
+		fileName: ${latestFile.fileName}
+		releaseType: ${latestFile.releaseType}
+		fileStatus: ${latestFile.fileStatus}
+		fileDate: ${dayjs(latestFile.fileDate).format('YYYY-MM-DD HH:mm:ss')}
+		`);
 
 		normalEmbed = new EmbedBuilder()
 			.setColor('#f87a1b')
