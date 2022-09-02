@@ -172,6 +172,8 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
 		releaseType: ${latestFile.releaseType}
 		fileStatus: ${latestFile.fileStatus}
 		fileDate: ${dayjs(latestFile.fileDate).format('YYYY-MM-DD HH:mm:ss')}
+		hash0: ${latestFile.hashes[0].value} (algo: ${latestFile.hashes[0].algo})
+		hash1: ${latestFile.hashes[1].value} (algo: ${latestFile.hashes[1].algo})
 		`);
 
 		normalEmbed = new EmbedBuilder()
