@@ -93,7 +93,20 @@ async function checkForProjectUpdates(client) {
 					continue;
 				}
 				if (dbProject.latest_file_id === requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id.toString()) {
-					logger.info(`Project latest file id matches database. It's ${requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id.toString()} (database is ${dbProject.latest_file_id}). Aborting update check.`);
+					logger.info(`Project latest file id matches latest id in database. It's ${requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id.toString()} (database is ${dbProject.latest_file_id}). Aborting update check.`);
+
+					await TrackedProjects.update({
+						date_updated: requestedMod.dateReleased,
+					}, {
+						where: {
+							id: dbProject.id,
+						},
+					});
+
+					continue;
+				}
+				if (dbProject.second_latest_file_id === requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id.toString()) {
+					logger.info(`Project latest file id matches second latest id in database. It's ${requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id.toString()} (database is ${dbProject.second_latest_file_id}). Aborting update check.`);
 
 					await TrackedProjects.update({
 						date_updated: requestedMod.dateReleased,
@@ -110,6 +123,7 @@ async function checkForProjectUpdates(client) {
 				await TrackedProjects.update({
 					date_updated: requestedMod.dateReleased,
 					latest_file_id: requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id,
+					second_latest_file_id: dbProject.latest_file_id,
 				}, {
 					where: {
 						id: dbProject.id,

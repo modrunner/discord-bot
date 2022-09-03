@@ -18,6 +18,9 @@ module.exports = (sequelize, DataTypes) => {
 		latest_file_id: {
 			type: DataTypes.STRING,
 		},
+		second_latest_file_id: {
+			type: DataTypes.STRING,
+		},
 		guild_data: {
 			type: DataTypes.JSON,
 			allowNull: false,

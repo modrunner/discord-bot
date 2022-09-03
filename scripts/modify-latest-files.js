@@ -6,7 +6,7 @@ async function modifyFiles() {
 
 	for (const project of projects) {
 		await TrackedProjects.update({
-			latest_file_id: null,
+			latest_file_id: 111111111,
 		}, {
 			where: {
 				id: project.id,
