@@ -12,7 +12,7 @@ Welcome to Modrunner ("**Company**", "**we**", "**our**", "**us**"). Modrunner c
 
 These Terms of Service ("**Terms**", "**Terms of Service**", "**TOS**") govern your use of both the Application and the Site.
 
-Our Privacy Policy also governs the use of our Services and explains how we collect, safeguard and disclose information that results from your use of our Serivces. Please read our Privacy Policy [here](./privacy_policy).
+Our Privacy Policy also governs the use of our Services and explains how we collect, safeguard and disclose information that results from your use of our Serivces. Please read our Privacy Policy [here](../privacy_policy).
 
 Your agreement with us includes these Terms and our Privacy Policy ("**Agreements**"). You acknowledge the you have read and understood the Agreements, and agree to be bound by them.
 

@@ -28,7 +28,7 @@ Search CurseForge for projects by project name. Projects can be:
 
 `Track Project` Button
 
-- Adds the displayed project to tracking. Has the same functionality as running the [Track](./track) command. The update channel will be the channel the original search command was executed in.
+- Adds the displayed project to tracking. Has the same functionality as running the [Track](../track) command. The update channel will be the channel the original search command was executed in.
 
 `View More Results` Button
 
@@ -65,7 +65,7 @@ Search Modrinth for projects by project name. Projects can be:
 
 `Track Project` Button
 
-- Adds the displayed project to tracking. Has the same functionality as running the [Track](./track) command. The update channel will be the channel the original search command was executed in.
+- Adds the displayed project to tracking. Has the same functionality as running the [Track](../track) command. The update channel will be the channel the original search command was executed in.
 
 `View More Results` Button
 

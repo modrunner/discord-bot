@@ -14,7 +14,7 @@ Add a project to tracking for the current server.
 
 :::tip
 
-You can get a project's ID from its project page on the Modrinth or CurseForge website, or by using the [Search](./search) command.
+You can get a project's ID from its project page on the Modrinth or CurseForge website, or by using the [Search](../search) command.
 
 :::
 
