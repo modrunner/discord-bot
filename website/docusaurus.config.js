@@ -8,7 +8,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
 	title: 'Modrunner',
 	tagline: 'Search for projects on Modrinth and CurseForge & get notified of updates to tracked projects, right from Discord.',
-	url: 'https://modrunner.net/',
+	url: 'https://beans-squared.github.io/',
 	baseUrl: '/',
 	onBrokenLinks: 'throw',
 	onBrokenMarkdownLinks: 'warn',
