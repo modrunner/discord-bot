@@ -20,3 +20,6 @@ Modrunner is designed to be intuitive to use and painless to set up. Searching f
 ## Supported Hosting Sites
 
 Modrunner currently supports searching for projects and project tracking for the following list of sites. If your preferred site isn't listed here, feel free to request support for it in [our Discord server](https://discord.gg/fm88jhzEbt).
+
+- CurseForge (https://curseforge.com/)
+- Modrinth (https://modrinth.com/)

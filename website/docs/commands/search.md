@@ -10,7 +10,7 @@ Search for projects on Modrinth and CurseForge and receive an embed with some ba
 
 ### Command
 
-`search curseforge [projectName]`
+`/search curseforge [projectName]`
 
 Search CurseForge for projects by project name. Projects can be:
 
@@ -50,7 +50,7 @@ I'm looking into ways to improve the quality of search results but this problem 
 
 ### Command
 
-`search modrinth [projectName]`
+`/search modrinth [projectName]`
 
 Search Modrinth for projects by project name. Projects can be:
 

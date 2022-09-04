@@ -64,7 +64,7 @@ const config = {
 				title: 'Modrunner',
 				logo: {
 					alt: 'My Site Logo',
-					src: 'img/modrunner_logo.png',
+					src: 'img/modrunner_logo.svg',
 				},
 				items: [
 					{
@@ -85,17 +85,25 @@ const config = {
 				style: 'dark',
 				links: [
 					{
-						title: 'Docs',
+						title: 'Resources',
 						items: [
 							{
 								label: 'Documentation',
 								to: '/docs/intro',
+							},
+							{
+								label: 'Invite Link',
+								href: 'https://invite.modrunner.net/',
 							},
 						],
 					},
 					{
 						title: 'Community',
 						items: [
+							{
+								label: 'Blog',
+								to: '/blog',
+							},
 							{
 								label: 'Discord',
 								href: 'https://discord.gg/fm88jhzEbt',
@@ -106,8 +114,12 @@ const config = {
 						title: 'More',
 						items: [
 							{
-								label: 'Blog',
-								to: '/blog',
+								label: 'Terms of Service',
+								to: '/legal/tos',
+							},
+							{
+								label: 'Privacy Policy',
+								to: '/legal/privacy_policy',
 							},
 							{
 								label: 'GitHub',

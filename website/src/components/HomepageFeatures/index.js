@@ -4,32 +4,36 @@ import styles from './styles.module.css';
 
 const FeatureList = [
 	{
-		title: 'Easy to Use',
-		Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+		title: 'Search for Projects',
+		Svg: require('@site/static/img/undraw_web_search_re_efla.svg').default,
 		description: (
 			<>
-				Docusaurus was designed from the ground up to be easily installed and
-				used to get your website up and running quickly.
+				Search for your favorite Minecraft community projects,
+				including mods, modpacks, and resource packs,
+				and get information posted directly into Discord for
+				easy sharing.
 			</>
 		),
 	},
 	{
-		title: 'Focus on What Matters',
-		Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+		title: 'Watch for Project Updates',
+		Svg: require('@site/static/img/undraw_notify_re_65on.svg').default,
 		description: (
 			<>
-				Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-				ahead and move your docs into the <code>docs</code> directory.
+				Get customizable notifications posted into Discord when your
+				tracked projects recieve updates. Know exactly when new features
+				are added to your favorite mods, modpacks and more.
 			</>
 		),
 	},
 	{
-		title: 'Powered by React',
-		Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+		title: 'Automate your Development',
+		Svg: require('@site/static/img/undraw_news_re_6uub.svg').default,
 		description: (
 			<>
-				Extend or customize your website layout by reusing React. Docusaurus can
-				be extended while reusing the same header and footer.
+				For project developers, Modrunner takes the hassle out of having to
+				write your own announcements every time you update your projects:
+				Modrunner can let everyone know for you.
 			</>
 		),
 	},
