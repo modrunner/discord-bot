@@ -21,11 +21,3 @@ body:
       placeholder: Tell us what you see! You can also upload files (like screenshots) by dragging them into this text area.
     validations:
       required: true
-  - type: dropdown
-    attributes:
-      label: Version
-      description: What version of our software are you running?
-      options: 
-        - latest (Default)
-    validations:
-      required: true
