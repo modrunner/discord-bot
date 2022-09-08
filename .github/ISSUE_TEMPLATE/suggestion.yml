@@ -13,6 +13,7 @@ body:
         - Offering feedback on existing functionality
   - type: textarea
     attributes:
+      label: Description
       description: Describe your suggestion or feedback
       placeholder: 'Make it gooder'
     validations:
