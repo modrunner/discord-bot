@@ -1,0 +1,21 @@
+name: Suggestion or Feedback
+description: Propose a new feature, update or leave feedback
+title: ''
+labels: ['suggestion']
+
+body:
+  - type: dropdown
+    id: suggestion-type
+    attributes:
+      label: Suggestion Type
+      description: Are you suggesting new features, new updates, or leaving feedback?
+      options:
+        - Suggesting a new feature
+        - Suggesting an update to existing functionality
+        - Offering feedback on existing functionality
+  - type: textarea
+    id: description
+    description: Describe your suggestion or feedback
+    placeholder: 'Make it gooder'
+    validations:
+      required: true
