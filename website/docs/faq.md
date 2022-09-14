@@ -16,7 +16,7 @@ https://www.buymeacoffee.com/beansquared
 
 ## How can I invite Modrunner to my server?
 
-Use this link: https://invite.modrunner.net/
+Use [this link](https://discord.com/api/oauth2/authorize?client_id=978413985722404924&permissions=2048&scope=bot%20applications.commands).
 
 ## I noticed something strange or broken about Modrunner. Where can I report this?
 
