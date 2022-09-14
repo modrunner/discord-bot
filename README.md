@@ -22,12 +22,14 @@
   - Customize your notifications with Normal and Compact embed styles
 
 This is list not exhaustive. Invite the bot to your server today and see what else it can offer!
-- **Want to try Modrunner?** Use [this link](https://invite.modrunner.net/).
-- **Need help with commands?** Visit the [Docs](https://modrunner.net/docs/intro/).
-- **Want to contribute to Modrunner?** See [Contributing](./CONTRIBUTING.md).
-- **Enjoy Modrunner?** 
-  - Leave a star ⭐ on the repository!
-  - [Buy us a coffee ☕](https://www.buymeacoffee.com/beansquared)!
 
-## Community and Support
+- **Want to try Modrunner?** Use [this link](https://discord.com/api/oauth2/authorize?client_id=978413985722404924&permissions=2048&scope=bot%20applications.commands).
+- **Need help with commands?** Visit the [docs](https://modrunner.net/docs/intro/).
+- **Want to contribute to Modrunner?** See [Contributing](./CONTRIBUTING.md).
+- **Enjoy Modrunner?**
+  - Leave a star ⭐ on the repository!
+  - [Buy me a coffee ☕](https://www.buymeacoffee.com/beansquared)!
+
+## Community & Support
+
 [![](https://discordapp.com/api/guilds/764169561003130881/widget.png?style=banner3)](https://discord.gg/HZMCRNUd5Z)

@@ -27,7 +27,7 @@ const FeatureList = [
 		),
 	},
 	{
-		title: 'Automate your Development',
+		title: 'Hassle-Free Announcements',
 		Svg: require('@site/static/img/undraw_news_re_6uub.svg').default,
 		description: (
 			<>

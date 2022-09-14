@@ -17,17 +17,20 @@ function HomepageHeader() {
 				<div className={styles.buttons}>
 					<Link
 						className="button button--secondary button--lg"
-						to="/docs/intro">
+						to="/docs/intro"
+					>
 						Documentation
 					</Link>
 					<Link
 						className="button button--secondary button--lg"
-						to="https://invite.modrunner.net/">
+						to="https://invite.modrunner.net/"
+					>
 						Invite Link
 					</Link>
 					<Link
 						className="button button--secondary button--lg"
-						to="https://discord.gg/fm88jhzEbt">
+						to="https://discord.gg/fm88jhzEbt"
+					>
 						Discord
 					</Link>
 				</div>
@@ -41,7 +44,8 @@ export default function Home() {
 	return (
 		<Layout
 			title={`${siteConfig.tagline}`}
-			description="Description will go into a meta tag in <head />">
+			description="Search for projects on Modrinth and CurseForge & get notified of updates to tracked projects, right from Discord"
+		>
 			<HomepageHeader />
 			<main>
 				<HomepageFeatures />
