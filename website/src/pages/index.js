@@ -23,7 +23,7 @@ function HomepageHeader() {
 					</Link>
 					<Link
 						className="button button--secondary button--lg"
-						to="https://invite.modrunner.net/"
+						to="https://discord.com/api/oauth2/authorize?client_id=978413985722404924&permissions=2048&scope=bot%20applications.commands"
 					>
 						Invite Link
 					</Link>
