@@ -7,8 +7,8 @@
 
 <p align="center">Search for projects on Modrinth and CurseForge & get notified of updates to tracked projects, right from Discord.</p>
 
-<p align="center"><img src="./assets/screenshot1.png" alt="modrunner search"></p>
-<p align="center"><img src="./assets/screenshot2.png" alt="modrunner track"></p>
+<p align="center"><img src="./assets/search_example.png" alt="modrunner search"></p>
+<p align="center"><img src="./assets/notification_example.png" alt="modrunner track"></p>
 
 # Features
 
