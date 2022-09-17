@@ -1,14 +1,17 @@
-<p align="center"><img src="./assets/modrunner_logo.jpg" width="150px" height="150px" alt="modrunner"></p>
+<img src="./assets/modrunner_logo.jpg" width="200" height="200">
 
-<h1 align="center">Modrunner</h1>
-<em><h5 align="center">(formerly Modrinth Bot)</h5></em>
+# Modrunner
 
-[<p align="center"><img src="https://img.shields.io/discord/764169561003130881?color=%237289DA&logo=discord&style=for-the-badge" alt="discord badge">](https://discord.gg/HZMCRNUd5Z) [<img src="https://img.shields.io/github/v/release/beans-squared/modrunner-bot?style=for-the-badge" alt="latest release version badge">](https://github.com/beans-squared/modrunner-bot/releases) [<img src="https://img.shields.io/github/license/beans-squared/modrunner-bot?style=for-the-badge" alt="license badge">](./LICENSE) [<img src="https://forthebadge.com/images/badges/contains-tasty-spaghetti-code.svg" alt="tasty spagetti code badge" height="28px">]() [<img src="https://img.buymeacoffee.com/button-api/?text=BUY ME A COFFEE&emoji=&slug=beansquared&button_colour=FFDD00&font_colour=000000&font_family=Arial&outline_colour=000000&coffee_colour=ffffff" alt="buy me a coffee badge" height="28px">](https://www.buymeacoffee.com/beansquared)</p>
+*(Formerly Modrinth Bot)*
 
-<p align="center">Search for projects on Modrinth and CurseForge & get notified of updates to tracked projects, right from Discord.</p>
+[<img src="https://img.shields.io/discord/764169561003130881?color=%237289DA&logo=discord&style=for-the-badge" alt="discord badge">](https://discord.gg/HZMCRNUd5Z) [<img src="https://img.shields.io/github/v/release/beans-squared/modrunner-bot?style=for-the-badge" alt="latest release version badge">](https://github.com/beans-squared/modrunner-bot/releases) [<img src="https://img.shields.io/github/license/beans-squared/modrunner-bot?style=for-the-badge" alt="license badge">](./LICENSE) [<img src="https://forthebadge.com/images/badges/contains-tasty-spaghetti-code.svg" alt="tasty spagetti code badge" height="28px">]() [<img src="https://img.buymeacoffee.com/button-api/?text=BUY ME A COFFEE&emoji=&slug=beansquared&button_colour=FFDD00&font_colour=000000&font_family=Arial&outline_colour=000000&coffee_colour=ffffff" alt="buy me a coffee badge" height="28px">](https://www.buymeacoffee.com/beansquared)
 
-<p align="center"><img src="./assets/search_example.png" alt="modrunner search"></p>
-<p align="center"><img src="./assets/notification_example.png" alt="modrunner track"></p>
+A Discord bot to search for projects on Modrinth and CurseForge & get notified of updates to tracked projects.
+
+Have a question about Modrunner? Open a [Q&A Discussion](https://github.com/beans-squared/modrunner-bot/discussions/new) or join our [Discord](https://discord.gg/HZMCRNUd5Z).
+
+![](./assets/search_example.png)
+![](./assets/notification_example.png)
 
 # Features
 
@@ -30,6 +33,26 @@ This is list not exhaustive. Invite the bot to your server today and see what el
   - Leave a star ⭐ on the repository!
   - [Buy me a coffee ☕](https://www.buymeacoffee.com/beansquared)!
 
-## Community & Support
+# Invite
 
-[![](https://discordapp.com/api/guilds/764169561003130881/widget.png?style=banner3)](https://discord.gg/HZMCRNUd5Z)
+[Link](https://discord.com/api/oauth2/authorize?client_id=978413985722404924&permissions=2048&scope=bot%20applications.commands)
+
+# Commands
+
+- `/search` - Get info about projects
+- `/track` - Track projects for updates
+- `/list` - List all tracked projects
+- `/mode` - Customize notification style
+
+See the [docs](https://modrunner.net/docs/intro/) for more detailed information.
+
+# Contributing
+
+`npm run start` - Run the application<br>
+`npm run register` - Register application commands to a specific guild<br>
+`npm run dbInit` - Initialize the database<br>
+`npm run dbReset` - Reset the database<br>
+`npm run dbAlter` - Alter the database<br>
+
+Please check the [development board](https://github.com/users/beans-squared/projects/6) before getting started.<br>
+See [Contributing](./CONTRIBUTING.md) for more detailed information.
