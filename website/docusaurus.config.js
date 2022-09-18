@@ -52,7 +52,7 @@ const config = {
 				title: 'Modrunner',
 				logo: {
 					alt: 'My Site Logo',
-					src: 'img/modrunner_logo.svg',
+					src: 'img/globe.png',
 				},
 				items: [
 					{
