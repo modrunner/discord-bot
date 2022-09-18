@@ -1,4 +1,4 @@
-<img src="./assets/modrunner_logo.jpg" width="200" height="200">
+<img src="./assets/globe.png" width="200" height="200">
 
 # Modrunner
 
