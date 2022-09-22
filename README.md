@@ -54,5 +54,5 @@ See the [docs](https://modrunner.net/docs/intro/) for more detailed information.
 `npm run dbReset` - Reset the database<br>
 `npm run dbAlter` - Alter the database<br>
 
-Please check the [development board](https://github.com/users/beans-squared/projects/6) before getting started.<br>
+Please check the [development board](https://trello.com/b/tNrFYngk) before getting started.<br>
 See [Contributing](./CONTRIBUTING.md) for more detailed information.
