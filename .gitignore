@@ -1,10 +1,9 @@
-/.vscode
-/.idea
-/node_modules
-/_*
-/api/api_config.json
+.vscode
+.idea
+node_modules
+_*
+api/api_config.json
 
-.eslintrc.json
 *.log
 config.json
 database.sqlite

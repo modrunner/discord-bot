@@ -27,6 +27,7 @@
     "undici": "^5.8.2"
   },
   "devDependencies": {
-    "eslint": "^8.20.0"
+    "eslint": "^8.20.0",
+    "prettier": "^2.7.1"
   }
 }

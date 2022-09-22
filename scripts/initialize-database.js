@@ -1,16 +1,15 @@
-const logger = require('../logger');
 const Sequelize = require('sequelize');
+const logger = require('../logger');
 
 const sequelize = new Sequelize('database', 'username', 'password', {
 	host: 'localhost',
 	dialect: 'sqlite',
 	logging: false,
-	storage: 'database.sqlite',
+	storage: 'database/database.sqlite',
 });
 
-require('../models/GuildSettings')(sequelize, Sequelize.DataTypes);
-require('../models/Project')(sequelize, Sequelize.DataTypes);
-require('../models/TrackedProjects')(sequelize, Sequelize.DataTypes);
+require("../database/tables/guild")(sequelize, Sequelize.DataTypes);
+require("../database/tables/project")(sequelize, Sequelize.DataTypes);
 
 const force = process.argv.includes('--force') || process.argv.includes('-f');
 const alter = process.argv.includes('--alter') || process.argv.includes('-a');
@@ -27,7 +26,7 @@ if (force) {
 	}).catch(logger.error);
 } else {
 	sequelize.sync().then(async () => {
-		logger.info('Database intialized.');
+		logger.info('Database initialized.');
 		sequelize.close();
 	}).catch(logger.error);
 }
