@@ -1,6 +1,5 @@
 const fs = require('node:fs');
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
-const { token } = require('./config.json');
 
 const client = new Client({
 	intents: [
@@ -27,4 +26,4 @@ for (const file of eventFiles) {
 	}
 }
 
-client.login(token);
+client.login(process.env['BOT_TOKEN']);

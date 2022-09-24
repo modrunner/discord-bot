@@ -1,5 +1,4 @@
 const pino = require('pino');
-const { env } = require('./config.json');
 
 const outputToConsole = pino.transport({
 	target: 'pino-pretty',
@@ -19,7 +18,7 @@ const outputToFile = pino.transport({
 	},
 });
 
-const logger = pino((env === 'dev') ? outputToConsole : outputToFile);
-logger.level = (env === 'dev') ? 'trace' : 'info';
+const logger = pino((process.env['LOGGING'] === 'dev') ? outputToConsole : outputToFile);
+logger.level = (process.env['LOGGING'] === 'dev') ? 'trace' : 'info';
 
 module.exports = logger;

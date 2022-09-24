@@ -1,4 +1,4 @@
-const { api_max_retries, cf_base_url, cf_api_key } = require('../api_config.json');
+const { api_max_retries, cf_base_url } = require('../constants');
 const { request } = require('undici');
 const logger = require('../../logger');
 const { ApiCallManager } = require('../apiCallManager');
@@ -10,12 +10,12 @@ async function getModFileDownloadUrl(modId, fileId) {
 			const responseData = await request(`${cf_base_url}/mods/${modId}/files/${fileId}/download-url`, {
 				method: 'GET',
 				headers: {
-					'x-api-key': cf_api_key,
+					'x-api-key': process.env['CF_API_KEY'],
 				},
 			});
 			return responseData;
 		} catch (error) {
-			logger.debug(`A ${error.name} occured while requesting data from CurseForge (Get Mod File Download URL)`);
+			logger.debug(`A ${error.name} occurred while requesting data from CurseForge (Get Mod File Download URL)`);
 		}
 	}
 	return null;
