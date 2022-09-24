@@ -1,12 +1,13 @@
 {
   "name": "modrunner-bot",
-  "version": "1.0.0",
+  "version": "1.1.7",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node .",
-    "register": "node scripts/register-commands.js",
-    "register-globally": "node scripts/register-commands.js -g",
+    "prestart": "node -p \"'module.exports = { VERSION: ' + JSON.stringify(require('./package.json').version) + ' };'\" > version.js",
+    "start": "doppler run --command=\"node .\"",
+    "register": "doppler run --command=\"node scripts/register-commands.js\"",
+    "register-globally": "doppler run --command=\"node scripts/register-commands.js -g\"",
     "dbInit": "node scripts/initialize-database.js",
     "dbReset": "node scripts/initialize-database.js -f",
     "dbAlter": "node scripts/initialize-database.js -a",

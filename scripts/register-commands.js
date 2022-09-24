@@ -1,7 +1,6 @@
 const fs = require('node:fs');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
-const { clientId, guildIds, token } = require('../config.json');
 const logger = require('../logger');
 
 const commands = [];
@@ -15,7 +14,7 @@ for (const file of commandFiles) {
 	commands.push(command.data.toJSON());
 }
 
-const rest = new REST({ version: '9' }).setToken(token);
+const rest = new REST({ version: '9' }).setToken(process.env['BOT_TOKEN']);
 
 (async () => {
 	try {
@@ -25,23 +24,21 @@ const rest = new REST({ version: '9' }).setToken(token);
 			logger.info('Command scope: GLOBAL');
 
 			await rest.put(
-				Routes.applicationCommands(clientId),
+				Routes.applicationCommands(process.env['CLIENT_ID']),
 				{ body: commands },
 			);
 		} else {
 			logger.info('Command scope: GUILD');
 
-			for (const guildId of guildIds) {
-				await rest.put(
-					Routes.applicationGuildCommands(clientId, guildId),
-					{ body: commands },
-				);
-			}
+			await rest.put(
+				Routes.applicationGuildCommands(process.env['CLIENT_ID'], process.env['DEV_GUILD_ID']),
+				{ body: commands },
+			);
 		}
 
 		logger.info(`Registration of application commands complete. Total commands registered:\nCHAT_INPUT: ${commands.length}\nUSER: ${user_commands.length}\nMESSAGE: ${message_commands.length}`);
 	} catch (error) {
-		logger.warn('An error occured while registering application commands.');
+		logger.warn('An error occurred while registering application commands.');
 		logger.error(error);
 	}
 })();
