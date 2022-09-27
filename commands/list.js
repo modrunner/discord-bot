@@ -10,7 +10,7 @@ module.exports = {
 		await interaction.deferReply();
 
 		const projects = await TrackedProjects.findAll();
-		const guildProjects = new Array;
+		let guildProjects = new Array;
 
 		for (const project of projects) {
 			for (let i = 0; i < project.guild_data.guilds.length; i++) {
@@ -20,6 +20,8 @@ module.exports = {
 			}
 		}
 		logger.debug(`guild has ${guildProjects.length} projects`);
+
+		guildProjects = guildProjects.sort((a, b) => a.title.localeCompare(b.title));
 
 		const page1 = new EmbedBuilder()
 			.setColor('DarkGreen')
