@@ -1,6 +1,6 @@
-<img src="./assets/globe.png" width="200" height="200">
+<img src="./assets/modrunner_banner_trim.png" align="center">
 
-# Modrunner
+# 
 
 *(Formerly Modrinth Bot)*
 
