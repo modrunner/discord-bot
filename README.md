@@ -4,7 +4,7 @@
 
 *(Formerly Modrinth Bot)*
 
-[<img src="https://img.shields.io/discord/764169561003130881?color=%237289DA&logo=discord&style=for-the-badge" alt="discord badge">](https://discord.gg/HZMCRNUd5Z) [<img src="https://img.shields.io/github/v/release/beans-squared/modrunner-bot?style=for-the-badge" alt="latest release version badge">](https://github.com/beans-squared/modrunner-bot/releases) [<img src="https://img.shields.io/github/license/beans-squared/modrunner-bot?style=for-the-badge" alt="license badge">](./LICENSE) [<img src="https://forthebadge.com/images/badges/contains-tasty-spaghetti-code.svg" alt="tasty spagetti code badge" height="28px">]() [<img src="https://img.buymeacoffee.com/button-api/?text=BUY ME A COFFEE&emoji=&slug=beansquared&button_colour=FFDD00&font_colour=000000&font_family=Arial&outline_colour=000000&coffee_colour=ffffff" alt="buy me a coffee badge" height="28px">](https://www.buymeacoffee.com/beansquared)
+[<img src="https://img.shields.io/discord/764169561003130881?color=%237289DA&logo=discord&style=for-the-badge" alt="discord badge">](https://discord.gg/HZMCRNUd5Z) [<img src="https://img.shields.io/github/v/release/beans-squared/modrunner-bot?style=for-the-badge" alt="latest release version badge">](https://github.com/beans-squared/modrunner-bot/releases) [<img src="https://img.shields.io/github/license/beans-squared/modrunner-bot?style=for-the-badge" alt="license badge">](./LICENSE) [<img src="https://forthebadge.com/images/badges/contains-tasty-spaghetti-code.svg" alt="tasty spagetti code badge" height="28px">]() [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F8FFBV3)
 
 A Discord bot to search for projects on Modrinth and CurseForge & get notified of updates to tracked projects.
 
