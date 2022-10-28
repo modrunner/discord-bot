@@ -1,33 +1,40 @@
 {
   "name": "modrunner-bot",
   "version": "1.0.0",
-  "description": "",
+  "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "node .",
-    "register": "node scripts/register-commands.js",
-    "register-globally": "node scripts/register-commands.js -g",
-    "dbInit": "node scripts/initialize-database.js",
-    "dbReset": "node scripts/initialize-database.js -f",
-    "dbAlter": "node scripts/initialize-database.js -a",
-    "update": "git pull && pm2 restart modrunner-bot"
+    "setup-workspace": "npm install && scoop install doppler && doppler login && doppler setup",
+    "prettier-check": "prettier --check .",
+    "prettier-write": "prettier --write .",
+    "eslint": "eslint .",
+    "eslint-fix": "eslint fix .",
+    "prestart": "npm run register-globally && npm run create-db && npm run alter-db",
+    "start": "doppler run --command=\"node .\"",
+    "dev": "doppler run --command=\"nodemon .\"",
+    "register": "doppler run --command=\"node scripts/register-commands.js\"",
+    "register-globally": "doppler run --command=\"scripts/register-commands.js --global\"",
+    "create-db": "node scripts/initialize-database.js",
+    "reset-db": "node scripts/initialize-database.js --force",
+    "alter-db": "node scripts/initialize-database.js --alter",
+    "migrate-db": "doppler run --command=\"node scripts/migrate-database.js\""
   },
-  "author": "beansquared",
-  "license": "Apache-2.0",
   "dependencies": {
-    "@discordjs/rest": "^1.0.0",
-    "dayjs": "^1.11.4",
-    "discord-api-types": "^0.36.2",
-    "discord.js": "^14.0.3",
+    "@discordjs/rest": "^1.2.0",
+    "dayjs": "^1.11.5",
+    "discord-api-types": "^0.37.11",
+    "discord.js": "^14.5.0",
     "ms": "^2.1.3",
-    "pino": "^8.2.0",
-    "pino-pretty": "^8.1.0",
-    "sequelize": "^6.21.3",
-    "sqlite3": "^5.0.9",
-    "undici": "^5.8.2"
+    "pino": "^8.6.1",
+    "pino-pretty": "^9.1.0",
+    "sequelize": "^6.23.2",
+    "sqlite3": "^5.1.1",
+    "undici": "^5.10.0"
   },
   "devDependencies": {
-    "eslint": "^8.20.0",
+    "eslint": "^8.24.0",
+    "eslint-config-prettier": "^8.5.0",
+    "nodemon": "^2.0.20",
     "prettier": "^2.7.1"
   }
 }

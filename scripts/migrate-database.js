@@ -1,30 +1,63 @@
-const { trackProject } = require('../commands/track');
-const { Projects } = require('../dbObjects');
-const logger = require('../logger');
-const wait = require('node:timers/promises').setTimeout;
+const { TrackedProjects, GuildSettings } = require("../dbObjects");
+const { Guilds, Projects } = require("../database/models");
+const logger = require("../logger");
+const wait = require("node:timers/promises").setTimeout;
 
 (async () => {
-	const oldProjects = await Projects.findAll();
+  const oldProjects = await TrackedProjects.findAll();
+  const oldGuilds = await GuildSettings.findAll();
 
-	const failures = new Array;
-	let migrated = 0;
+  logger.info(`Starting migration of ${oldProjects.length} projects...`);
 
-	for (const project of oldProjects) {
-		const trackRequest = await trackProject(project.project_id, project.post_channel, project.guild_id);
+  const failedFetches = [];
+  for (const oldProject of oldProjects) {
+    logger.info(`Migrating ${oldProject.title}`);
 
-		if (!trackRequest.success) {
-			failures.push(project);
-			logger.warn(`Failed to migrate project ${project.project_title}`);
-		} else {
-			migrated++;
-			logger.info(`${migrated}. Migrated project ${project.project_title}`);
-		}
+    // Populate projects table
+    const newProj = await Projects.fetch(oldProject.id);
+    if (!newProj) {
+      logger.info(`Fetching info for ${oldProject.title} failed...:(`);
+      failedFetches.push(oldProject);
+      await wait(500);
+      continue;
+    }
 
-		await wait(1000);
-	}
-	logger.info(`Tracked Projects Database Migrated. Total projects migrated: ${migrated} | Total failures: ${failures.length}`);
+    logger.info("Migrated information to projects table.");
+    logger.info("Adding entries to tracked projects table...");
 
-	for (const failure of failures) {
-		console.log(failure.title);
-	}
+    // Add tracking data
+    const trackingData = oldProject.guild_data;
+    for (const guild of trackingData.guilds) {
+      for (const channel of guild.channels) {
+        await newProj.track(guild.id, channel);
+        logger.info(
+          `Tracked in guild with id ${guild.id} in channel with id ${channel}`
+        );
+      }
+    }
+    logger.info("All project tracking information migrated.");
+
+    await wait(500);
+  }
+
+  logger.info(`Project migration complete.`);
+
+  await wait(1000);
+
+  logger.info(`Starting migration of ${oldGuilds.length} guilds...`);
+
+  for (const guild of oldGuilds) {
+    await Guilds.create({
+      id: guild.guild_id,
+      notificationStyle: guild.is_lightweight_mode_enabled
+        ? "compact"
+        : "normal",
+    });
+  }
+
+  logger.info("Guild migration complete.");
+
+  logger.info(
+    `Database migration completed. Failed to migrate ${failedFetches.length} projects:\n${failedFetches}`
+  );
 })();

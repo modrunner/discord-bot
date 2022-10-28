@@ -1,5 +1,5 @@
-const { SlashCommandBuilder, EmbedBuilder, inlineCode } = require('discord.js');
-const { TrackedProjects } = require('../dbObjects');
+const { Collection, SlashCommandBuilder, EmbedBuilder, inlineCode } = require('discord.js');
+const { Projects, TrackedProjects } = require('../database/models');
 const logger = require('../logger');
 
 module.exports = {
@@ -9,60 +9,69 @@ module.exports = {
 	async execute(interaction) {
 		await interaction.deferReply();
 
-		const projects = await TrackedProjects.findAll();
-		const guildProjects = new Array;
+		// Get all the tracked projects for this guild from the database
+		const projects = await TrackedProjects.findAll({
+			where: {
+				guildId: interaction.guild.id,
+			},
+		});
 
+		logger.info(`${interaction.user.tag} (${interaction.user.id}) requested the tracked project list for guild ${interaction.guild.name} (${interaction.guild.id})`);
+
+		// If the guild has no tracked projects
+		if (projects.length === 0) return await interaction.editReply('There aren\'t any projects currently tracked in this server. Add some by using the `/track` command!');
+
+		// Organize the data formatting so we can get every channel for each project
+		const projectList = new Collection();
 		for (const project of projects) {
-			for (let i = 0; i < project.guild_data.guilds.length; i++) {
-				if (project.guild_data.guilds.at(i).id === interaction.guild.id) {
-					guildProjects.push(project);
-				}
+			if (projectList.has(project.projectId)) {
+				const proj = projectList.get(project.projectId);
+				proj.channels.push(project.channelId);
+				projectList.set(project.projectId, proj);
+			} else {
+				const p = await Projects.findByPk(project.projectId);
+				const proj = { projectId: project.projectId, channels: [project.channelId], projectName: p.name };
+				projectList.set(project.projectId, proj);
 			}
 		}
-		logger.debug(`guild has ${guildProjects.length} projects`);
 
-		const page1 = new EmbedBuilder()
+		const numberOfProjects = projectList.size;
+
+		// Sort the project list alphabetically
+		projectList.sort((a, b) => a.projectName.localeCompare(b.projectName));
+
+		// Create the number of required pages
+		// The first page is special as it has the title and description so we make that separately
+		const firstPage = new EmbedBuilder()
 			.setColor('DarkGreen')
-			.setTitle(`Projects currently being tracked in ${interaction.guild.name}`)
-			.setDescription(`Projects are not listed in any particular order.\nTo manage your tracked projects, use the ${inlineCode('/track')} and ${inlineCode('/untrack')} commands.`)
+			.setTitle(`Projects currently tracked in ${interaction.guild.name}`)
+			.setDescription('Projects are listed alphabetically.\nTo manage your tracked projects, use the `/track` and `/untrack` commands.')
 			.setFooter({ text: 'Page 1' });
+		const pagesToMake = Math.ceil((numberOfProjects - 25) / 25);
 
-		const page2 = new EmbedBuilder().setColor('DarkGreen').setFooter({ text: 'Page 2' });
-		const page3 = new EmbedBuilder().setColor('DarkGreen').setFooter({ text: 'Page 3' });
-		const page4 = new EmbedBuilder().setColor('DarkGreen').setFooter({ text: 'Page 4' });
+		logger.debug(`Guild has ${numberOfProjects} projects tracked. Pages required: ${pagesToMake + 1}`);
 
-		for (let i = 0; i < guildProjects.length; i++) {
-			const channels = new Array;
-			for (let j = 0; j < guildProjects.at(i).guild_data.guilds.length; j++) {
-				if (guildProjects.at(i).guild_data.guilds.at(j).id === interaction.guild.id) {
-					for (const channel of guildProjects.at(i).guild_data.guilds.at(j).channels) {
-						channels.push(channel);
-					}
-				}
-			}
-
-			let listChannels = new Array;
-			for (const channel of channels) {
-				const listChannel = interaction.guild.channels.cache.get(channel);
-				listChannels.push(listChannel);
-			}
-			listChannels = listChannels.join(', ');
-			const field = { name: `${guildProjects.at(i).title} (${guildProjects.at(i).id})`, value: `${listChannels}`, inline: false };
-
-			if (i >= 0 && i < 25) {
-				page1.addFields(field);
-			} else if (i >= 25 && i < 50) {
-				page2.addFields(field);
-			} else if (i >= 50 && i < 75) {
-				page3.addFields(field);
-			} else if (i >= 75 && i < 100) {
-				page4.addFields(field);
-			}
+		const embedPages = [firstPage];
+		for (let i = 0; i < pagesToMake; i++) {
+			const page = new EmbedBuilder()
+				.setColor('DarkGreen')
+				.setFooter({ text: `Page ${i + 2}` });
+			embedPages.push(page);
 		}
-		const pages = { embeds: [ page1 ] };
-		if (guildProjects.length > 25) pages.embeds.push(page2);
-		if (guildProjects.length > 50) pages.embeds.push(page3);
-		if (guildProjects.length > 75) pages.embeds.push(page4);
-		return await interaction.editReply(pages);
+
+		// Add project information to appropriate page
+		for (let i = 0; i < projectList.size; i++) {
+			const pageToAddTo = Math.floor(i / 25);
+			const channels = [];
+			projectList.at(i).channels.forEach((ch) => {
+				channels.push(interaction.client.channels.cache.get(ch));
+			});
+			embedPages[pageToAddTo].addFields({
+				name: `${projectList.at(i).projectName} (${projectList.at(i).projectId})`,
+				value: `${channels}`,
+			});
+		}
+
+		await interaction.editReply({ embeds: embedPages });
 	},
 };

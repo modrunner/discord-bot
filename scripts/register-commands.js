@@ -1,7 +1,6 @@
 const fs = require('node:fs');
 const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
-const { clientId, guildIds, token } = require('../config.json');
+const { Routes } = require('discord-api-types/v10');
 const logger = require('../logger');
 
 const commands = [];
@@ -15,33 +14,39 @@ for (const file of commandFiles) {
 	commands.push(command.data.toJSON());
 }
 
-const rest = new REST({ version: '9' }).setToken(token);
+const rest = new REST().setToken(process.env.DISCORD_TOKEN);
 
 (async () => {
 	try {
 		logger.info('Registering application commands...');
 
 		if (process.argv.includes('--global') || process.argv.includes('-g')) {
-			logger.info('Command scope: GLOBAL');
+			if (process.env.DOPPLER_ENVIRONMENT === 'dev') return logger.info('Global registration of commands is disabled in a developer workspace environment.');
 
+			logger.info('Registering application commands globally across Discord...');
 			await rest.put(
-				Routes.applicationCommands(clientId),
+				Routes.applicationCommands(process.env.DISCORD_APPLICATION_ID),
 				{ body: commands },
 			);
 		} else {
-			logger.info('Command scope: GUILD');
-
-			for (const guildId of guildIds) {
-				await rest.put(
-					Routes.applicationGuildCommands(clientId, guildId),
-					{ body: commands },
+			logger.info('Registering application commands to development guild...');
+			if (!process.env.DISCORD_DEVELOPMENT_GUILD_ID) {
+				logger.info(
+					'There is no defined development guild; cancelling registration.'
 				);
+				process.exit(0);
 			}
+			await rest.put(
+				Routes.applicationGuildCommands(process.env.DISCORD_APPLICATION_ID, process.env.DISCORD_DEVELOPMENT_GUILD_ID),
+				{ body: commands },
+			);
 		}
 
-		logger.info(`Registration of application commands complete. Total commands registered:\nCHAT_INPUT: ${commands.length}\nUSER: ${user_commands.length}\nMESSAGE: ${message_commands.length}`);
+		logger.info(
+			`Registered ${commands.length} CHAT_INPUT, ${user_commands.length} USER, and ${message_commands.length} MESSAGE commands.`
+		);
 	} catch (error) {
-		logger.warn('An error occured while registering application commands.');
+		logger.warn('An error occurred while registering application commands.');
 		logger.error(error);
 	}
 })();

@@ -95,7 +95,7 @@ module.exports = {
 				const searchResults = await getJSONResponse(responseData.body);
 
 				const resultsList = new EmbedBuilder()
-					.setColor('DARK_GREEN')
+					.setColor('DarkGreen')
 					.setAuthor({ name: 'From modrinth.com', iconURL: 'https://i.imgur.com/2XDguyk.png', url: 'https://modrinth.com' })
 					.setTitle(`Results for ${inlineCode(interaction.customId.substring(5))}`)
 					.setDescription(`${searchResults.hits.length} total results`)

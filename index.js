@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
-const { token } = require('./config.json');
+const logger = require('./logger');
 
 const client = new Client({
 	intents: [
@@ -27,4 +27,6 @@ for (const file of eventFiles) {
 	}
 }
 
-client.login(token);
+client.login(process.env.DISCORD_TOKEN).then(() => {
+	logger.info(`Logged into Discord as ${client.user.tag}`);
+});

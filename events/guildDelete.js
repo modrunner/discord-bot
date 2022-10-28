@@ -1,44 +1,23 @@
-const { GuildSettings, TrackedProjects } = require('../dbObjects');
 const logger = require('../logger');
+const { TrackedProjects, Guilds } = require("../database/models");
 
 module.exports = {
 	name: 'guildDelete',
 	async execute(guild) {
-		await GuildSettings.destroy({
+		// Remove this guild's settings from the database
+		await Guilds.destroy({
 			where: {
-				guild_id: guild.id,
+				id: guild.id,
+			}
+		});
+
+		// Remove this guild's tracked projects
+		await TrackedProjects.destroy({
+			where: {
+				guildId: guild.id,
 			},
 		});
 
-
-		const dbProjects = await TrackedProjects.findAll();
-		for (const dbProject of dbProjects) {
-			const dbGuilds = dbProject.guild_data.guilds;
-			const newData = { guilds: [] };
-			for (const dbGuild of dbGuilds) {
-				if (dbGuild.id != guild.id) {
-					newData.guilds.push(dbGuild);
-				}
-			}
-
-			if (newData.guilds.length === 0) {
-				await TrackedProjects.destroy({
-					where: {
-						id: dbProject.id,
-					},
-				});
-			} else {
-				await TrackedProjects.update({
-					guild_data: newData,
-				}, {
-					where: {
-						id: dbProject.id,
-					},
-				});
-			}
-		}
-
-
-		logger.info(`Client was kicked from guild ${guild.name} (${guild.id}) or was guild was deleted. Removed guild information from tracked projects and removed all settings.`);
+		logger.info(`Client left guild ${guild.name} (${guild.id}). Removed settings and tracked projects.`);
 	},
 };
