@@ -88,6 +88,6 @@ We will update this Privacy Policy from time to time. We will always indicate th
 
 ## Contact us
 
-For any questions, comments or concerns about this policy, please reach out to us at [contact@cybermechanicsguild.net](mailto:contact@cybermechanicsguild.net).
+For any questions, comments or concerns about this policy, please reach out to us at [beansquared@cybermechanics.org](mailto:beansquared@cybermechanics.org).
 
 You can also contact us in our official Discord server, [CyberMechanics Guild](https://discord.gg/rS264xm5Yt).
