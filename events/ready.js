@@ -6,7 +6,6 @@ const getJSONResponse = require("../api/getJSONResponse");
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, codeBlock, ActivityType } = require("discord.js");
 const { ApiCallManager } = require("../api/apiCallManager");
 const { Guilds, Projects, TrackedProjects } = require("../database/models");
-const sleep = require("node:timers/promises").setTimeout;
 
 module.exports = {
   name: "ready",
