@@ -107,7 +107,7 @@ async function checkForProjectUpdates(client) {
         }
 
         // If we get here, the project has passed all verification checks and has a legitmate update available
-        logger.info(`Update detected for CurseForge project ${dbProject.title} (${dbProject.id})`);
+        logger.info(`Update detected for CurseForge project ${dbProject.name} (${dbProject.id})`);
 
         await dbProject.updateDate(requestedMod.dateReleased);
         await dbProject.addFiles([requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id]);
@@ -135,7 +135,7 @@ async function checkForProjectUpdates(client) {
         }
 
         // If we get here, the project has passed all verification checks and has a legitmate update available
-        logger.info(`Update detected for Modrinth project ${dbProject.title} (${dbProject.id})`);
+        logger.info(`Update detected for Modrinth project ${dbProject.name} (${dbProject.id})`);
 
         await dbProject.updateDate(requestedProject.updated);
         await dbProject.addFiles(requestedProject.versions);
@@ -155,160 +155,50 @@ async function checkForProjectUpdates(client) {
  * @param {*} dbProject - The project's database data
  */
 async function sendUpdateEmbed(requestedProject, dbProject, client) {
-  let normalEmbed, compactEmbed, buttonRow;
+  let versionData;
 
   // Behavior is slightly different depending on platform, mostly dependent on the data returned from the initial earlier API call
   switch (dbProject.platform) {
     case "curseforge": {
       // Call the CurseForge API to get this file's changelog
-      const responseData = await getModFileChangelog(requestedProject.id, requestedProject.latestFiles[requestedProject.latestFiles.length - 1].id);
-      if (responseData) {
-        if (responseData.statusCode === 200) {
-          var rawChangelog = await getJSONResponse(responseData.body);
-        } else {
-          logger.warn(`Unexpected ${responseData.statusCode} status code while getting a file's changelog.`);
-        }
-      } else {
-        logger.warn("A request to CurseForge timed out while checking projects for updates.");
-      }
+      const response = await getModFileChangelog(requestedProject.id, requestedProject.latestFiles[requestedProject.latestFiles.length - 1].id);
+      if (!response) return logger.warn("A request to CurseForge timed out while getting a project file's changelog");
+      if (response.statusCode !== 200) return logger.warn(`Unexpected ${response.statusCode} status code while getting a project files's changelog.`);
 
-      // Since CurseForge returns changelogs in HTML format, we need to strip out HTML tags and special characters first
-      const changelogNoHTML = rawChangelog.data.replace(/<br>/g, "\n").replace(/<.*?>/g, "");
-
-      // Trim the changelog length
-      const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
-      const trimmedChangelog = trim(changelogNoHTML, 4000);
-
-      const latestFile = requestedProject.latestFiles[requestedProject.latestFiles.length - 1];
-
-      logger.info(`
-				${requestedProject.name} latest file info:
-				id: ${latestFile.id}
-				displayName: ${latestFile.displayName}
-				fileName: ${latestFile.fileName}
-				releaseType: ${latestFile.releaseType}
-				fileStatus: ${latestFile.fileStatus}
-				fileDate: ${dayjs(latestFile.fileDate).format("YYYY-MM-DD HH:mm:ss")}
-				hash0: ${latestFile.hashes[0].value} (algo: ${latestFile.hashes[0].algo})
-				hash1: ${latestFile.hashes[1].value} (algo: ${latestFile.hashes[1].algo})
-			`);
-
-      // We create embeds for all types, but will only use one based on this guild's setttings
-      normalEmbed = new EmbedBuilder()
-        .setColor("#f87a1b")
-        .setAuthor({
-          name: "From curseforge.com",
-          iconURL: "https://i.imgur.com/uA9lFcz.png",
-          url: "https://curseforge.com",
-        })
-        .setTitle(`${requestedProject.name} has been updated`)
-        .setDescription(`**Changelog:** ${codeBlock(trimmedChangelog)}`)
-        .setThumbnail(`${requestedProject.logo.url}`)
-        .setFields(
-          { name: "Version Name", value: `${latestFile.displayName}` },
-          { name: "Version Number", value: `${latestFile.fileName}` },
-          {
-            name: "Release Type",
-            value: `${releaseTypeToString(latestFile.releaseType)}`,
-          },
-          {
-            name: "Date Published",
-            value: `<t:${dayjs(latestFile.fileDate).unix()}:f>`,
-          }
-        )
-        .setTimestamp();
-
-      compactEmbed = new EmbedBuilder()
-        .setColor("#f87a1b")
-        .setTitle(`${requestedProject.name} ${latestFile.displayName}`)
-        .setURL(
-          `https://www.curseforge.com/minecraft/${classIdToUrlString(requestedProject.classId)}/${requestedProject.slug}/files/${
-            requestedProject.latestFilesIndexes[0].fileId
-          }`
-        )
-        .setDescription(`${latestFile.fileName} (${releaseTypeToString(latestFile.releaseType)})`)
-        .setFooter({
-          text: `${dayjs(requestedProject.dateReleased).format("MMM D, YYYY")}`,
-          iconURL: "https://i.imgur.com/uA9lFcz.png",
-        });
-
-      const viewButton = new ButtonBuilder()
-        .setURL(
-          `https://www.curseforge.com/minecraft/${classIdToUrlString(requestedProject.classId)}/${requestedProject.slug}/files/${
-            requestedProject.latestFilesIndexes[0].fileId
-          }`
-        )
-        .setLabel("View on CurseForge")
-        .setStyle(ButtonStyle.Link);
-      buttonRow = new ActionRowBuilder().addComponents(viewButton);
+      const rawData = await getJSONResponse(response.body);
+      versionData = {
+        changelog: rawData.data,
+        date: requestedProject.latestFiles[requestedProject.latestFiles.length - 1].fileDate,
+        name: requestedProject.latestFiles[requestedProject.latestFiles.length - 1].displayName,
+        number: requestedProject.latestFiles[requestedProject.latestFiles.length - 1].fileName,
+        type: releaseTypeToString(requestedProject.latestFiles[requestedProject.latestFiles.length - 1].releaseType),
+        url: `https://www.curseforge.com/minecraft/${classIdToUrlString(requestedProject.classId)}/${requestedProject.slug}/files/${
+          requestedProject.latestFilesIndexes[0].fileId
+        }`,
+      };
 
       break;
     }
     case "modrinth": {
       // Call the Modrinth API to get this version's information
-      const responseData = await listProjectVersions(requestedProject.id);
-      if (responseData) {
-        if (responseData.statusCode === 200) {
-          var requestedVersions = await getJSONResponse(responseData.body);
-        } else {
-          logger.warn(`Unexpected ${responseData.statusCode} status code while getting a version's information.`);
-        }
-      } else {
-        logger.warn("A request to Modrinth timed out while checking projects for updates.");
-      }
+      const response = await listProjectVersions(requestedProject.id);
+      if (!response) return logger.warn("A request to Modrinth timed out while getiing a project's version information");
+      if (response.statusCode !== 200) return logger.warn(`Unexpected ${response.statusCode} status code while getting a project's version information.`);
 
-      const latestVersion = requestedVersions[0];
-
-      // Trim the changelog length
-      const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
-      const trimmedDescription = trim(latestVersion.changelog, 4000);
-
-      // We create embeds for all types, but will only use one based on this guild's setttings
-      normalEmbed = new EmbedBuilder()
-        .setColor("DarkGreen")
-        .setAuthor({
-          name: "From modrinth.com",
-          iconURL: "https://i.imgur.com/2XDguyk.png",
-          url: "https://modrinth.com",
-        })
-        .setTitle(`${requestedProject.title} has been updated`)
-        .setDescription(`**Changelog:** ${codeBlock(trimmedDescription)}`)
-        .setThumbnail(`${requestedProject.icon_url}`)
-        .setFields(
-          { name: "Version Name", value: `${latestVersion.name}` },
-          { name: "Version Number", value: `${latestVersion.version_number}` },
-          {
-            name: "Release Type",
-            value: `${capitalize(latestVersion.version_type)}`,
-          },
-          {
-            name: "Date Published",
-            value: `<t:${dayjs(latestVersion.date_published).unix()}:f>`,
-          }
-        )
-        .setTimestamp();
-
-      compactEmbed = new EmbedBuilder()
-        .setColor("DarkGreen")
-        .setTitle(`${requestedProject.title} ${latestVersion.name}`)
-        .setURL(`https://modrinth.com/${requestedProject.project_type}/${requestedProject.slug}/version/${latestVersion.version_number}`)
-        .setDescription(`${latestVersion.version_number} (${capitalize(latestVersion.version_type)})`)
-        .setFooter({
-          text: `${dayjs(latestVersion.date_published).format("MMM D, YYYY")}`,
-          iconURL: "https://i.imgur.com/2XDguyk.png",
-        });
-
-      const viewButton = new ButtonBuilder()
-        .setURL(`https://modrinth.com/${requestedProject.project_type}/${requestedProject.slug}/version/${latestVersion.version_number}`)
-        .setLabel("View on Modrinth")
-        .setStyle(ButtonStyle.Link);
-      buttonRow = new ActionRowBuilder().addComponents(viewButton);
+      const rawData = await getJSONResponse(response.body);
+      versionData = {
+        changelog: rawData[0].changelog,
+        date: rawData[0].date_published,
+        name: rawData[0].name,
+        number: rawData[0].version_number,
+        type: capitalize(rawData[0].version_type),
+        url: `https://modrinth.com/${requestedProject.project_type}/${requestedProject.slug}/version/${rawData[0].version_number}`,
+      };
 
       break;
     }
     default:
-      logger.warn("sendUpdateEmbed: invalid platform");
-      break;
+      return logger.warn("Update notification functionality has not been implemented for this platform yet.");
   }
 
   // Send the notification to each appropriate guild channel
@@ -324,10 +214,58 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
     const guildSettings = await Guilds.findByPk(trackedProject.guildId);
     switch (guildSettings.notificationStyle) {
       case "compact":
-        await channel.send({ embeds: [compactEmbed] });
+        await channel.send({
+          embeds: [
+            new EmbedBuilder()
+              .setColor(embedColorData(dbProject.platform))
+              .setDescription(`${versionData.number} (${capitalize(versionData.type)})`)
+              .setFooter({
+                text: `${dayjs(versionData.date).format("MMM D, YYYY")}`,
+                iconURL: embedAuthorData(dbProject.platform).iconURL ?? null,
+              })
+              .setTitle(`${dbProject.name} ${versionData.name}`)
+              .setURL(versionData.url),
+          ],
+        });
         break;
       default:
-        await channel.send({ embeds: [normalEmbed], components: [buttonRow] });
+        await channel.send({
+          embeds: [
+            new EmbedBuilder()
+              .setAuthor(embedAuthorData(dbProject.platform))
+              .setColor(embedColorData(dbProject.platform))
+              .setDescription(`**Changelog**: ${codeBlock(trimChangelog(versionData.changelog, guildSettings.changelogMaxLength))}`)
+              .setFields(
+                {
+                  name: "Version Name",
+                  value: versionData.name,
+                },
+                {
+                  name: "Version Number",
+                  value: `${versionData.number}`,
+                },
+                {
+                  name: "Release Type",
+                  value: `${versionData.type}`,
+                },
+                {
+                  name: "Date Published",
+                  value: `<t:${dayjs(versionData.date).unix()}:f>`,
+                }
+              )
+              .setThumbnail()
+              .setTimestamp()
+              .setTitle(`${dbProject.name} has been updated`),
+          ],
+          components: [
+            new ActionRowBuilder().addComponents(
+              new ButtonBuilder()
+                .setLabel(`View on ${capitalize(dbProject.platform)}`)
+                .setStyle(ButtonStyle.Link)
+                .setURL(versionData.url)
+            ),
+          ],
+        });
     }
   }
 }
@@ -382,4 +320,48 @@ function releaseTypeToString(releaseType) {
 
 function capitalize(string) {
   return string.replace(string.charAt(0), String.fromCharCode(string.charCodeAt(0) - 32));
+}
+
+function embedAuthorData(platform) {
+  switch (platform) {
+    case "curseforge":
+      return {
+        name: "From curseforge.com",
+        iconURL: "https://i.imgur.com/uA9lFcz.png",
+        url: "https://curseforge.com",
+      };
+    case "modrinth":
+      return {
+        name: "From modrinth.com",
+        iconURL: "https://i.imgur.com/2XDguyk.png",
+        url: "https://modrinth.com",
+      };
+    default:
+      return {
+        name: "From unknown source",
+      };
+  }
+}
+
+function embedColorData(platform) {
+  switch (platform) {
+    case "curseforge":
+      return "#f87a1b";
+    case "modrinth":
+      return "#1bd96a";
+    default:
+      return "DarkGreen";
+  }
+}
+
+function trimChangelog(changelog, maxLength) {
+  const formattedChangelog = formatHtmlChangelog(changelog);
+  return formattedChangelog.length > maxLength ? `${formattedChangelog.slice(0, maxLength - 3)}...` : formattedChangelog;
+}
+
+function formatHtmlChangelog(changelog) {
+  return changelog
+    .replace(/<br>/g, "\n") // Fix line breaks
+    .replace(/<.*?>/g, "") // Remove HTML tags
+    .replace(/&\w*?;/g, ""); // Remove HTMl special characters
 }
