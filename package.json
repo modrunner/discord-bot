@@ -1,6 +1,6 @@
 {
   "name": "modrunner-bot",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "private": true,
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,8 @@
     "create-db": "node scripts/initialize-database.js",
     "reset-db": "node scripts/initialize-database.js --force",
     "alter-db": "node scripts/initialize-database.js --alter",
-    "migrate-db": "doppler run --command=\"node scripts/migrate-database.js\""
+    "migrate-db": "doppler run --command=\"node scripts/migrate-database.js\"",
+    "set-guild-max": "node scripts/set-guild-max-tracking.js"
   },
   "dependencies": {
     "@discordjs/rest": "^1.2.0",
