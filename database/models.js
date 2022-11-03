@@ -1,7 +1,6 @@
 const Sequelize = require("sequelize");
 const { getProject, getMod, validateIdOrSlug } = require("../api/apiMethods");
 const getJSONResponse = require("../api/getJSONResponse");
-const logger = require("../logger");
 
 const sequelize = new Sequelize("database", "user", "password", {
   host: "localhost",
@@ -10,26 +9,21 @@ const sequelize = new Sequelize("database", "user", "password", {
   storage: "./database/database.sqlite",
 });
 
-(async () => {
-  try {
-    await sequelize.authenticate();
-    logger.info("Database connection successful.");
-  } catch (error) {
-    logger.error(error);
-  }
-})();
-
 // Tables
 const Guilds = require("./models/Guild")(sequelize, Sequelize.DataTypes);
 const Projects = require("./models/Project")(sequelize, Sequelize.DataTypes);
-const TrackedProjects = require("./models/TrackedProject")(
-  sequelize,
-  Sequelize.DataTypes
-);
+const TrackedProjects = require("./models/TrackedProject")(sequelize, Sequelize.DataTypes);
 
 Reflect.defineProperty(Guilds.prototype, "setChangelogMaxLength", {
   value: async function (length) {
     this.changelogMaxLength = length;
+    await this.save();
+  },
+});
+
+Reflect.defineProperty(Guilds.prototype, "setMaxTrackedProjects", {
+  value: async function (max) {
+    this.maxTrackedProjects = max;
     await this.save();
   },
 });
