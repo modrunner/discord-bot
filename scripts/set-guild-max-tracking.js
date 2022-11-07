@@ -6,13 +6,16 @@ const { Guilds } = require("../database/models");
     input: process.stdin,
     output: process.stdout,
   });
-
-  rl.question("Enter guild ID: ", async (id) => {
-    const guild = await Guilds.findByPk(id);
-    rl.question("Enter new max: ", async (max) => {
-      await guild.setMaxTrackedProjects(max);
-      console.log(`Set guild's max tracked projects to ${max}.`);
-      rl.close();
+  try {
+    rl.question("Enter guild ID: ", async (id) => {
+      const guild = await Guilds.findByPk(id);
+      rl.question("Enter new max: ", async (max) => {
+        await guild.setMaxTrackedProjects(max);
+        console.log(`Set guild's max tracked projects to ${max}.`);
+        rl.close();
+      });
     });
-  });
+  } catch (error) {
+    console.error(error);
+  }
 })();
