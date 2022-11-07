@@ -16,13 +16,13 @@ Our Privacy Policy also governs the use of our Services and explains how we coll
 
 Your agreement with us includes these Terms and our Privacy Policy ("**Agreements**"). You acknowledge the you have read and understood the Agreements, and agree to be bound by them.
 
-If you do not agree with (or simply cannot comply with) these Agreements, then you may not use our Services, but please let us know by emailing us at [contact@cybermechanicsguild.net](mailto:contact@cybermechanicsguild.net) so we can try and find a solution that works for both of us. These Terms apply to all visitors, users, and others who wish to access or use our Services.
+If you do not agree with (or simply cannot comply with) these Agreements, then you may not use our Services, but please let us know by emailing us at [beansquared@cybermechanics.org](mailto:beansquared@cybermechanics.org) so we can try and find a solution that works for both of us. These Terms apply to all visitors, users, and others who wish to access or use our Services.
 
 Thank you for being responsible.
 
 ## Communications
 
-By creating an Account on our Site, you agree to subscribe to newsletters, marketing or promotional materials and other information we may send. However, you may easily opt-out of receiving any, or all, of these communications from us by following the unsubscribe link or by emailing us at [contact@cybermechanicsguild.net](mailto:contact@cybermechanicsguild.net).
+By creating an Account on our Site, you agree to subscribe to newsletters, marketing or promotional materials and other information we may send. However, you may easily opt-out of receiving any, or all, of these communications from us by following the unsubscribe link or by emailing us at [beansquared@cybermechanics.org](mailto:beansquared@cybermechanics.org).
 
 ## Purchases
 
@@ -78,7 +78,7 @@ Our Services and their original content (excluding Content provided by users), f
 
 ## Error Reporting and Feedback
 
-You may provide us either directly at [contact@cybermechanicsguild.com](mailto:contact@cybermechanicsguild.com) or via third party sites and tools with information and feedback concerning errors, suggestions for improvements, ideas, problems, complaints, and other matters related to our Service ("**Feedback**"). You acknowledge and agree that:
+You may provide us either directly at [beansquared@cybermechanics.org](mailto:beansquared@cybermechanics.org) or via third party sites and tools with information and feedback concerning errors, suggestions for improvements, ideas, problems, complaints, and other matters related to our Service ("**Feedback**"). You acknowledge and agree that:
 
 1. you shall not retain, acquire or assert any intellectual property right or other right, title or interest in or to the Feedback;
 2. The Company may have development ideas similar to the Feedback;
@@ -162,4 +162,4 @@ BY USING SERVICE OR OTHER SERVICES PROVIDED BY US, YOU ACKNOWLEDGE THAT YOU HAVE
 ## Contact Us
 
 Please send your feedback, comments, requests for technical support:
-By email: [contact@cybermechanicsguild.net](mailto:contact@cybermechanicsguild.net)
+By email: [beansquared@cybermechanics.org](mailto:beansquared@cybermechanics.org)

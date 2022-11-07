@@ -12,7 +12,6 @@ async function listProjectVersions(projectId) {
 					'user-agent': 'big7star/modrunner-bot/1.2.0 (modrunner.net)',
 				},
 			});
-			return responseData;
 		} catch (error) {
 			logger.error(`A ${ error.name } has occurred while requesting data from Modrinth (List Project Versions)`);
 		}

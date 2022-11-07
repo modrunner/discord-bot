@@ -6,5 +6,4 @@ _*
 api/api_config.json
 
 *.log
-config.json
 database.sqlite

@@ -28,6 +28,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Incorrect embed color on "more results" embed for Modrinth searches
 
+## [1.1.7] - 2022-09-24
+
+### Changed
+- Switched to Doppler for secret management
+
 ## [1.1.6] - 2022-09-03
 
 ### Fixed
