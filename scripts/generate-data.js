@@ -1,21 +1,43 @@
-const { request } = require('undici');
-const getJSONResponse = require('../api/getJSONResponse');
-const { Projects } = require('../dbObjects');
+const { sequelize, Channels, Guilds, GuildChannels, Projects, TrackedProjects } = require('../database/models');
 
-func();
-async function func() {
-	const responseData = await request('https://api.modrinth.com/v2/search?limit=100');
-	const data = await getJSONResponse(responseData.body);
+(async () => {
+	await sequelize.sync({ force: true });
 
-	for (let i = 0; i < data.hits.length; i++) {
-		await Projects.create({
-			project_id: data.hits[i].project_id,
-			project_type: data.hits[i].project_type,
-			project_slug: data.hits[i].slug,
-			project_title: data.hits[i].title,
-			date_modified: data.hits[i].date_modified,
-			guild_id: '899777347400650854',
-			post_channel: '976354991054938144',
-		});
-	}
-}
+	await Guilds.bulkCreate([
+		{ id: 100 },
+		{ id: 200 },
+		{ id: 300 },
+	]);
+
+	await GuildChannels.bulkCreate([
+		{ guildId: 100, channelId: 1000 },
+		{ guildId: 100, channelId: 2000 },
+		{ guildId: 200, channelId: 3000 },
+		{ guildId: 300, channelId: 4000 },
+	]);
+
+	await Projects.bulkCreate([
+		{ id: 1, platform: 'curseforge', dateUpdated: new Date() },
+		{ id: 2, platform: 'curseforge', dateUpdated: new Date() },
+		{ id: 3, platform: 'modrinth', dateUpdated: new Date() },
+		{ id: 4, platform: 'modrinth', dateUpdated: new Date() },
+	]);
+
+	const guild = await Guilds.findByPk(100);
+	await guild.setChangelogMaxLength(1111);
+	await guild.setNotificationStyle('yeeeeeet');
+
+	const project = await Projects.findByPk(1);
+	await project.addFiles(["1"]);
+	await project.addFiles(["2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]);
+
+	await project.track({
+		channelId: 4000,
+		guildId: 300
+	});
+
+	await project.untrack({
+		channelId: 4000,
+		guildId: 300,
+	});
+})();
