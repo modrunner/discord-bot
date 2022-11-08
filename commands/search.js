@@ -29,7 +29,7 @@ module.exports = {
       const responseData = await searchMods(query);
       if (!responseData) {
         const errorEmbed = new EmbedBuilder()
-          .setColor("RED")
+          .setColor("Red")
           .setDescription(
             "⚠️ A connection to CurseForge could not be established.\nIf this happens frequently, please contact the developer of this application."
           )
@@ -73,7 +73,7 @@ module.exports = {
       const responseData = await searchProjects(query);
       if (!responseData) {
         const errorEmbed = new EmbedBuilder()
-          .setColor("RED")
+          .setColor("Red")
           .setDescription(
             "⚠️ A connection to Modrinth could not be established.\nIf this happens frequently, please contact the developer of this application."
           )
