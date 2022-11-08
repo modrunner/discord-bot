@@ -271,13 +271,28 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
 }
 
 async function updatePresenceData(client) {
-  const numberOfProjects = await Projects.count();
+  let projects = await Projects.findAndCountAll();
+  for (const project of projects.rows) {
+    const tracked = await TrackedProjects.findOne({
+      where: {
+        projectId: project.id,
+      },
+    });
+    if (!tracked) {
+      await Projects.destroy({
+        where: {
+          id: project.id,
+        },
+      });
+      projects.count--;
+    }
+  }
 
   client.user.setPresence({
     activities: [
       {
         type: ActivityType.Watching,
-        name: `${numberOfProjects} projects for updates in ${client.guilds.cache.size} servers.`,
+        name: `${projects.count} projects for updates in ${client.guilds.cache.size} servers.`,
       },
     ],
     status: "online",
