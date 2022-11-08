@@ -93,6 +93,7 @@ async function checkForProjectUpdates(client) {
   // Process information returned from the CurseForge API and perform checks
   if (dbCurseforgeProjects.length) {
     for (const dbProject of dbCurseforgeProjects) {
+      logger.trace(requestedMods);
       const requestedMod = requestedMods.data.find((element) => element.id.toString() === dbProject.id);
       // Check if this project has been updated
       if (dbProject.dateUpdated.getTime() !== new Date(requestedMod.dateReleased).getTime()) {
