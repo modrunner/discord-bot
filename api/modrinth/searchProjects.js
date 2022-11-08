@@ -12,6 +12,7 @@ async function searchProjects(query) {
 					'User-Agent': 'big7star/modrunner-bot/1.2.0 (modrunner.net)',
 				},
 			});
+			return responseData;
 		} catch (error) {
 			logger.error(`A ${ error.name } has occurred while requesting data from Modrinth (Search Projects)`);
 		}

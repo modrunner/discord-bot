@@ -12,6 +12,7 @@ async function getMod(modId) {
 					'x-api-key': process.env.CF_API_KEY,
 				},
 			});
+			return responseData;
 		} catch (error) {
 			logger.info(`An ${error.name} has occurred while requesting data from CurseForge (Get Mod)`);
 		}
