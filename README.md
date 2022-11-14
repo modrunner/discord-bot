@@ -1,4 +1,4 @@
-<img src="./assets/banner_trans.png" align="center">
+<img src="./assets/banner_trans_trim.png" align="center">
 
 # 
 
