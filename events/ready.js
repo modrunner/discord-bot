@@ -100,12 +100,15 @@ async function checkForProjectUpdates(client) {
         // Verify the file has been approved
         if (requestedMod.latestFiles[requestedMod.latestFiles.length - 1].fileStatus !== 4) continue;
         // Verify that this file's ID is not in the database. If it is, it has already been reported as updated
+        let reported = false;
         for (const file of requestedMod.latestFiles) {
-          if (dbProject.fileIds.includes(file.id.toString())) {
+          if (dbProject.fileIds.includes(file.id)) {
             await dbProject.updateDate(requestedMod.dateReleased);
-            continue;
+            reported = true;
+            break;
           }
         }
+        if (reported) continue;
 
         // If we get here, the project has passed all verification checks and has a legitmate update available
         logger.info(`Update detected for CurseForge project ${dbProject.name} (${dbProject.id})`);
@@ -128,12 +131,14 @@ async function checkForProjectUpdates(client) {
       // Check if the project has been updated
       if (dbProject.dateUpdated.getTime() !== new Date(requestedProject.updated).getTime()) {
         // Verify that this file's ID is not in the database. If it is, it has already been reported as updated
+        let reported = false;
         for (const fileId of requestedProject.versions) {
           if (dbProject.fileIds.includes(fileId)) {
             await dbProject.updateDate(requestedProject.updated);
-            continue;
+            break;
           }
         }
+        if (reported) continue;
 
         // If we get here, the project has passed all verification checks and has a legitmate update available
         logger.info(`Update detected for Modrinth project ${dbProject.name} (${dbProject.id})`);
