@@ -28,7 +28,7 @@ const FeatureList = [
 	},
 	{
 		title: 'Hassle-Free Announcements',
-		Svg: require('@site/static/img/undraw_news_re_6uub.svg').default,
+		Svg: require('@site/static/img/undraw_posts_re_ormv.svg').default,
 		description: (
 			<>
 				For project developers, Modrunner takes the hassle out of having to

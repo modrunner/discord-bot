@@ -10,9 +10,7 @@ Modrunner is a Discord bot that allows server members to easily and quickly sear
 
 ## Is Modrunner free?
 
-Modrunner is, and always will be, completely free to use. If you've got extra cash laying around and you think Modrunner is pretty neat, feel free to support me on BuyMeACoffee.
-
-https://www.buymeacoffee.com/beansquared
+Modrunner is, and always will be, completely free to use. If you've got extra cash laying around and you think Modrunner is pretty neat, feel free to support me on [Ko-Fi](https://ko-fi.com/beansquared).
 
 ## How can I invite Modrunner to my server?
 
@@ -20,7 +18,7 @@ Use [this link](https://discord.com/api/oauth2/authorize?client_id=9784139857224
 
 ## I noticed something strange or broken about Modrunner. Where can I report this?
 
-The best way is to make an issue on GitHub [here](https://github.com/beans-squared/modrunner-bot/issues). Otherwise, you can also [join our Discord server](https://discord.gg/fm88jhzEbt) and ask in the Modrunner discussion channel.
+The best way is to make an issue on GitHub [here](https://github.com/smcmo/modrunner-bot/issues). Otherwise, you can also [join our Discord server](https://discord.gg/fm88jhzEbt) and ask in the Modrunner discussion channel.
 
 ## Can you make Modrunner do X feature?
 
@@ -36,6 +34,6 @@ Most bots that provide similar functionality I've been personally disappointed w
 
 ## Modrunner does't quite have what I'm looking for. Can you add it?
 
-I'm always open to feedback and looking for ways to improve and add new functionality to Modrunner. Please let me know these things [in our Discord](https://discord.gg/fm88jhzEbt). Chances are, I'm already working on it as well. Check the [Trello board](https://trello.com/b/tNrFYngk) to see what I'm currently developing.
+I'm always open to feedback and looking for ways to improve and add new functionality to Modrunner. Please let me know these things [in our Discord](https://discord.gg/fm88jhzEbt). Chances are, I'm already working on it as well. Check the [development board](https://github.com/users/smcmo/projects/9) to see what I'm currently developing.
 
 If you're looking for quick alternatives, the only other bot I would recommend is [Claptrap](https://claptrapbot.me/) by HypherionSA. This mod offers similar tracking functionality to Modrunner, and includes ATLauncher, Forge, Fabric and Minecraft release tracking as well.

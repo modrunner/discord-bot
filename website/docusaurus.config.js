@@ -6,14 +6,14 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
 	title: 'Modrunner',
 	tagline:
-		'Search for projects on Modrinth and CurseForge & get notified of updates to tracked projects, right from Discord',
-	url: 'https://beans-squared.github.io/',
+		'Search & track Minecraft projects in Discord',
+	url: 'https://smcmo.github.io/',
 	baseUrl: '/',
 	onBrokenLinks: 'throw',
 	onBrokenMarkdownLinks: 'warn',
-	favicon: 'img/favicon.ico',
+	favicon: 'img/logo.ico',
 	trailingSlash: true,
-	organizationName: 'beans-squared',
+	organizationName: 'smcmo',
 	projectName: 'modrunner-bot',
 
 	i18n: {
@@ -51,19 +51,18 @@ const config = {
 			navbar: {
 				title: 'Modrunner',
 				logo: {
-					alt: 'My Site Logo',
-					src: 'img/globe.png',
+					alt: 'The Modrunner logo',
+					src: 'img/logo_trans.png',
 				},
 				items: [
 					{
 						type: 'doc',
 						docId: 'intro',
 						position: 'left',
-						label: 'Docs',
+						label: 'Documentation',
 					},
-					{ to: '/blog', label: 'Blog', position: 'left' },
 					{
-						href: 'https://github.com/beans-squared/modrunner-bot',
+						href: 'https://github.com/smcmo/modrunner-bot',
 						label: 'GitHub',
 						position: 'right',
 					},
@@ -89,10 +88,6 @@ const config = {
 						title: 'Community',
 						items: [
 							{
-								label: 'Blog',
-								to: '/blog',
-							},
-							{
 								label: 'Discord',
 								href: 'https://discord.gg/fm88jhzEbt',
 							},
@@ -111,7 +106,7 @@ const config = {
 							},
 							{
 								label: 'GitHub',
-								href: 'https://github.com/beans-squared/modrunner-bot',
+								href: 'https://github.com/smcmo/modrunner-bot',
 							},
 						],
 					},
