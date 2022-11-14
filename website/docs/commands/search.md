@@ -10,7 +10,7 @@ Search for projects on Modrinth and CurseForge and receive an embed with some ba
 
 ### Command
 
-`/search curseforge [projectName]`
+`/search curseforge <query>`
 
 Search CurseForge for projects by project name. Projects can be:
 
@@ -22,19 +22,15 @@ Search CurseForge for projects by project name. Projects can be:
 - Bukkit Plugins
 - Customization
 
-### Result
-
-![image](../../static/img/commands/curseforge_projects_result.png)
-
-`Track Project` Button
+**Track Project** button
 
 - Adds the displayed project to tracking. Has the same functionality as running the [Track](../track) command. The update channel will be the channel the original search command was executed in.
 
-`View More Results` Button
+**View More Results** button
 
 - Displays a new embed with a list of all the results of the query, with links to each result's page on CurseForge.
 
-`View on CurseForge` Button
+**View on CurseForge** button
 
 - Opens the displayed project's page on CurseForge in your default web browser.
 
@@ -50,7 +46,7 @@ I'm looking into ways to improve the quality of search results but this problem 
 
 ### Command
 
-`/search modrinth [projectName]`
+`/search modrinth <query>`
 
 Search Modrinth for projects by project name. Projects can be:
 
@@ -59,18 +55,14 @@ Search Modrinth for projects by project name. Projects can be:
 - Plugins
 - Resource Packs
 
-### Result
-
-![image](../../static/img/commands/modrinth_projects_result.png)
-
-`Track Project` Button
+**Track Project** button
 
 - Adds the displayed project to tracking. Has the same functionality as running the [Track](../track) command. The update channel will be the channel the original search command was executed in.
 
-`View More Results` Button
+**View More Results** button
 
 - Displays a new embed with a list of all the results of the query, with links to each result's page on Modrinth.
 
-`View on Modrinth` Button
+**View on Modrinth** button
 
 - Opens the displayed project's page on Modrinth in your default web browser.

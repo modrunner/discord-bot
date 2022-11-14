@@ -1,4 +1,4 @@
-<img src="./assets/modrunner_banner_trim.png" align="center">
+<img src="./assets/banner_trans_trim.png" align="center">
 
 # 
 
@@ -8,7 +8,7 @@
 
 A Discord bot to search for projects on Modrinth and CurseForge & get notified of updates to tracked projects.
 
-Have a question about Modrunner? Open a [Q&A Discussion](https://github.com/beans-squared/modrunner-bot/discussions/new) or join our [Discord](https://discord.gg/HZMCRNUd5Z).
+Have a question about Modrunner? Open a [Q&A Discussion](https://github.com/smcmo/modrunner-bot/discussions/new) or join our [Discord](https://discord.gg/HZMCRNUd5Z).
 
 ![](./assets/search_example.png)
 ![](./assets/notification_example.png)
@@ -31,7 +31,7 @@ This is list not exhaustive. Invite the bot to your server today and see what el
 - **Want to contribute to Modrunner?** See [Contributing](./CONTRIBUTING.md).
 - **Enjoy Modrunner?**
   - Leave a star ⭐ on the repository!
-  - [Buy me a coffee ☕](https://www.buymeacoffee.com/beansquared)!
+  - [Buy me a coffee ☕](https://ko-fi.com/beansquared)!
 
 # Invite
 
@@ -42,17 +42,17 @@ This is list not exhaustive. Invite the bot to your server today and see what el
 - `/search` - Get info about projects
 - `/track` - Track projects for updates
 - `/list` - List all tracked projects
-- `/mode` - Customize notification style
+- `/settings` - Customize settings
 
 See the [docs](https://modrunner.net/docs/intro/) for more detailed information.
 
 # Contributing
 
-`npm run start` - Run the application<br>
+`npm run dev` - Run the application<br>
 `npm run register` - Register application commands to a specific guild<br>
-`npm run dbInit` - Initialize the database<br>
-`npm run dbReset` - Reset the database<br>
-`npm run dbAlter` - Alter the database<br>
+`npm run create-db` - Initialize the database<br>
+`npm run reset-db` - Reset the database<br>
+`npm run alter-db` - Alter the database<br>
 
-Please check the [development board](https://trello.com/b/tNrFYngk), or the [currently open issues](../../issues) before getting started. Issues marked with `good first issue` are ideal for first-time contributors.<br>
+Please check the [development board](https://github.com/users/smcmo/projects/9), or the [currently open issues](../../issues) before getting started. Issues marked with `good first issue` are ideal for first-time contributors.<br>
 See [Contributing](./CONTRIBUTING.md) for more detailed information.

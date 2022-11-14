@@ -1,7 +1,6 @@
 const logger = require("../logger");
 
 class ApiCallManager {
-	// Eslint is being a whiny bitch here, just ingore it the code works
 	static totalCalls = 0;
 	static curseforgeCalls = 0;
 	static modrinthCalls = 0;
@@ -20,7 +19,7 @@ class ApiCallManager {
 	}
 
 	static logCalls() {
-		logger.info(`ApiCallManager:\nTotal calls: ${this.totalCalls}\nCurseForge calls: ${this.curseforgeCalls}\nModrinth calls: ${this.modrinthCalls}`);
+		logger.info(`API call monitoring: ${this.totalCalls} total calls, ${this.curseforgeCalls} CurseForge calls and ${this.modrinthCalls} Modrinth calls have been made in the last 24 hours.`);
 
 		this.totalCalls = 0;
 		this.curseforgeCalls = 0;

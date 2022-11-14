@@ -1,17 +1,19 @@
-const { TrackedProjects } = require('../dbObjects');
+const { Projects } = require("../database/models");
 
 modifyDates();
 async function modifyDates() {
-	const projects = await TrackedProjects.findAll();
+  const projects = await Projects.findAll();
 
-	for (const project of projects) {
-		await TrackedProjects.update({
-			date_updated: new Date('1970-01-01'),
-		}, {
-			where: {
-				id: project.id,
-			},
-		});
-	}
+  for (const project of projects) {
+    await Projects.update(
+      {
+        dateUpdated: new Date("1970-01-01"),
+      },
+      {
+        where: {
+          id: project.id,
+        },
+      }
+    );
+  }
 }
-

@@ -1,239 +1,50 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { ChannelType } = require('discord-api-types/v10');
-const { TrackedProjects } = require('./../dbObjects');
-const { PermissionsBitField } = require('discord.js');
-const { getMod, getProject, validateIdOrSlug } = require('../api/apiMethods');
-const getJSONResponse = require('../api/getJSONResponse');
-const logger = require('../logger');
+const { ChannelType } = require("discord-api-types/v10");
+const { PermissionsBitField, SlashCommandBuilder } = require("discord.js");
+const logger = require("../logger");
+const { Projects, TrackedProjects, Guilds } = require("../database/models");
 
 module.exports = {
-	data: new SlashCommandBuilder()
-		.setName('track')
-		.setDescription('Track a Modrinth or CurseForge project and get notified when it gets updated.')
-		.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
-		.addStringOption(option =>
-			option
-				.setName('projectid')
-				.setDescription('The project\'s ID.')
-				.setRequired(true),
-		)
-		.addChannelOption(option =>
-			option
-				.setName('channel')
-				.setDescription('The channel you want project update notifications posted to.')
-				.addChannelTypes(
-					ChannelType.GuildText,
-					ChannelType.GuildNews,
-				)
-				.setRequired(true),
-		),
-	async execute(interaction) {
-		const projectId = interaction.options.getString('projectid');
-		const channel = interaction.options.getChannel('channel');
+  data: new SlashCommandBuilder()
+    .setName("track")
+    .setDescription("Track a Modrinth or CurseForge project and get notified when it gets updated.")
+    .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
+    .addStringOption((option) => option.setName("projectid").setDescription("The project's ID.").setRequired(true))
+    .addChannelOption((option) =>
+      option
+        .setName("channel")
+        .setDescription("The channel you want project update notifications posted to.")
+        .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement)
+    ),
+  async execute(interaction) {
+    const projectId = interaction.options.getString("projectid");
+    const channel = interaction.options.getChannel("channel") ?? interaction.channel;
 
-		await interaction.deferReply();
-		const trackRequest = await this.trackProject(projectId, channel.id, interaction.guild.id);
+    await interaction.deferReply();
 
-		logger.debug(`Tracking request for project ID ${projectId} completed. Success: ${trackRequest.success} | Reason: ${trackRequest.reason} | Project Title: ${trackRequest.projectTitle}`);
+    // Fetch the project from the database
+    // If the project isn't there, it calls the API and adds it
+    const project = await Projects.fetch(projectId);
+    if (!project) return await interaction.editReply(`:warning: No project exists with ID **${projectId}**.`);
 
-		if (trackRequest.success) {
-			switch (trackRequest.reason) {
-			case 'new_database_entry_added':
-				return await interaction.editReply(`✅ Project **${trackRequest.projectTitle}** added to tracking. Updates will be posted in ${channel}.`);
-			case 'new_guild_added':
-				return await interaction.editReply(`✅ Project **${trackRequest.projectTitle}** added to tracking. Updates will be posted in ${channel}.`);
-			case 'new_channel_added':
-				return await interaction.editReply(`✅ Project **${trackRequest.projectTitle}** will now additionally have updates posted in ${channel}.`);
-			}
-		} else {
-			switch (trackRequest.reason) {
-			case 'project_already_tracked_in_channel':
-				return await interaction.editReply(`⚠️ Project **${trackRequest.projectTitle}** is already posting updates to channel ${channel}.`);
-			case 'file_not_found':
-				return await interaction.editReply(`⚠️ No project exists with ID **${projectId}**.`);
-			case 'api_error':
-				return await interaction.editReply('❌ An error occured, please try again.\nIf this issue persists, please contact the developer of this application. `(API_ERROR)`');
-			case 'api_failure':
-				return await interaction.editReply('❌ An error occured, please try again.\nIf this issue persists, please contact the developer of this application. `(API_FAILURE)`');
-			}
-		}
-	},
+    logger.info(`User ${interaction.user.tag} made a tracking request for project ${project.name} (${project.id}).`);
 
-	async trackProject(projectId, updateChannelId, guildId) {
-		if (projectId.match(/[A-z]/)) {
-			// Modrinth
-			// this is fucked but whatever
-			const a = await validateIdOrSlug(projectId);
-			let validatedId;
-			if (a.statusCode === 200) {
-				const responseData = await getJSONResponse(a.body);
-				validatedId = responseData.id;
-			} else {
-				return { success: false, reason: 'file_not_found' };
-			}
-			const responseData = await getProject(validatedId);
-			if (responseData) {
-				if (responseData.statusCode === 200) {
-					var requestedProject = await getJSONResponse(responseData.body);
+    // Find how many projects this guild is already tracking
+    // If greater than the guild's max allowed tracked projects (usually 200), don't allow this project to be tracked
+    const guildSettings = await Guilds.findByPk(interaction.guild.id);
+    const currentlyTracked = await TrackedProjects.count({
+      where: {
+        guildId: interaction.guild.id,
+      },
+    });
+    if (currentlyTracked >= guildSettings.maxTrackedProjects)
+      return await interaction.editReply(":x: Your server has reached its maximum limit of tracked projects and cannot track any more.");
 
-					const dbProject = await TrackedProjects.findOne({
-						where: {
-							id: validatedId,
-						},
-					});
+    // Track the project
+    // This #track method returns an array with the model as the first element and a boolean indicating if a new entry
+    // was created (tracking successful) as the second element
+    const trackRequest = await project.track(interaction.guild.id, channel.id);
+    if (!trackRequest[1]) return await interaction.editReply(`:warning: Project **${project.name}** is already tracked in ${channel}.`);
 
-					if (dbProject) {
-						if (dbProject.guild_data.guilds.some(element => element.id === guildId)) {
-							if (dbProject.guild_data.guilds.find(element => element.id === guildId).channels.includes(updateChannelId)) {
-								return { success: false, reason: 'project_already_tracked_in_channel', projectTitle: requestedProject.title };
-							} else {
-								const newData = dbProject.guild_data;
-								newData.guilds.find(element => element.id === guildId).channels.push(updateChannelId);
-
-								await TrackedProjects.update({
-									title: requestedProject.title,
-									guild_data: newData,
-								}, {
-									where: {
-										id: validatedId,
-									},
-								});
-
-								return { success: true, reason: 'new_channel_added', projectTitle: requestedProject.title };
-							}
-						} else {
-							const newData = dbProject.guild_data;
-							newData.guilds.push({
-								id: guildId,
-								channels: [
-									updateChannelId,
-								],
-							});
-
-							await TrackedProjects.update({
-								title: requestedProject.title,
-								guild_data: newData,
-							}, {
-								where: {
-									id: validatedId,
-								},
-							});
-
-							return { success: true, reason: 'new_guild_added', projectTitle: requestedProject.title };
-						}
-					} else {
-						await TrackedProjects.create({
-							id: validatedId,
-							title: requestedProject.title,
-							platform: 'modrinth',
-							date_updated: requestedProject.updated,
-							latestFileId: null,
-							guild_data: {
-								'guilds': [
-									{
-										'id': guildId,
-										'channels': [
-											updateChannelId,
-										],
-									},
-								],
-							},
-						});
-						return { success: true, reason: 'new_database_entry_added', projectTitle: requestedProject.title };
-					}
-				} else if (responseData.statusCode === 404) {
-					return { success: false, reason: 'file_not_found' };
-				} else {
-					logger.warn(`Modrinth project track failure: a Get Project request to Modrinth returned a ${responseData.statusCode} status code.`);
-					return { success: false, reason: 'api_error' };
-				}
-			} else {
-				logger.warn('Modrinth project track failure: a connection could not be established to Modrinth\'s API.');
-				return { success: false, reason: 'api_failure' };
-			}
-		} else {
-			// CurseForge
-			const responseData = await getMod(projectId);
-			if (responseData) {
-				if (responseData.statusCode === 200) {
-					var requestedMod = await getJSONResponse(responseData.body);
-
-					const dbProject = await TrackedProjects.findOne({
-						where: {
-							id: projectId,
-						},
-					});
-
-					if (dbProject) {
-						if (dbProject.guild_data.guilds.some(element => element.id === guildId)) {
-							if (dbProject.guild_data.guilds.find(element => element.id === guildId).channels.includes(updateChannelId)) {
-								return { success: false, reason: 'project_already_tracked_in_channel', projectTitle: requestedMod.data.name };
-							} else {
-								const newData = dbProject.guild_data;
-								newData.guilds.find(element => element.id === guildId).channels.push(updateChannelId);
-
-								await TrackedProjects.update({
-									title: requestedMod.data.name,
-									guild_data: newData,
-								}, {
-									where: {
-										id: projectId,
-									},
-								});
-
-								return { success: true, reason: 'new_channel_added', projectTitle: requestedMod.data.name };
-							}
-						} else {
-							const newData = dbProject.guild_data;
-							newData.guilds.push({
-								id: guildId,
-								channels: [
-									updateChannelId,
-								],
-							});
-
-							await TrackedProjects.update({
-								title: requestedMod.data.name,
-								guild_data: newData,
-							}, {
-								where: {
-									id: projectId,
-								},
-							});
-
-							return { success: true, reason: 'new_guild_added', projectTitle: requestedMod.data.name };
-						}
-					} else {
-						await TrackedProjects.create({
-							id: projectId,
-							title: requestedMod.data.name,
-							platform: 'curseforge',
-							date_updated: requestedMod.data.dateReleased,
-							latestFileId: requestedMod.data.latestFiles[requestedMod.data.latestFiles.length - 1],
-							guild_data: {
-								'guilds': [
-									{
-										'id': guildId,
-										'channels': [
-											updateChannelId,
-										],
-									},
-								],
-							},
-						});
-
-						return { success: true, reason: 'new_database_entry_added', projectTitle: requestedMod.data.name };
-					}
-				} else if (responseData.statusCode === 404) {
-					return { success: false, reason: 'file_not_found' };
-				} else {
-					logger.warn(`CurseForge project track failure: a Get Mod request to CurseForge returned a ${responseData.statusCode} status code.`);
-					return { success: false, reason: 'api_error' };
-				}
-			} else {
-				logger.warn('CurseForge project track failure: a connection could not be established to CurseForge\'s API.');
-				return { success: false, reason: 'api_failure' };
-			}
-		}
-	},
+    return await interaction.editReply(`:white_check_mark: Project **${project.name}** tracked successfully. Its updates will be posted to ${channel}.`);
+  },
 };

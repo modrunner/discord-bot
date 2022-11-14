@@ -1,12 +1,14 @@
-const { GuildSettings } = require('../dbObjects');
+const { Guilds } = require('../database/models');
 const logger = require('../logger');
 
 module.exports = {
 	name: 'guildCreate',
 	async execute(guild) {
-		await GuildSettings.create({
-			guild_id: guild.id,
-		});
-		logger.info(`Client joined guild ${guild.name} (${guild.id}). Initialized settings for guild in database.`);
+    // Add settings to database for guild
+    await Guilds.create({
+      id: guild.id,
+    });
+
+    logger.info(`Client was invited to guild ${guild.name} (${guild.id}). Initialized settings.`);
 	},
 };

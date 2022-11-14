@@ -1,18 +1,18 @@
-const { api_max_retries, cf_base_url } = require('../constants');
 const { request } = require('undici');
 const logger = require('../../logger');
 const { ApiCallManager } = require('../apiCallManager');
 
 async function getMod(modId) {
-	for (let i = api_max_retries; i > 0; i--) {
+	for (let i = 3; i > 0; i--) {
 		ApiCallManager.trackCall('curseforge');
 		try {
-			return await request(`${cf_base_url}/mods/${modId}`, {
+			const responseData = await request(`https://api.curseforge.com/v1/mods/${modId}`, {
 				method: 'GET',
 				headers: {
-					'x-api-key': process.env['CF_API_KEY'],
+					'x-api-key': process.env.CF_API_KEY,
 				},
 			});
+			return responseData;
 		} catch (error) {
 			logger.info(`An ${error.name} has occurred while requesting data from CurseForge (Get Mod)`);
 		}

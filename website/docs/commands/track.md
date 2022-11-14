@@ -8,16 +8,12 @@ Add a project to tracking using its project ID. Tracked projects are monitored f
 
 ## Command
 
-`/track [projectId] [channel]`
+`/track <project_id> [channel]`
 
-Add a project to tracking for the current server.
+Add a project to tracking for the current server. Optionally specify a channel to track in.
 
 :::tip
 
 You can get a project's ID from its project page on the Modrinth or CurseForge website, or by using the [Search](../search) command.
 
 :::
-
-## Result
-
-![image](../../static/img/commands/track_result.png)

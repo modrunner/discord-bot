@@ -1,18 +1,18 @@
-const { api_max_retries, modrinth_base_url, user_agent } = require('../constants');
 const { request } = require('undici');
 const logger = require('../../logger');
 const { ApiCallManager } = require('../apiCallManager');
 
 async function getProject(projectId) {
-	for (let i = api_max_retries; i > 0; i--) {
+	for (let i = 3; i > 0; i--) {
 		ApiCallManager.trackCall('modrinth');
 		try {
-			return await request(`${modrinth_base_url}/project/${projectId}`, {
+			const responseData = await request(`https://api.modrinth.com/v2/project/${projectId}`, {
 				method: 'GET',
 				headers: {
-					'user-agent': user_agent,
+					'user-agent': 'big7star/modrunner-bot/1.2.0 (modrunner.net)',
 				},
 			});
+			return responseData;
 		} catch (error) {
 			logger.error(`A ${ error.name } has occurred while requesting data from Modrinth (Get Project)`);
 		}
