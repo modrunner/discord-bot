@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionsBitField } = require('discord.js');
+const { SlashCommandBuilder, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const { Projects, TrackedProjects } = require('../database/models');
 const logger = require('../logger');
 
@@ -61,12 +61,47 @@ module.exports = {
 			if (untrackedProjects === 0) return await interaction.editReply(`:warning: Project **${project.name}** is not being tracked in this server.`);
 			return await interaction.editReply(`:white_check_mark: Successfully removed project **${project.name}** from tracking from all channels.`);
 		} else {
-			const untrackedProjects = await TrackedProjects.destroy({
-				where: {
-					guildId: interaction.guild.id,
-				},
-			});
-			return await interaction.editReply(`:white_check_mark: Successfully removed **${untrackedProjects}** from tracking in this server.`);
+			const confirmDialog = await interaction.editReply({ content: ':warning: **WARNING** This will untrack every project being tracked in this server. Are you sure this is what you want to do?', components: [
+				new ActionRowBuilder().addComponents([
+					new ButtonBuilder()
+						.setCustomId('confirm')
+						//.setEmoji(':white_check_mark:')
+						.setStyle(ButtonStyle.Success)
+						.setLabel('Yes, I\'m sure'),
+					new ButtonBuilder()
+						.setCustomId('cancel')
+						//.setEmoji(':warning:')
+						.setStyle(ButtonStyle.Danger)
+						.setLabel('No, cancel')
+				])
+			]})
+
+			const filter = i => {
+				i.deferUpdate();
+				return i.user.id === interaction.user.id;
+			};
+			const buttonInteraction = await confirmDialog.awaitMessageComponent({
+				filter,
+				componentType: ComponentType.Button,
+				time: 30_000,
+			}).catch(error => logger.debug('Time expired on untrack confirmation dialog.'));
+
+			await interaction.editReply({ components: [] });
+
+			if (buttonInteraction && buttonInteraction.customId === 'confirm') {
+				logger.debug('Untrack request confirmed.');
+
+				const untrackedProjects = await TrackedProjects.destroy({
+					where: {
+						guildId: interaction.guild.id,
+					},
+				});
+
+				return await interaction.editReply(`:white_check_mark: Successfully removed **${untrackedProjects}** from tracking in this server.`);
+			} else {
+				logger.debug('Untrack request cancelled.');
+				return await interaction.editReply('Untrack request cancelled. No projects were untracked.');
+			}
 		}
 	},
 };
