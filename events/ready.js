@@ -94,8 +94,11 @@ async function checkForProjectUpdates(client) {
   if (dbCurseforgeProjects.length) {
     for (const dbProject of dbCurseforgeProjects) {
       // If the initial API call failed
-      if (!requestedMods) break;
-
+      if (!requestedMods) {
+        logger.warn('Did not find any requested CurseForge mods for update checking. Variable data:');
+        logger.info(requestedMods);
+        break;
+      }
       const requestedMod = requestedMods.data.find((element) => element.id.toString() === dbProject.id);
       // Check if this project has been updated
       if (dbProject.dateUpdated.getTime() !== new Date(requestedMod.dateReleased).getTime()) {
@@ -130,8 +133,11 @@ async function checkForProjectUpdates(client) {
   if (dbModrinthProjects.length) {
     for (const dbProject of dbModrinthProjects) {
       // If the initial API call failed
-      if (!requestedProjects) break;
-
+      if (!requestedProjects) {
+        logger.warn('Did not find any requested Modrinth projects for update checking. Variable data:');
+        logger.info(requestedProjects);
+        break;
+      }
       const requestedProject = requestedProjects.find((project) => project.id === dbProject.id);
       // Check if the project has been updated
       if (dbProject.dateUpdated.getTime() !== new Date(requestedProject.updated).getTime()) {
