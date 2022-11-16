@@ -221,7 +221,15 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
 
   for (const trackedProject of trackedProjects) {
     const guild = client.guilds.cache.get(trackedProject.guildId);
+    if (!guild) {
+      logger.warn(`Could not find guild with ID ${trackedProject.guildId} in cache. Update notification not sent.`);
+      continue;
+    }
     const channel = guild.channels.cache.get(trackedProject.channelId);
+    if (!channel) {
+      logger.warn(`Could not find channel with ID ${trackedProject.channelId} in cache. Update notification not sent.`);
+      continue;
+    }
     const guildSettings = await Guilds.findByPk(trackedProject.guildId);
     switch (guildSettings.notificationStyle) {
       case "compact":
