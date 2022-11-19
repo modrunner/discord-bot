@@ -1,0 +1,18 @@
+{
+  "display": "Node 16",
+
+  "compilerOptions": {
+    "lib": ["es2021"],
+    "target": "es2021",
+
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "Node16",
+    "moduleResolution": "node16",
+    "rootDir": "src",
+    "outDir": "dist",
+    "resolveJsonModule": true,
+  }
+}

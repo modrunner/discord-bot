@@ -4,5 +4,14 @@ env:
 extends:
   - eslint:recommended
   - prettier
+  - plugin:@typescript-eslint/recommended
+parser: '@typescript-eslint/parser'
 parserOptions:
+  project: ./tsconfig.json
   ecmaVersion: latest
+  sourceType: module
+plugins:
+  - '@typescript-eslint'
+rules:
+  '@typescript-eslint/no-inferrable-types': off
+  '@typescript-eslint/no-explicit-any': off
