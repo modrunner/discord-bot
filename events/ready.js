@@ -12,12 +12,18 @@ module.exports = {
   async execute(client) {
     logger.info("Ready status reported.");
 
+    await sweepDatabase(client);
     await checkForProjectUpdates(client);
     await updatePresenceData(client);
 
+    setInterval(runSweepDatabase, ms('24h'));
     setInterval(runUpdateCheck, ms("1m"));
     setInterval(runUpdatePresence, ms("10m"));
     setInterval(runLogCalls, ms("24h"));
+
+    async function runSweepDatabase() {
+      await sweepDatabase(client);
+    }
 
     async function runUpdateCheck() {
       await checkForProjectUpdates(client);
@@ -95,8 +101,7 @@ async function checkForProjectUpdates(client) {
     for (const dbProject of dbCurseforgeProjects) {
       // If the initial API call failed
       if (!requestedMods) {
-        logger.warn('Did not find any requested CurseForge mods for update checking. Variable data:');
-        logger.info(requestedMods);
+        logger.warn('No CurseForge mods were checked for updates.');
         break;
       }
       const requestedMod = requestedMods.data.find((element) => element.id.toString() === dbProject.id);
@@ -134,8 +139,7 @@ async function checkForProjectUpdates(client) {
     for (const dbProject of dbModrinthProjects) {
       // If the initial API call failed
       if (!requestedProjects) {
-        logger.warn('Did not find any requested Modrinth projects for update checking. Variable data:');
-        logger.info(requestedProjects);
+        logger.warn('No Modrinth projects were checked for updates.');
         break;
       }
       const requestedProject = requestedProjects.find((project) => project.id === dbProject.id);
@@ -199,7 +203,7 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
     case "modrinth": {
       // Call the Modrinth API to get this version's information
       const response = await listProjectVersions(requestedProject.id);
-      if (!response) return logger.warn("A request to Modrinth timed out while getiing a project's version information");
+      if (!response) return logger.warn("A request to Modrinth timed out while getting a project's version information");
       if (response.statusCode !== 200) return logger.warn(`Unexpected ${response.statusCode} status code while getting a project's version information.`);
 
       const rawData = await getJSONResponse(response.body);
@@ -322,6 +326,42 @@ async function updatePresenceData(client) {
     ],
     status: "online",
   });
+}
+
+async function sweepDatabase(client) {
+  const tracked = await TrackedProjects.findAll();
+  let trackedSwept = 0;
+  for (const project of tracked) {
+    if (!client.channels.cache.has(project.channelId)) {
+      const deleted = await TrackedProjects.destroy({
+        where: {
+          guildId: project.guildId,
+          channelId: project.channelId,
+        },
+      });
+      trackedSwept += deleted;
+    }
+  }
+  logger.info(`Swept ${trackedSwept} tracked projects with missing channels from the database.`);
+
+  const projects = await Projects.findAll();
+  let projectsSwept = 0;
+  for (const project of projects) {
+    const found = await TrackedProjects.findOne({
+      where: {
+        projectId: project.id,
+      },
+    });
+    if (!found) {
+      await Projects.destroy({
+        where: {
+          id: project.id,
+        },
+      });
+      projectsSwept++;
+    }
+  }
+  logger.info(`Swept ${projectsSwept} projects not being tracked in any guild from the database.`);
 }
 
 function classIdToUrlString(classId) {

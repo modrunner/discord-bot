@@ -98,8 +98,10 @@ module.exports = {
       const pageToAddTo = Math.floor(i / 25);
       const channels = [];
       projectList.at(i).channels.forEach((ch) => {
-        channels.push(interaction.client.channels.cache.get(ch));
+        const channel = interaction.client.channels.cache.get(ch);
+        if (channel) channels.push(channel);
       });
+      if (channels.length <= 0) continue;
       embedPages[pageToAddTo].addFields({
         name: `${projectList.at(i).projectName} (${projectList.at(i).projectId})`,
         value: `${channels}`,
