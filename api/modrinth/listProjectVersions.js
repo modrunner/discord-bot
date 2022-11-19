@@ -9,7 +9,7 @@ async function listProjectVersions(projectId) {
 			const responseData = await request(`https://api.modrinth.com/v2/project/${projectId}/version`, {
 				method: 'GET',
 				headers: {
-					'user-agent': 'big7star/modrunner-bot/1.2.0 (modrunner.net)',
+					'user-agent': 'big7star/modrunner-bot/1.2.3 (modrunner.net)',
 				},
 			});
 			return responseData;

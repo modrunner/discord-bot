@@ -9,7 +9,7 @@ async function searchProjects(query) {
 			const responseData = await request(`https://api.modrinth.com/v2/search?${new URLSearchParams({ query })}`, {
 				method: 'GET',
 				headers: {
-					'User-Agent': 'big7star/modrunner-bot/1.2.0 (modrunner.net)',
+					'User-Agent': 'big7star/modrunner-bot/1.2.3 (modrunner.net)',
 				},
 			});
 			return responseData;

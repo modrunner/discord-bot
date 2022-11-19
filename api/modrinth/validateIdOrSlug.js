@@ -9,7 +9,7 @@ async function validateIdOrSlug(idOrSlug) {
 			const responseData = await request(`https://api.modrinth.com/v2/project/${idOrSlug}/check`, {
 				method: 'GET',
 				headers: {
-					'User-Agent': 'big7star/modrunner-bot/1.2.0 (modrunner.net)',
+					'User-Agent': 'big7star/modrunner-bot/1.2.3 (modrunner.net)',
 				},
 			});
 			return responseData;
