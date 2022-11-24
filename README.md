@@ -54,5 +54,5 @@ See the [docs](https://modrunner.net/docs/intro/) for more detailed information.
 `npm run reset-db` - Reset the database<br>
 `npm run alter-db` - Alter the database<br>
 
-Please check the [development board](https://github.com/users/smcmo/projects/9), or the [currently open issues](../../issues) before getting started. Issues marked with `good first issue` are ideal for first-time contributors.<br>
+Please check the [development board](https://github.com/smcmo/modrunner-bot/projects), or the [currently open issues](../../issues) before getting started. Issues marked with `good first issue` are ideal for first-time contributors.<br>
 See [Contributing](./CONTRIBUTING.md) for more detailed information.
