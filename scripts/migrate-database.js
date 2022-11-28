@@ -1,7 +1,7 @@
-const { TrackedProjects, GuildSettings } = require("../dbObjects");
-const { Guilds, Projects } = require("../database/models");
-const logger = require("../logger");
-const wait = require("node:timers/promises").setTimeout;
+const { TrackedProjects, GuildSettings } = require('../dbObjects');
+const { Guilds, Projects } = require('../database/models');
+const logger = require('../logger');
+const wait = require('node:timers/promises').setTimeout;
 
 (async () => {
   const oldProjects = await TrackedProjects.findAll();
@@ -22,20 +22,18 @@ const wait = require("node:timers/promises").setTimeout;
       continue;
     }
 
-    logger.info("Migrated information to projects table.");
-    logger.info("Adding entries to tracked projects table...");
+    logger.info('Migrated information to projects table.');
+    logger.info('Adding entries to tracked projects table...');
 
     // Add tracking data
     const trackingData = oldProject.guild_data;
     for (const guild of trackingData.guilds) {
       for (const channel of guild.channels) {
         await newProj.track(guild.id, channel);
-        logger.info(
-          `Tracked in guild with id ${guild.id} in channel with id ${channel}`
-        );
+        logger.info(`Tracked in guild with id ${guild.id} in channel with id ${channel}`);
       }
     }
-    logger.info("All project tracking information migrated.");
+    logger.info('All project tracking information migrated.');
 
     await wait(500);
   }
@@ -49,15 +47,11 @@ const wait = require("node:timers/promises").setTimeout;
   for (const guild of oldGuilds) {
     await Guilds.create({
       id: guild.guild_id,
-      notificationStyle: guild.is_lightweight_mode_enabled
-        ? "compact"
-        : "normal",
+      notificationStyle: guild.is_lightweight_mode_enabled ? 'compact' : 'normal',
     });
   }
 
-  logger.info("Guild migration complete.");
+  logger.info('Guild migration complete.');
 
-  logger.info(
-    `Database migration completed. Failed to migrate ${failedFetches.length} projects:\n${failedFetches}`
-  );
+  logger.info(`Database migration completed. Failed to migrate ${failedFetches.length} projects:\n${failedFetches}`);
 })();

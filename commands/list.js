@@ -1,20 +1,20 @@
-const { Collection, SlashCommandBuilder, EmbedBuilder, inlineCode, ChannelType } = require("discord.js");
-const { Projects, TrackedProjects, Guilds } = require("../database/models");
-const logger = require("../logger");
+const { Collection, SlashCommandBuilder, EmbedBuilder, inlineCode, ChannelType } = require('discord.js');
+const { Projects, TrackedProjects, Guilds } = require('../database/models');
+const logger = require('../logger');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("list")
-    .setDescription("List all the projects that are currently tracked in your server.")
+    .setName('list')
+    .setDescription('List all the projects that are currently tracked in your server.')
     .addChannelOption((option) =>
       option
-        .setName("channel")
-        .setDescription("Filter projects to those tracked in a specific channel.")
+        .setName('channel')
+        .setDescription('Filter projects to those tracked in a specific channel.')
         .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement)
     ),
   async execute(interaction) {
     await interaction.deferReply();
-    const channel = interaction.options.getChannel("channel");
+    const channel = interaction.options.getChannel('channel');
 
     // Get all the tracked projects for this guild (or channel, if specified) from the database
     let projects;
@@ -44,7 +44,7 @@ module.exports = {
     // If the guild has no tracked projects
     if (projects.length === 0)
       return await interaction.editReply(
-        `There aren't any projects currently tracked in this ${channel ? "channel" : "server"}. Add some by using the ${inlineCode("/track")} command!`
+        `There aren't any projects currently tracked in this ${channel ? 'channel' : 'server'}. Add some by using the ${inlineCode('/track')} command!`
       );
 
     // Organize the data formatting so we can get every channel for each project
@@ -71,14 +71,14 @@ module.exports = {
     // Create the number of required pages
     // The first page is special as it has the title and description so we make that separately
     const firstPage = new EmbedBuilder()
-      .setColor("DarkGreen")
+      .setColor('DarkGreen')
       .setTitle(`Projects currently tracked in ${channel ? channel.name : interaction.guild.name}`)
       .setDescription(
-        `**Projects: ${projects.length}${channel ? "" : "/"}${
-          channel ? "" : guildSettings.maxTrackedProjects
-        }**\n\nProjects are listed alphabetically.\nTo manage your tracked projects, use the ${inlineCode("/track")} and ${inlineCode("/untrack")} commands.`
+        `**Projects: ${projects.length}${channel ? '' : '/'}${
+          channel ? '' : guildSettings.maxTrackedProjects
+        }**\n\nProjects are listed alphabetically.\nTo manage your tracked projects, use the ${inlineCode('/track')} and ${inlineCode('/untrack')} commands.`
       )
-      .setFooter({ text: "Page 1" });
+      .setFooter({ text: 'Page 1' });
     const pagesToMake = Math.ceil((numberOfProjects - 25) / 25);
 
     logger.debug(
@@ -89,7 +89,7 @@ module.exports = {
 
     const embedPages = [firstPage];
     for (let i = 0; i < pagesToMake; i++) {
-      const page = new EmbedBuilder().setColor("DarkGreen").setFooter({ text: `Page ${i + 2}` });
+      const page = new EmbedBuilder().setColor('DarkGreen').setFooter({ text: `Page ${i + 2}` });
       embedPages.push(page);
     }
 

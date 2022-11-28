@@ -1,7 +1,7 @@
 const { TrackedProjects } = require('../database/models');
 const logger = require('../logger');
 
-module.exports =  {
+module.exports = {
   name: 'channelDelete',
   async execute(channel) {
     const deleted = await TrackedProjects.destroy({
@@ -11,8 +11,8 @@ module.exports =  {
       },
     });
 
-
-
-    logger.info(`Channel #${channel.name} (${channel.id}) was deleted in guild ${channel.guild.name} (${channel.guild.id}). Removed ${deleted} projects from tracking as a result.`);
-  }
-}
+    logger.info(
+      `Channel #${channel.name} (${channel.id}) was deleted in guild ${channel.guild.name} (${channel.guild.id}). Removed ${deleted} projects from tracking as a result.`
+    );
+  },
+};

@@ -1,8 +1,8 @@
 <img src="./assets/banner_trans_trim.png" align="center">
 
-# 
+#
 
-*(Formerly Modrinth Bot)*
+_(Formerly Modrinth Bot)_
 
 [<img src="https://img.shields.io/discord/764169561003130881?color=%237289DA&logo=discord&style=for-the-badge" alt="discord badge">](https://discord.gg/HZMCRNUd5Z) [<img src="https://img.shields.io/github/v/release/beans-squared/modrunner-bot?style=for-the-badge" alt="latest release version badge">](https://github.com/beans-squared/modrunner-bot/releases) [<img src="https://img.shields.io/github/license/beans-squared/modrunner-bot?style=for-the-badge" alt="license badge">](./LICENSE) [<img src="https://forthebadge.com/images/badges/contains-tasty-spaghetti-code.svg" alt="tasty spagetti code badge" height="28px">]() [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F8FFBV3)
 

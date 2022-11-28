@@ -1,48 +1,48 @@
-const Sequelize = require("sequelize");
-const { getProject, getMod, validateIdOrSlug } = require("../api/apiMethods");
-const getJSONResponse = require("../api/getJSONResponse");
+const Sequelize = require('sequelize');
+const { getProject, getMod, validateIdOrSlug } = require('../api/apiMethods');
+const getJSONResponse = require('../api/getJSONResponse');
 
-const sequelize = new Sequelize("database", "user", "password", {
-  host: "localhost",
-  dialect: "sqlite",
+const sequelize = new Sequelize('database', 'user', 'password', {
+  host: 'localhost',
+  dialect: 'sqlite',
   logging: false,
-  storage: "./database/database.sqlite",
+  storage: './database/database.sqlite',
 });
 
 // Tables
-const Guilds = require("./models/Guild")(sequelize, Sequelize.DataTypes);
-const Projects = require("./models/Project")(sequelize, Sequelize.DataTypes);
-const TrackedProjects = require("./models/TrackedProject")(sequelize, Sequelize.DataTypes);
+const Guilds = require('./models/Guild')(sequelize, Sequelize.DataTypes);
+const Projects = require('./models/Project')(sequelize, Sequelize.DataTypes);
+const TrackedProjects = require('./models/TrackedProject')(sequelize, Sequelize.DataTypes);
 
-Reflect.defineProperty(Guilds.prototype, "setChangelogMaxLength", {
+Reflect.defineProperty(Guilds.prototype, 'setChangelogMaxLength', {
   value: async function (length) {
     this.changelogMaxLength = length;
     await this.save();
   },
 });
 
-Reflect.defineProperty(Guilds.prototype, "setMaxTrackedProjects", {
+Reflect.defineProperty(Guilds.prototype, 'setMaxTrackedProjects', {
   value: async function (max) {
     this.maxTrackedProjects = max;
     await this.save();
   },
 });
 
-Reflect.defineProperty(Guilds.prototype, "setNotificationStyle", {
+Reflect.defineProperty(Guilds.prototype, 'setNotificationStyle', {
   value: async function (style) {
     this.notificationStyle = style;
     await this.save();
   },
 });
 
-Reflect.defineProperty(Projects.prototype, "updateDate", {
+Reflect.defineProperty(Projects.prototype, 'updateDate', {
   value: async function (date) {
     this.dateUpdated = date;
     await this.save();
   },
 });
 
-Reflect.defineProperty(Projects.prototype, "addFiles", {
+Reflect.defineProperty(Projects.prototype, 'addFiles', {
   value: async function (files) {
     const fileIds = this.fileIds;
     for (const file of files) {
@@ -64,7 +64,7 @@ Reflect.defineProperty(Projects.prototype, "addFiles", {
   },
 });
 
-Reflect.defineProperty(Projects.prototype, "track", {
+Reflect.defineProperty(Projects.prototype, 'track', {
   value: async function (guildId, channelId) {
     return await TrackedProjects.findOrCreate({
       where: {
@@ -81,7 +81,7 @@ Reflect.defineProperty(Projects.prototype, "track", {
   },
 });
 
-Reflect.defineProperty(Projects, "fetch", {
+Reflect.defineProperty(Projects, 'fetch', {
   value: async function (projectId) {
     if (projectId.match(/[A-z]/)) {
       const validationResponse = await validateIdOrSlug(projectId);
@@ -100,7 +100,7 @@ Reflect.defineProperty(Projects, "fetch", {
       return await this.create({
         id: data.id,
         name: data.title,
-        platform: "modrinth",
+        platform: 'modrinth',
         dateUpdated: data.updated,
         fileIds: data.versions,
       });
@@ -119,7 +119,7 @@ Reflect.defineProperty(Projects, "fetch", {
       return await this.create({
         id: data.data.id,
         name: data.data.name,
-        platform: "curseforge",
+        platform: 'curseforge',
         dateUpdated: data.data.dateReleased,
         fileIds: fileIds,
       });

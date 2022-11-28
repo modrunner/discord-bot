@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    "trackedProject",
+    'trackedProject',
     {
       projectId: {
         type: DataTypes.STRING,

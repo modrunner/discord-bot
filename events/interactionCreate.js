@@ -1,12 +1,12 @@
-const { PermissionsBitField, ApplicationCommandType, ComponentType, EmbedBuilder } = require("discord.js");
-const getJSONResponse = require("../api/getJSONResponse");
-const { inlineCode } = require("@discordjs/builders");
-const { searchMods, searchProjects } = require("../api/apiMethods");
-const logger = require("../logger");
-const { Projects, Guilds, TrackedProjects } = require("../database/models");
+const { PermissionsBitField, ApplicationCommandType, ComponentType, EmbedBuilder } = require('discord.js');
+const getJSONResponse = require('../api/getJSONResponse');
+const { inlineCode } = require('@discordjs/builders');
+const { searchMods, searchProjects } = require('../api/apiMethods');
+const logger = require('../logger');
+const { Projects, Guilds, TrackedProjects } = require('../database/models');
 
 module.exports = {
-  name: "interactionCreate",
+  name: 'interactionCreate',
   async execute(interaction) {
     // Slash command interactions
     if (interaction.commandType === ApplicationCommandType.ChatInput) {
@@ -18,11 +18,11 @@ module.exports = {
         command.execute(interaction);
       } catch (error) {
         logger.error(error);
-        await interaction.reply({ content: "There was an error while executing this command.", ephemeral: true });
+        await interaction.reply({ content: 'There was an error while executing this command.', ephemeral: true });
       }
       // Button interactions
     } else if (interaction.componentType === ComponentType.Button) {
-      if (interaction.customId.startsWith("track:")) {
+      if (interaction.customId.startsWith('track:')) {
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels))
           return await interaction.reply({ content: "You can only add projects to tracking if you have the 'Manage Channels' permission.", ephemeral: true });
 
@@ -46,7 +46,7 @@ module.exports = {
           },
         });
         if (currentlyTracked >= guildSettings.maxTrackedProjects)
-          return await interaction.editReply(":x: Your server has reached its maximum limit of tracked projects and cannot track any more.");
+          return await interaction.editReply(':x: Your server has reached its maximum limit of tracked projects and cannot track any more.');
 
         // Track the project
         // This #track method returns an array with the model as the first element and a boolean indicating if a new entry
@@ -55,16 +55,16 @@ module.exports = {
         if (!trackRequest[1]) return await interaction.editReply(`:warning: Project **${project.name}** is already tracked in ${channel}.`);
 
         return await interaction.editReply(`:white_check_mark: Project **${project.name}** tracked successfully. Its updates will be posted to ${channel}.`);
-      } else if (interaction.customId.startsWith("more:")) {
+      } else if (interaction.customId.startsWith('more:')) {
         await interaction.deferReply();
 
         const query = interaction.customId.substring(5);
         const responseData = await searchProjects(query);
         if (!responseData) {
           const errorEmbed = new EmbedBuilder()
-            .setColor("RED")
+            .setColor('RED')
             .setDescription(
-              "⚠️ A connection to Modrinth could not be established.\nIf this happens frequently, please contact the developer of this application."
+              '⚠️ A connection to Modrinth could not be established.\nIf this happens frequently, please contact the developer of this application.'
             )
             .setTimestamp();
           return await interaction.editReply({ embeds: [errorEmbed] });
@@ -73,8 +73,8 @@ module.exports = {
         const searchResults = await getJSONResponse(responseData.body);
 
         const resultsList = new EmbedBuilder()
-          .setColor("DarkGreen")
-          .setAuthor({ name: "From modrinth.com", iconURL: "https://i.imgur.com/2XDguyk.png", url: "https://modrinth.com" })
+          .setColor('DarkGreen')
+          .setAuthor({ name: 'From modrinth.com', iconURL: 'https://i.imgur.com/2XDguyk.png', url: 'https://modrinth.com' })
           .setTitle(`Results for ${inlineCode(interaction.customId.substring(5))}`)
           .setDescription(`${searchResults.hits.length} total results`)
           .setFooter({ text: "NOTE: To see more than 25 results, or if you don't see what you're trying to find here, try searching on Modrinth's website." });
@@ -89,7 +89,7 @@ module.exports = {
         }
 
         return await interaction.editReply({ embeds: [resultsList] });
-      } else if (interaction.customId.startsWith("cf_more:")) {
+      } else if (interaction.customId.startsWith('cf_more:')) {
         await interaction.deferReply();
 
         const query = interaction.customId.substring(8);
@@ -97,9 +97,9 @@ module.exports = {
         const responseData = await searchMods(query);
         if (!responseData) {
           const errorEmbed = new EmbedBuilder()
-            .setColor("RED")
+            .setColor('RED')
             .setDescription(
-              "⚠️ A connection to CurseForge could not be established.\nIf this happens frequently, please contact the developer of this application."
+              '⚠️ A connection to CurseForge could not be established.\nIf this happens frequently, please contact the developer of this application.'
             )
             .setTimestamp();
           return await interaction.editReply({ embeds: [errorEmbed] });
@@ -108,8 +108,8 @@ module.exports = {
         const searchResults = await getJSONResponse(responseData.body);
 
         const resultsList = new EmbedBuilder()
-          .setColor("#f87a1b")
-          .setAuthor({ name: "From curseforge.com", iconURL: "https://i.imgur.com/uA9lFcz.png", url: "https://curseforge.com" })
+          .setColor('#f87a1b')
+          .setAuthor({ name: 'From curseforge.com', iconURL: 'https://i.imgur.com/uA9lFcz.png', url: 'https://curseforge.com' })
           .setTitle(`Results for ${inlineCode(interaction.customId.substring(8))}`)
           .setDescription(`${searchResults.data.length} total results`)
           .setFooter({
@@ -138,20 +138,20 @@ module.exports = {
 function classIdToString(classId) {
   switch (classId) {
     case 5:
-      return "Bukkit Plugin";
+      return 'Bukkit Plugin';
     case 6:
-      return "Mod";
+      return 'Mod';
     case 12:
-      return "Resource Pack";
+      return 'Resource Pack';
     case 17:
-      return "World";
+      return 'World';
     case 4471:
-      return "Modpack";
+      return 'Modpack';
     case 4546:
-      return "Customization";
+      return 'Customization';
     case 4559:
-      return "Addon";
+      return 'Addon';
     default:
-      return "Unknown";
+      return 'Unknown';
   }
 }
