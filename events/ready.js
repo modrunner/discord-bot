@@ -385,13 +385,13 @@ function classIdToUrlString(classId) {
 function releaseTypeToString(releaseType) {
   switch (releaseType) {
     case 1:
-      return 'Release';
+      return 'release';
     case 2:
-      return 'Beta';
+      return 'beta';
     case 3:
-      return 'Alpha';
+      return 'alpha';
     default:
-      return 'UnknownReleaseType';
+      return 'unknownReleaseType';
   }
 }
 
