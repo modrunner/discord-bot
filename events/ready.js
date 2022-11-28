@@ -109,12 +109,14 @@ async function checkForProjectUpdates(client) {
       // Check if this project has been updated
       if (dbProject.dateUpdated.getTime() !== new Date(requestedMod.dateReleased).getTime()) {
         // Verify the file has been approved
-        if (requestedMod.latestFiles[requestedMod.latestFiles.length - 1].fileStatus !== 4) {
+        /*
+        if (requestedMod.latestFilesIndexes[0].fileStatus !== 4) {
           logger.debug(`${dbProject.name}'s latest file has not been approved.`);
           continue;
         }
+				*/
         // Verify that this latest file's ID is not in the database. If it is, it has already been reported as updated
-        if (dbProject.fileIds.includes(requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id)) {
+        if (dbProject.fileIds.includes(requestedMod.latestFilesIndexes[0].fileId)) {
           logger.debug(`${dbProject.name}'s latest file has already been reported on.`);
           await dbProject.updateDate(requestedMod.dateReleased);
           continue;
@@ -124,7 +126,7 @@ async function checkForProjectUpdates(client) {
         logger.info(`Update detected for CurseForge project ${dbProject.name} (${dbProject.id})`);
 
         await dbProject.updateDate(requestedMod.dateReleased);
-        await dbProject.addFiles([requestedMod.latestFiles[requestedMod.latestFiles.length - 1].id]);
+        await dbProject.addFiles([requestedMod.latestFilesIndexes[0].fileId]);
 
         await sendUpdateEmbed(requestedMod, dbProject, client);
       } else {
