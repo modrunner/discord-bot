@@ -1,8 +1,7 @@
 # Changelog
 
-## \[1.2.6]
+## \[1.2.6] (2022-11-28)
 
-- 2022-11-28
 - Fixed Notifications being sent for previous project updates
 
 ## [1.2.5] - 2022-11-28
