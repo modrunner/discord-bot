@@ -123,7 +123,9 @@ async function checkForProjectUpdates(client) {
         }
 
         // If we get here, the project has passed all verification checks and has a legitmate update available
-        logger.info(`Update detected for CurseForge project ${dbProject.name} (${dbProject.id})\n${requestedMod.latestFilesIndexes[0]}`);
+        logger.info(
+          `Update detected for CurseForge project ${dbProject.name} (${dbProject.id})\nFilename: ${requestedMod.latestFilesIndexes[0].fileName}\nFile Id: ${requestedMod.latestFilesIndexes[0].fileId}`
+        );
 
         await dbProject.updateDate(requestedMod.dateReleased);
         await dbProject.addFiles([requestedMod.latestFilesIndexes[0].fileId]);
