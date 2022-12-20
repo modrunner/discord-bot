@@ -21,5 +21,6 @@ jobs:
           script: |
             cd ${{ secrets.STAGING_PATH }}
             git pull
+            cd ../
             PATH=$PATH:/${{ secrets.USERNAME }}/.nvm/versions/node/v16.14.2/bin
             pm2 restart modrunner-staging
