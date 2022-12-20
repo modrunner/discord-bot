@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    "guild",
+    'guild',
     {
       id: {
         type: DataTypes.STRING,
@@ -16,9 +16,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       notificationStyle: {
         type: DataTypes.STRING,
-        defaultValue: "normal",
+        defaultValue: 'normal',
         validate: {
-          isIn: [["normal", "compact"]],
+          isIn: [['normal', 'compact']],
         },
       },
     },

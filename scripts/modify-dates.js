@@ -1,4 +1,4 @@
-const { Projects } = require("../database/models");
+const { Projects } = require('../database/models');
 
 modifyDates();
 async function modifyDates() {
@@ -7,7 +7,7 @@ async function modifyDates() {
   for (const project of projects) {
     await Projects.update(
       {
-        dateUpdated: new Date("1970-01-01"),
+        dateUpdated: new Date('1970-01-01'),
       },
       {
         where: {

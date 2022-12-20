@@ -1,90 +1,85 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+## \[1.2.6] (2022-11-28)
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+- Fixed Notifications being sent for previous project updates
 
-## [1.2.0-] - 2022-11-14
+## \[1.2.5] (2022-11-28)
 
-### Added
+- Fixed capitalization bug on CurseForge project update notifications
 
-- `/settings` command to replace `/mode` command
-- New `projectid` and `channel` parameters to `/untrack` for more control over project tracking
-- New `channel` parameter to `/list` for filtering tracked projects by channel
-- Limit on the number of tracked projects allowed for a single guild
+## \[1.2.4] (2022-11-27)
 
-### Changed
+- Fixed missing notifications for updated CurseForge projects
 
-- Rewrote internal database structure
-- List command now sorts projects alphabetically
-- List command embed now shows total projects tracked out of guild maximum
+## \[1.2.3] (2022-11-19)
 
-### Removed
+- Added checks for tracked projects in deleted channels in `list` command and update check cycle
+- Added sweepers for stale database data
 
-- `/mode` command (replaced by `/settings` command)
+## \[1.2.2] (20220-11-15)
 
-### Fixed
+- Added some minor error handling for more graceful handling of failed API calls
 
-- Incorrect embed color on "more results" embed for Modrinth searches
+## \[1.2.1] (2022-11-14)
 
-## [1.1.7] - 2022-09-24
+- Fixed posting notifications for old updates for CurseForge projects
 
-### Changed
-- Switched to Doppler for secret management
+## \[1.2.0] (2022-11-14)
 
-## [1.1.6] - 2022-09-03
+- Added `/settings` command to replace `/mode` command
+- Added new `projectid` and `channel` parameters to `/untrack` for more control over project tracking
+- Added new `channel` parameter to `/list` for filtering tracked projects by channel
+- Added limit on the number of tracked projects allowed for a single guild
 
-### Fixed
+- Changed internal database structure
+- Changed list command now sorts projects alphabetically
+- Changed list command embed now shows total projects tracked out of guild maximum
 
-- Triple-posting updates for CurseForge projects
+- Removed `/mode` command (replaced by `/settings` command)
 
-## [1.1.5] - 2022-08-26
+- Fixed incorrect embed color on "more results" embed for Modrinth searches
 
-### Fixed
+## \[1.1.7] (2022-09-24)
 
-- Notification mode setting being ignored
-- Release type in Modrinth compact notification embeds not being capitalized
+- Changed switched to Doppler for secret management
 
-## [1.1.4] - 2022-08-24
+## \[1.1.6] (2022-09-03)
 
-### Fixed
+- Fixed triple-posting updates for CurseForge projects
 
-- Update check logic with CurseForge projects
-- Missing settings for guilds not in database on update check
+## \[1.1.5] (2022-08-26)
 
-## [1.1.3] - 2022-08-22
+- Fixed notification mode setting being ignored
+- Fixed release type in Modrinth compact notification embeds not being capitalized
 
-### Added
+## \[1.1.4] (2022-08-24)
 
-- Validation to Modrinth project IDs on track request to prevent breaking the database
+- Fixed update check logic with CurseForge projects
+- Fixed missing settings for guilds not in database on update check
 
-## [1.1.2] - 2022-08-22
+## \[1.1.3] (2022-08-22)
 
-### Fixed
+- Added validation to Modrinth project IDs on track request to prevent breaking the database
 
-- Updates displaying for CurseForge files still in `Processing` or status other than `Approved`
-- Updates displaying for CurseForge files upon additional file upload
-- Release type displaying as uncapitalized in Modrinth update embeds
+## \[1.1.2] (2022-08-22)
 
-## [1.1.1] - 2022-08-11
+- Fixed updates displaying for CurseForge files still in `Processing` or status other than `Approved`
+- Fixed updates displaying for CurseForge files upon additional file upload
+- Fixed release type displaying as uncapitalized in Modrinth update embeds
 
-### Fixed
+## \[1.1.1] (2022-08-11)
 
-- When compact mode is enabled, notifications show both compact and normal embed
-- Presence data not showing
+- Fixed when compact mode is enabled, notifications show both compact and normal embed
+- Fixed presence data not showing
 
-## [1.1.0] - 2022-08-09
+## \[1.1.0] (2022-08-09)
 
-### Added
-
-- ApiCallManager for basic API call volume monitoring
-- Changelog file to more accurately document changes
-
-### Changed
-
+- Added ApiCallManager for basic API call volume monitoring
+- Added Changelog file to more accurately document changes
 - Added new getMods and getProjects endpoint methods
 - Changed database schema to support various new features
+
 - Reduced project update check cycle from ten minutes to one minute
 - Rewrote API endpoint methods for consistancy and support for ApiCallManager
 - Rewrote trackProject function to support new database schema
@@ -94,10 +89,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Switched to default permssions from strict enforcement of Manage Channels permssion
 - Updated to discord.js v14
 
-### Fixed
-
-- CurseForge project types other than Mod or Modpack displaying on search result embeds as 'Other'
-- CurseForge links for update embeds not working correctly for project types other than Mod or Modpack
-- CurseForge update embeds only displaying latest Release file when the new file was a Beta or Alpha release
-- Update embed date updated field displaying unlocalized timestamps
-- Presence data counting the same project multiple times
+- Fixed CurseForge project types other than Mod or Modpack displaying on search result embeds as 'Other'
+- Fixed CurseForge links for update embeds not working correctly for project types other than Mod or Modpack
+- Fixed CurseForge update embeds only displaying latest Release file when the new file was a Beta or Alpha release
+- Fixed update embed date updated field displaying unlocalized timestamps
+- Fixed presence data counting the same project multiple times

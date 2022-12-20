@@ -1,23 +1,23 @@
-const { ChannelType } = require("discord-api-types/v10");
-const { PermissionsBitField, SlashCommandBuilder } = require("discord.js");
-const logger = require("../logger");
-const { Projects, TrackedProjects, Guilds } = require("../database/models");
+const { ChannelType } = require('discord-api-types/v10');
+const { PermissionsBitField, SlashCommandBuilder } = require('discord.js');
+const logger = require('../logger');
+const { Projects, TrackedProjects, Guilds } = require('../database/models');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("track")
-    .setDescription("Track a Modrinth or CurseForge project and get notified when it gets updated.")
+    .setName('track')
+    .setDescription('Track a Modrinth or CurseForge project and get notified when it gets updated.')
     .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
-    .addStringOption((option) => option.setName("projectid").setDescription("The project's ID.").setRequired(true))
+    .addStringOption((option) => option.setName('projectid').setDescription("The project's ID.").setRequired(true))
     .addChannelOption((option) =>
       option
-        .setName("channel")
-        .setDescription("The channel you want project update notifications posted to.")
+        .setName('channel')
+        .setDescription('The channel you want project update notifications posted to.')
         .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement)
     ),
   async execute(interaction) {
-    const projectId = interaction.options.getString("projectid");
-    const channel = interaction.options.getChannel("channel") ?? interaction.channel;
+    const projectId = interaction.options.getString('projectid');
+    const channel = interaction.options.getChannel('channel') ?? interaction.channel;
 
     await interaction.deferReply();
 
@@ -37,7 +37,7 @@ module.exports = {
       },
     });
     if (currentlyTracked >= guildSettings.maxTrackedProjects)
-      return await interaction.editReply(":x: Your server has reached its maximum limit of tracked projects and cannot track any more.");
+      return await interaction.editReply(':x: Your server has reached its maximum limit of tracked projects and cannot track any more.');
 
     // Track the project
     // This #track method returns an array with the model as the first element and a boolean indicating if a new entry

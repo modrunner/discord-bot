@@ -1,8 +1,8 @@
 <img src="./assets/banner_trans_trim.png" align="center">
 
-# 
+#
 
-*(Formerly Modrinth Bot)*
+_(Formerly Modrinth Bot)_
 
 [<img src="https://img.shields.io/discord/764169561003130881?color=%237289DA&logo=discord&style=for-the-badge" alt="discord badge">](https://discord.gg/HZMCRNUd5Z) [<img src="https://img.shields.io/github/v/release/beans-squared/modrunner-bot?style=for-the-badge" alt="latest release version badge">](https://github.com/beans-squared/modrunner-bot/releases) [<img src="https://img.shields.io/github/license/beans-squared/modrunner-bot?style=for-the-badge" alt="license badge">](./LICENSE) [<img src="https://forthebadge.com/images/badges/contains-tasty-spaghetti-code.svg" alt="tasty spagetti code badge" height="28px">]() [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F8FFBV3)
 
@@ -54,5 +54,5 @@ See the [docs](https://modrunner.net/docs/intro/) for more detailed information.
 `npm run reset-db` - Reset the database<br>
 `npm run alter-db` - Alter the database<br>
 
-Please check the [development board](https://github.com/users/smcmo/projects/9), or the [currently open issues](../../issues) before getting started. Issues marked with `good first issue` are ideal for first-time contributors.<br>
+Please check the [development board](https://github.com/smcmo/modrunner-bot/projects), or the [currently open issues](../../issues) before getting started. Issues marked with `good first issue` are ideal for first-time contributors.<br>
 See [Contributing](./CONTRIBUTING.md) for more detailed information.

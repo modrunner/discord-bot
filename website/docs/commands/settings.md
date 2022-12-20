@@ -11,6 +11,7 @@ Modrunner has a variety of different settings that you can modify, which you can
 `/settings [changelog_length] [notification_style]`
 
 - `changelog_length` allows you to specify the maximum size for changelogs in update notifications. Useful if you track projects which commonly have extremely long changelogs.
+
   - Must be an integer between 0 and 4000
   - Defaults to 4000
 
