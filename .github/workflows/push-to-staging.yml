@@ -22,4 +22,4 @@ jobs:
             cd ${{ secrets.STAGING_PATH }}
             git pull
             npm install pm2@latest -g
-            pm2 restart modrunner-staging
+            /root/.nvm/versions/node/v16.14.2/bin/pm2 restart modrunner-staging
