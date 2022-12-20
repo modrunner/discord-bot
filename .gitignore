@@ -1,9 +1,7 @@
-.fleet
-.vscode
 .idea
 node_modules
 _*
 src/api/api_config.json
 
-*.log
 database.sqlite
+database.sqlite-journal

@@ -1,15 +1,18 @@
-import { Guilds } from '../database/db.js';
+import { Guild } from 'discord.js';
 import logger from '../logger.js';
-import { Guild } from "discord.js";
+import { database } from '../prisma.js';
 
 export default {
-	name: 'guildCreate',
-	async execute(guild: Guild) {
+  name: 'guildCreate',
+  async execute(guild: Guild) {
+    logger.debug('guildCreate event fired');
     // Add settings to database for guild
-    await Guilds.create({
-      id: guild.id,
+    await database.guild.create({
+      data: {
+        id: guild.id,
+      },
     });
 
     logger.info(`Client was invited to guild ${guild.name} (${guild.id}). Initialized settings.`);
-	},
+  },
 };

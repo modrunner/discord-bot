@@ -1,5 +1,5 @@
-const readline = require("node:readline");
-const { Guilds } = require("../database/db.ts");
+const readline = require('node:readline');
+const { Guilds } = require('../database/db.ts');
 
 (async () => {
   const rl = readline.createInterface({
@@ -7,9 +7,9 @@ const { Guilds } = require("../database/db.ts");
     output: process.stdout,
   });
   try {
-    rl.question("Enter guild ID: ", async (id) => {
+    rl.question('Enter guild ID: ', async (id: string) => {
       const guild = await Guilds.findByPk(id);
-      rl.question("Enter new max: ", async (max) => {
+      rl.question('Enter new max: ', async (max: number) => {
         await guild.setMaxTrackedProjects(max);
         console.log(`Set guild's max tracked projects to ${max}.`);
         rl.close();

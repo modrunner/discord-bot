@@ -2,7 +2,7 @@ import { request } from 'undici';
 import logger from '../../logger.js';
 import ApiCallManager from '../apiCallManager.js';
 
-export default async function getModFileDownloadUrl(modId: number, fileId: number) {
+export async function getModFileDownloadUrl(modId: number, fileId: number) {
 	for (let i = 3; i > 0; i--) {
 		ApiCallManager.trackCall('curseforge');
 		try {

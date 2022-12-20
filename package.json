@@ -12,7 +12,7 @@
     "eslint-fix": "eslint fix .",
     "prestart": "npm run register-globally && npm run create-db && npm run alter-db",
     "start": "doppler run --command=\"node .\"",
-    "dev": "doppler run --command=\"nodemon .\"",
+    "dev": "doppler run --command=\"ts-node-esm .\"",
     "register": "doppler run --command=\\\"node src/scripts/register-commands.js\\\"",
     "register-globally": "doppler run --command=\\\"node src/scripts/register-commands.js --global\\\"",
     "create-db": "node src/scripts/initialize-database.js",
@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@discordjs/rest": "^1.2.0",
+    "@prisma/client": "^4.7.0",
     "dayjs": "^1.11.5",
     "discord-api-types": "^0.37.11",
     "discord.js": "^14.5.0",
@@ -34,12 +35,14 @@
     "undici": "^5.10.0"
   },
   "devDependencies": {
+    "@types/node": "^18.11.9",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "@typescript-eslint/parser": "^5.43.0",
     "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
     "nodemon": "^2.0.20",
     "prettier": "^2.7.1",
+    "prisma": "^4.7.0",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.3"
   }

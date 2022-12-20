@@ -8,6 +8,6 @@ export const curseforge = {
 export const modrinth = {
   api_max_retries: 3,
   baseUrl: 'https://api.modrinth.com/v2',
-  userAgent: `smcmo/modrunner-bot/${VERSION} (modrunner.net)`,
+  userAgent: `smcmo/modrunner-bot/${version} (modrunner.net)`,
   version: 2,
 };

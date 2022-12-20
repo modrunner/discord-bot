@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Dev Bot",
+      "command": "npm run dev",
+      "type": "node-terminal",
+      "request": "launch",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Prettify Code",
+      "command": "npm run prettier-write",
+      "type": "node-terminal",
+      "request": "launch",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Lint Code",
+      "command": "npm run eslint",
+      "type": "node-terminal",
+      "request": "launch",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

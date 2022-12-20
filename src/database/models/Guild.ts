@@ -1,6 +1,7 @@
+import { Guild } from 'discord.js';
 import type { Sequelize } from 'sequelize';
 
-export default (sequelize: Sequelize, DataTypes: any) => {
+(sequelize: Sequelize, DataTypes: any) => {
   const Guild = sequelize.define(
     'guild',
     {
@@ -18,9 +19,9 @@ export default (sequelize: Sequelize, DataTypes: any) => {
       },
       notificationStyle: {
         type: DataTypes.STRING,
-        defaultValue: "normal",
+        defaultValue: 'normal',
         validate: {
-          isIn: [["normal", "compact"]],
+          isIn: [['normal', 'compact']],
         },
       },
     },
@@ -29,21 +30,21 @@ export default (sequelize: Sequelize, DataTypes: any) => {
     }
   );
 
-  Reflect.defineProperty(Guild.prototype, "setChangelogMaxLength", {
+  Reflect.defineProperty(Guild.prototype, 'setChangelogMaxLength', {
     value: async function (length: number): Promise<void> {
       this.changelogMaxLength = length;
       await this.save();
     },
   });
 
-  Reflect.defineProperty(Guild.prototype, "setMaxTrackedProjects", {
+  Reflect.defineProperty(Guild.prototype, 'setMaxTrackedProjects', {
     value: async function (max: number): Promise<void> {
       this.maxTrackedProjects = max;
       await this.save();
     },
   });
 
-  Reflect.defineProperty(Guild.prototype, "setNotificationStyle", {
+  Reflect.defineProperty(Guild.prototype, 'setNotificationStyle', {
     value: async function (style: string): Promise<void> {
       this.notificationStyle = style;
       await this.save();
@@ -52,3 +53,5 @@ export default (sequelize: Sequelize, DataTypes: any) => {
 
   return Guild;
 };
+
+export default Guild;

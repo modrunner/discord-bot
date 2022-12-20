@@ -1,23 +1,24 @@
-import { ChannelType } from "discord-api-types/v10";
-import { ChatInputCommandInteraction, PermissionsBitField, SlashCommandBuilder } from "discord.js";
-import logger from "../logger.js";
-import { Projects, TrackedProjects, Guilds } from "../database/db.js";
+import { ChannelType } from 'discord-api-types/v10';
+import { ChatInputCommandInteraction, PermissionsBitField, SlashCommandBuilder } from 'discord.js';
+import logger from '../logger.js';
+import { Projects, TrackedProjects, Guilds } from '../database/db.js';
 
 export default {
   data: new SlashCommandBuilder()
-    .setName("track")
-    .setDescription("Track a Modrinth or CurseForge project and get notified when it gets updated.")
+    .setName('track')
+    .setDescription('Track a Modrinth or CurseForge project and get notified when it gets updated.')
     .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
-    .addStringOption((option) => option.setName("projectid").setDescription("The project's ID.").setRequired(true))
+    .addStringOption((option) => option.setName('projectid').setDescription("The project's ID.").setRequired(true))
     .addChannelOption((option) =>
       option
-        .setName("channel")
-        .setDescription("The channel you want project update notifications posted to.")
+        .setName('channel')
+        .setDescription('The channel you want project update notifications posted to.')
         .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement)
     ),
   async execute(interaction: ChatInputCommandInteraction) {
-    const projectId = interaction.options.getString("projectid");
-    const channel = interaction.options.getChannel("channel") ?? interaction.channel;
+    const projectId = interaction.options.getString('projectid');
+    const channel = interaction.options.getChannel('channel') ?? interaction.channel;
+    if (!interaction.guild) return;
 
     await interaction.deferReply();
 
@@ -29,7 +30,7 @@ export default {
     logger.info(`User ${interaction.user.tag} made a tracking request for project ${project.name} (${project.id}).`);
 
     // Find how many projects this guild is already tracking
-    // If greater than the guild's max allowed tracked projects (usually 200), don't allow this project to be tracked
+    // If greater than the guild's max allowed tracked projects (usually 100), don't allow this project to be tracked
     const guildSettings = await Guilds.findByPk(interaction.guild.id);
     const currentlyTracked = await TrackedProjects.count({
       where: {
@@ -37,7 +38,7 @@ export default {
       },
     });
     if (currentlyTracked >= guildSettings.maxTrackedProjects)
-      return await interaction.editReply(":x: Your server has reached its maximum limit of tracked projects and cannot track any more.");
+      return await interaction.editReply(':x: Your server has reached its maximum limit of tracked projects and cannot track any more.');
 
     // Track the project
     // This #track method returns an array with the model as the first element and a boolean indicating if a new entry

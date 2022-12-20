@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:database.sqlite"
+}
+
+model Guild {
+  id                 String           @id
+  changelogMaxLength Int              @default(4000)
+  maxTrackedProjects Int              @default(100)
+  notificationStyle  String           @default("normal")
+  TrackedProject     TrackedProject[]
+}
+
+model Project {
+  id                 String
+  platform           String
+  dateUpdated        DateTime
+  name               String?
+  latestFileId       String?
+  secondLatestFileId String?
+  TrackedProject     TrackedProject[]
+
+  @@id([id, platform])
+}
+
+model TrackedProject {
+  project    Project @relation(fields: [projectId, platformId], references: [id, platform])
+  projectId  String
+  platformId String
+  guild      Guild   @relation(fields: [guildId], references: [id])
+  guildId    String
+  channelId  String
+
+  @@id([projectId, platformId, guildId, channelId])
+}

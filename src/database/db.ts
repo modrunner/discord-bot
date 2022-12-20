@@ -1,12 +1,13 @@
-import { Model, Sequelize } from "sequelize";
-import { getProject, getMod, validateIdOrSlug } from "../api/apiMethods.js";
-import getJSONResponse from "../api/getJSONResponse";
+import { Model, Sequelize } from 'sequelize';
+import * as API from '../api/RestClient.js';
+import getJSONResponse from '../api/getJSONResponse.js';
 
-const sequelize = new Sequelize("database", "user", "password", {
-  host: "localhost",
-  dialect: "sqlite",
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const sequelize = new Sequelize('database', 'user', 'password', {
+  host: 'localhost',
+  dialect: 'sqlite',
   logging: false,
-  storage: "./database/database.sqlite",
+  storage: './src/database/database.sqlite',
 });
 
 // Tables
@@ -14,10 +15,11 @@ import Guilds from './models/Guild.js';
 import Projects from './models/Project.js';
 import TrackedProjects from './models/TrackedProject.js';
 
-Reflect.defineProperty(Projects, "fetch", {
+Reflect.defineProperty(Projects, 'fetch', {
   value: async function (projectId: string): Promise<Model | null> {
     if (projectId.match(/[A-z]/)) {
-      const validationResponse = await validateIdOrSlug(projectId);
+      const validationResponse = await API.validateIdOrSlug(projectId);
+      if (!validationResponse) return null;
       if (validationResponse.statusCode !== 200) return null;
 
       const validatedData = await getJSONResponse(validationResponse.body);
@@ -26,14 +28,15 @@ Reflect.defineProperty(Projects, "fetch", {
       const project = await this.findByPk(validatedId);
       if (project) return project;
 
-      const response = await getProject(validatedId);
+      const response = await API.getProject(validatedId);
+      if (!response) return null;
       if (response.statusCode !== 200) return null;
 
       const data = await getJSONResponse(response.body);
       return await this.create({
         id: data.id,
         name: data.title,
-        platform: "modrinth",
+        platform: 'modrinth',
         dateUpdated: data.updated,
         fileIds: data.versions,
       });
@@ -41,7 +44,8 @@ Reflect.defineProperty(Projects, "fetch", {
       const project = await this.findByPk(projectId);
       if (project) return project;
 
-      const response = await getMod(projectId);
+      const response = await API.getMod(projectId);
+      if (!response) return null;
       if (response.statusCode !== 200) return null;
 
       const data = await getJSONResponse(response.body);
@@ -52,7 +56,7 @@ Reflect.defineProperty(Projects, "fetch", {
       return await this.create({
         id: data.data.id,
         name: data.data.name,
-        platform: "curseforge",
+        platform: 'curseforge',
         dateUpdated: data.data.dateReleased,
         fileIds: fileIds,
       });
@@ -60,4 +64,4 @@ Reflect.defineProperty(Projects, "fetch", {
   },
 });
 
-module.exports = { sequelize, Guilds, Projects, TrackedProjects };
+export { Guilds, Projects, TrackedProjects };

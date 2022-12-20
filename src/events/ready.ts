@@ -1,31 +1,22 @@
-import logger from "../logger.js";
-import { getMods, getProjects, listProjectVersions, getModFileChangelog } from "../api/apiMethods";
-import ms from "ms";
-import dayjs from "dayjs";
-import getJSONResponse from "../api/getJSONResponse";
-import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  EmbedBuilder,
-  codeBlock,
-  ActivityType,
-  Client,
-} from "discord.js";
-import { ApiCallManager } from "../api/apiCallManager";
-import { Guilds, Projects, TrackedProjects } from "../database/db.js";
+import logger from '../logger.js';
+import ms from 'ms';
+import dayjs from 'dayjs';
+import getJSONResponse from '../api/getJSONResponse.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, codeBlock, ActivityType, Client } from 'discord.js';
+import ApiCallManager from '../api/apiCallManager.js';
+import { Guilds, Projects, TrackedProjects } from '../database/db.js';
 
 export default {
-  name: "ready",
+  name: 'ready',
   async execute(client: Client) {
-    logger.info("Ready status reported.");
+    logger.info('ready event fired');
 
     await checkForProjectUpdates(client);
     await updatePresenceData(client);
 
-    setInterval(runUpdateCheck, ms("1m"));
-    setInterval(runUpdatePresence, ms("10m"));
-    setInterval(runLogCalls, ms("24h"));
+    setInterval(runUpdateCheck, ms('1m'));
+    setInterval(runUpdatePresence, ms('10m'));
+    setInterval(runLogCalls, ms('24h'));
 
     async function runUpdateCheck() {
       await checkForProjectUpdates(client);
@@ -44,15 +35,15 @@ export default {
 /**
  * The primary function that handles the functionality for checking for updates to projects
  */
-async function checkForProjectUpdates(client) {
-  logger.debug("Running global update check...");
+async function checkForProjectUpdates(client: Client) {
+  logger.debug('Running global update check...');
 
   // Get all projects from the database. We seperate them by platform so we can call the appropriate API and read the returned data correctly
   const dbCurseforgeProjects = await Projects.findAll({
-    where: { platform: "curseforge" },
+    where: { platform: 'curseforge' },
   });
   const dbModrinthProjects = await Projects.findAll({
-    where: { platform: "modrinth" },
+    where: { platform: 'modrinth' },
   });
 
   const dbCurseforgeProjectsIds = [];
@@ -68,7 +59,7 @@ async function checkForProjectUpdates(client) {
   // Call the CurseForge API
   let requestedMods, requestedProjects;
   if (dbCurseforgeProjectsIds.length) {
-    var curseforgeResponseData = await getMods(dbCurseforgeProjectsIds);
+    const curseforgeResponseData = await getMods(dbCurseforgeProjectsIds);
     if (curseforgeResponseData) {
       if (curseforgeResponseData.statusCode === 200) {
         requestedMods = await getJSONResponse(curseforgeResponseData.body);
@@ -76,15 +67,15 @@ async function checkForProjectUpdates(client) {
         logger.warn(`Unexpected ${curseforgeResponseData.statusCode} status code while checking CurseForge projects for updates.`);
       }
     } else {
-      logger.warn("A request to CurseForge timed out while checking projects for updates.");
+      logger.warn('A request to CurseForge timed out while checking projects for updates.');
     }
   } else {
-    logger.info("No CurseForge projects in database. Skipping.");
+    logger.info('No CurseForge projects in database. Skipping.');
   }
 
   // Call the Modrinth API
   if (dbModrinthProjectIds.length) {
-    var modrinthResponseData = await getProjects(dbModrinthProjectIds);
+    const modrinthResponseData = await getProjects(dbModrinthProjectIds);
     if (modrinthResponseData) {
       if (modrinthResponseData.statusCode === 200) {
         requestedProjects = await getJSONResponse(modrinthResponseData.body);
@@ -92,10 +83,10 @@ async function checkForProjectUpdates(client) {
         logger.warn(`Unexpected ${modrinthResponseData.statusCode} status code while checking Modrinth projects for updates.`);
       }
     } else {
-      logger.warn("A request to Modrinth timed out while checking projects for updates.");
+      logger.warn('A request to Modrinth timed out while checking projects for updates.');
     }
   } else {
-    logger.info("No Modrinth projects in database. Skipping.");
+    logger.info('No Modrinth projects in database. Skipping.');
   }
 
   // Process information returned from the CurseForge API and perform checks
@@ -132,7 +123,7 @@ async function checkForProjectUpdates(client) {
       }
     }
   }
-  logger.debug("CurseForge update check complete.");
+  logger.debug('CurseForge update check complete.');
 
   // Process information returned from the Modrinth API and perform checks
   if (dbModrinthProjects.length) {
@@ -148,6 +139,7 @@ async function checkForProjectUpdates(client) {
         for (const fileId of requestedProject.versions) {
           if (dbProject.fileIds.includes(fileId)) {
             await dbProject.updateDate(requestedProject.updated);
+            reported = true;
             break;
           }
         }
@@ -165,7 +157,7 @@ async function checkForProjectUpdates(client) {
       }
     }
   }
-  logger.debug("Modrinth update check complete.");
+  logger.debug('Modrinth update check complete.');
 }
 
 /**
@@ -178,7 +170,7 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
 
   // Behavior is slightly different depending on platform, mostly dependent on the data returned from the initial earlier API call
   switch (dbProject.platform) {
-    case "curseforge": {
+    case 'curseforge': {
       // Call the CurseForge API to get this file's changelog
       const response = await getModFileChangelog(requestedProject.id, requestedProject.latestFiles[requestedProject.latestFiles.length - 1].id);
       if (!response) return logger.warn("A request to CurseForge timed out while getting a project file's changelog");
@@ -198,7 +190,7 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
 
       break;
     }
-    case "modrinth": {
+    case 'modrinth': {
       // Call the Modrinth API to get this version's information
       const response = await listProjectVersions(requestedProject.id);
       if (!response) return logger.warn("A request to Modrinth timed out while getiing a project's version information");
@@ -217,7 +209,7 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
       break;
     }
     default:
-      return logger.warn("Update notification functionality has not been implemented for this platform yet.");
+      return logger.warn('Update notification functionality has not been implemented for this platform yet.');
   }
 
   // Send the notification to each appropriate guild channel
@@ -240,14 +232,14 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
     }
     const guildSettings = await Guilds.findByPk(trackedProject.guildId);
     switch (guildSettings.notificationStyle) {
-      case "compact":
+      case 'compact':
         await channel.send({
           embeds: [
             new EmbedBuilder()
               .setColor(embedColorData(dbProject.platform))
               .setDescription(`${versionData.number} (${capitalize(versionData.type)})`)
               .setFooter({
-                text: `${dayjs(versionData.date).format("MMM D, YYYY")}`,
+                text: `${dayjs(versionData.date).format('MMM D, YYYY')}`,
                 iconURL: embedAuthorData(dbProject.platform).iconURL ?? null,
               })
               .setTitle(`${dbProject.name} ${versionData.name}`)
@@ -264,19 +256,19 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
               .setDescription(`**Changelog**: ${codeBlock(trimChangelog(versionData.changelog, guildSettings.changelogMaxLength))}`)
               .setFields(
                 {
-                  name: "Version Name",
+                  name: 'Version Name',
                   value: versionData.name,
                 },
                 {
-                  name: "Version Number",
+                  name: 'Version Number',
                   value: `${versionData.number}`,
                 },
                 {
-                  name: "Release Type",
+                  name: 'Release Type',
                   value: `${versionData.type}`,
                 },
                 {
-                  name: "Date Published",
+                  name: 'Date Published',
                   value: `<t:${dayjs(versionData.date).unix()}:f>`,
                 }
               )
@@ -298,7 +290,7 @@ async function sendUpdateEmbed(requestedProject, dbProject, client) {
 }
 
 async function updatePresenceData(client) {
-  let projects = await Projects.findAndCountAll();
+  const projects = await Projects.findAndCountAll();
   for (const project of projects.rows) {
     const tracked = await TrackedProjects.findOne({
       where: {
@@ -322,41 +314,41 @@ async function updatePresenceData(client) {
         name: `${projects.count} projects for updates in ${client.guilds.cache.size} servers.`,
       },
     ],
-    status: "online",
+    status: 'online',
   });
 }
 
 function classIdToUrlString(classId) {
   switch (classId) {
     case 5:
-      return "bukkit-plugins";
+      return 'bukkit-plugins';
     case 6:
-      return "mc-mods";
+      return 'mc-mods';
     case 12:
-      return "texture-packs";
+      return 'texture-packs';
     case 17:
-      return "worlds";
+      return 'worlds';
     case 4471:
-      return "modpacks";
+      return 'modpacks';
     case 4546:
-      return "customization";
+      return 'customization';
     case 4559:
-      return "mc-addons";
+      return 'mc-addons';
     default:
-      return "unknownClassIdValue";
+      return 'unknownClassIdValue';
   }
 }
 
 function releaseTypeToString(releaseType) {
   switch (releaseType) {
     case 1:
-      return "Release";
+      return 'Release';
     case 2:
-      return "Beta";
+      return 'Beta';
     case 3:
-      return "Alpha";
+      return 'Alpha';
     default:
-      return "UnknownReleaseType";
+      return 'UnknownReleaseType';
   }
 }
 
@@ -366,33 +358,33 @@ function capitalize(string) {
 
 function embedAuthorData(platform) {
   switch (platform) {
-    case "curseforge":
+    case 'curseforge':
       return {
-        name: "From curseforge.com",
-        iconURL: "https://i.imgur.com/uA9lFcz.png",
-        url: "https://curseforge.com",
+        name: 'From curseforge.com',
+        iconURL: 'https://i.imgur.com/uA9lFcz.png',
+        url: 'https://curseforge.com',
       };
-    case "modrinth":
+    case 'modrinth':
       return {
-        name: "From modrinth.com",
-        iconURL: "https://i.imgur.com/2XDguyk.png",
-        url: "https://modrinth.com",
+        name: 'From modrinth.com',
+        iconURL: 'https://i.imgur.com/2XDguyk.png',
+        url: 'https://modrinth.com',
       };
     default:
       return {
-        name: "From unknown source",
+        name: 'From unknown source',
       };
   }
 }
 
 function embedColorData(platform) {
   switch (platform) {
-    case "curseforge":
-      return "#f87a1b";
-    case "modrinth":
-      return "#1bd96a";
+    case 'curseforge':
+      return '#f87a1b';
+    case 'modrinth':
+      return '#1bd96a';
     default:
-      return "DarkGreen";
+      return 'DarkGreen';
   }
 }
 
@@ -403,7 +395,7 @@ function trimChangelog(changelog, maxLength) {
 
 function formatHtmlChangelog(changelog) {
   return changelog
-    .replace(/<br>/g, "\n") // Fix line breaks
-    .replace(/<.*?>/g, "") // Remove HTML tags
-    .replace(/&\w*?;/g, ""); // Remove HTMl special characters
+    .replace(/<br>/g, '\n') // Fix line breaks
+    .replace(/<.*?>/g, '') // Remove HTML tags
+    .replace(/&\w*?;/g, ''); // Remove HTMl special characters
 }
