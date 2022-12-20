@@ -1,7 +1,8 @@
 const { PermissionsBitField, ApplicationCommandType, ComponentType, EmbedBuilder } = require('discord.js');
 const getJSONResponse = require('../api/getJSONResponse');
 const { inlineCode } = require('@discordjs/builders');
-const { searchMods, searchProjects } = require('../api/apiMethods');
+const { searchMods } = require('../api/curseforge');
+const { searchProjects } = require('../api/modrinth');
 const logger = require('../logger');
 const { Projects, Guilds, TrackedProjects } = require('../database/models');
 

@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
-const { getProject, getMod, validateIdOrSlug } = require('../api/apiMethods');
+const { getMod } = require('../api/curseforge');
+const { getProject, validateIdOrSlug } = require('../api/modrinth');
 const getJSONResponse = require('../api/getJSONResponse');
 
 const sequelize = new Sequelize('database', 'user', 'password', {
