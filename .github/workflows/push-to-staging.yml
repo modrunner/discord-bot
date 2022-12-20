@@ -18,4 +18,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
-          script: cd ${{ secrets.STAGING_PATH }} && bash fetch-staging-updates.sh
+          script: cd ${{ secrets.STAGING_PATH }} && git pull && bash restart-staging.sh
