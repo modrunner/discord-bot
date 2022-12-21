@@ -1,0 +1,23 @@
+name: Push to Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  push:
+    name: Push to Production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Executing remote SSH commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd ${{ secrets.PRODUCTION_PATH }}
+            git pull

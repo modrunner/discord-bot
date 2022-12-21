@@ -8,6 +8,7 @@ async function modifyDates() {
     await Projects.update(
       {
         dateUpdated: new Date('1970-01-01'),
+        fileIds: [],
       },
       {
         where: {

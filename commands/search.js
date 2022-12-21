@@ -2,7 +2,8 @@ const { SlashCommandBuilder, inlineCode } = require('@discordjs/builders');
 const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
 const dayjs = require('dayjs');
 const getJSONResponse = require('../api/getJSONResponse');
-const { searchMods, searchProjects } = require('../api/apiMethods');
+const { searchMods } = require('../api/curseforge');
+const { searchProjects } = require('../api/modrinth');
 
 module.exports = {
   data: new SlashCommandBuilder()

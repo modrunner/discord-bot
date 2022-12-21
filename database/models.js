@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
-const { getProject, getMod, validateIdOrSlug } = require('../api/apiMethods');
+const { getMod } = require('../api/curseforge');
+const { getProject, validateIdOrSlug } = require('../api/modrinth');
 const getJSONResponse = require('../api/getJSONResponse');
 
 const sequelize = new Sequelize('database', 'user', 'password', {
@@ -58,6 +59,27 @@ Reflect.defineProperty(Projects.prototype, 'addFiles', {
       {
         where: {
           id: this.id,
+        },
+      }
+    );
+  },
+});
+
+Reflect.defineProperty(TrackedProjects.prototype, 'addRoles', {
+  value: async function (roles) {
+    const roleIds = this.roleIds ?? [];
+    for (const role of roles) {
+      roleIds.push(role.id);
+    }
+    return await TrackedProjects.update(
+      {
+        roleIds: roleIds,
+      },
+      {
+        where: {
+          projectId: this.projectId,
+          guildId: this.guildId,
+          channelId: this.channelId,
         },
       }
     );

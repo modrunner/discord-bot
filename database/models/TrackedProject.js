@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         primaryKey: true,
       },
+      roleIds: {
+        type: DataTypes.JSON,
+        defaultValue: [],
+        allowNull: true,
+      },
     },
     {
       timestamps: false,
