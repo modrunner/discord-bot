@@ -1,9 +1,10 @@
+const { ChannelType } = require('discord-api-types/v10');
 const { getModFileChangelog } = require('./api/curseforge');
 const logger = require('./logger');
 const getJSONResponse = require('./api/getJSONResponse');
 const { listProjectVersions } = require('./api/modrinth');
 const { TrackedProjects, Guilds } = require('./database/models');
-const { EmbedBuilder, codeBlock, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { EmbedBuilder, codeBlock, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionsBitField } = require('discord.js');
 const dayjs = require('dayjs');
 module.exports = {
   /**
@@ -82,61 +83,145 @@ module.exports = {
         logger.warn(`Could not find channel with ID ${trackedProject.channelId} in cache. Update notification not sent.`);
         continue;
       }
+
+      // Check to see if Modrunner has permissions to post in the update channel
+      if (!channel.viewable || !channel.permissionsFor(client.user.id).has(PermissionsBitField.Flags.SendMessages)) {
+        logger.warn(
+          `Could not post notification in channel ${channel.name} (${channel.id}) in guild ${guild.name} (${guild.id}) due to insufficient permissions.`
+        );
+        continue;
+      }
+
       const guildSettings = await Guilds.findByPk(trackedProject.guildId);
+
+      const roleIds = trackedProject.roleIds;
+      let mentionableRoles;
+      let rolesString;
+      if (roleIds) {
+        mentionableRoles = roleIds.map((roleId) => `<@&${roleId}>`);
+        rolesString = mentionableRoles.join(' ');
+      }
+
       switch (guildSettings.notificationStyle) {
         case 'compact':
-          await channel.send({
-            embeds: [
-              new EmbedBuilder()
-                .setColor(embedColorData(dbProject.platform))
-                .setDescription(`${versionData.number} (${versionData.type})`)
-                .setFooter({
-                  text: `${dayjs(versionData.date).format('MMM D, YYYY')}`,
-                  iconURL: embedAuthorData(dbProject.platform).iconURL ?? null,
-                })
-                .setTitle(`${dbProject.name} ${versionData.name}`)
-                .setURL(versionData.url),
-            ],
-          });
+          if (channel.type === ChannelType.GuildForum) {
+            await channel.threads.create({
+              name: `${versionData.name}`,
+              message: {
+                content: roleIds ? `${rolesString}` : null,
+                embeds: [
+                  new EmbedBuilder()
+                    .setColor(embedColorData(dbProject.platform))
+                    .setDescription(`${versionData.number} (${versionData.type})`)
+                    .setFooter({
+                      text: `${dayjs(versionData.date).format('MMM D, YYYY')}`,
+                      iconURL: embedAuthorData(dbProject.platform).iconURL ?? null,
+                    })
+                    .setTitle(`${dbProject.name} ${versionData.name}`)
+                    .setURL(versionData.url),
+                ],
+              },
+            });
+          } else {
+            await channel.send({
+              content: roleIds ? `${rolesString}` : null,
+              embeds: [
+                new EmbedBuilder()
+                  .setColor(embedColorData(dbProject.platform))
+                  .setDescription(`${versionData.number} (${versionData.type})`)
+                  .setFooter({
+                    text: `${dayjs(versionData.date).format('MMM D, YYYY')}`,
+                    iconURL: embedAuthorData(dbProject.platform).iconURL ?? null,
+                  })
+                  .setTitle(`${dbProject.name} ${versionData.name}`)
+                  .setURL(versionData.url),
+              ],
+            });
+          }
           break;
         default:
-          await channel.send({
-            embeds: [
-              new EmbedBuilder()
-                .setAuthor(embedAuthorData(dbProject.platform))
-                .setColor(embedColorData(dbProject.platform))
-                .setDescription(`**Changelog**: ${codeBlock(trimChangelog(versionData.changelog, guildSettings.changelogMaxLength))}`)
-                .setFields(
-                  {
-                    name: 'Version Name',
-                    value: versionData.name,
-                  },
-                  {
-                    name: 'Version Number',
-                    value: `${versionData.number}`,
-                  },
-                  {
-                    name: 'Release Type',
-                    value: `${versionData.type}`,
-                  },
-                  {
-                    name: 'Date Published',
-                    value: `<t:${dayjs(versionData.date).unix()}:f>`,
-                  }
-                )
-                .setThumbnail(versionData.iconURL)
-                .setTimestamp()
-                .setTitle(`${dbProject.name} has been updated`),
-            ],
-            components: [
-              new ActionRowBuilder().addComponents(
-                new ButtonBuilder()
-                  .setLabel(`View on ${capitalize(dbProject.platform)}`)
-                  .setStyle(ButtonStyle.Link)
-                  .setURL(versionData.url)
-              ),
-            ],
-          });
+          if (channel.type === ChannelType.GuildForum) {
+            await channel.threads.create({
+              name: `${versionData.name}`,
+              message: {
+                content: roleIds ? `${rolesString}` : null,
+                embeds: [
+                  new EmbedBuilder()
+                    .setAuthor(embedAuthorData(dbProject.platform))
+                    .setColor(embedColorData(dbProject.platform))
+                    .setDescription(`**Changelog**: ${codeBlock(trimChangelog(versionData.changelog, guildSettings.changelogMaxLength))}`)
+                    .setFields(
+                      {
+                        name: 'Version Name',
+                        value: versionData.name,
+                      },
+                      {
+                        name: 'Version Number',
+                        value: `${versionData.number}`,
+                      },
+                      {
+                        name: 'Release Type',
+                        value: `${versionData.type}`,
+                      },
+                      {
+                        name: 'Date Published',
+                        value: `<t:${dayjs(versionData.date).unix()}:f>`,
+                      }
+                    )
+                    .setThumbnail(versionData.iconURL)
+                    .setTimestamp()
+                    .setTitle(`${dbProject.name} has been updated`),
+                ],
+                components: [
+                  new ActionRowBuilder().addComponents(
+                    new ButtonBuilder()
+                      .setLabel(`View on ${capitalize(dbProject.platform)}`)
+                      .setStyle(ButtonStyle.Link)
+                      .setURL(versionData.url)
+                  ),
+                ],
+              },
+            });
+          } else {
+            await channel.send({
+              content: roleIds ? `${rolesString}` : null,
+              embeds: [
+                new EmbedBuilder()
+                  .setAuthor(embedAuthorData(dbProject.platform))
+                  .setColor(embedColorData(dbProject.platform))
+                  .setDescription(`**Changelog**: ${codeBlock(trimChangelog(versionData.changelog, guildSettings.changelogMaxLength))}`)
+                  .setFields(
+                    {
+                      name: 'Version Name',
+                      value: versionData.name,
+                    },
+                    {
+                      name: 'Version Number',
+                      value: `${versionData.number}`,
+                    },
+                    {
+                      name: 'Release Type',
+                      value: `${versionData.type}`,
+                    },
+                    {
+                      name: 'Date Published',
+                      value: `<t:${dayjs(versionData.date).unix()}:f>`,
+                    }
+                  )
+                  .setThumbnail(versionData.iconURL)
+                  .setTimestamp()
+                  .setTitle(`${dbProject.name} has been updated`),
+              ],
+              components: [
+                new ActionRowBuilder().addComponents(
+                  new ButtonBuilder()
+                    .setLabel(`View on ${capitalize(dbProject.platform)}`)
+                    .setStyle(ButtonStyle.Link)
+                    .setURL(versionData.url)
+                ),
+              ],
+            });
+          }
       }
     }
   },

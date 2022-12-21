@@ -65,6 +65,27 @@ Reflect.defineProperty(Projects.prototype, 'addFiles', {
   },
 });
 
+Reflect.defineProperty(TrackedProjects.prototype, 'addRoles', {
+  value: async function (roles) {
+    const roleIds = this.roleIds ?? [];
+    for (const role of roles) {
+      roleIds.push(role.id);
+    }
+    return await TrackedProjects.update(
+      {
+        roleIds: roleIds,
+      },
+      {
+        where: {
+          projectId: this.projectId,
+          guildId: this.guildId,
+          channelId: this.channelId,
+        },
+      }
+    );
+  },
+});
+
 Reflect.defineProperty(Projects.prototype, 'track', {
   value: async function (guildId, channelId) {
     return await TrackedProjects.findOrCreate({
