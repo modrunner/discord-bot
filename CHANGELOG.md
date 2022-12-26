@@ -1,5 +1,13 @@
 # Changelog
 
+## \[1.3.0] (2022-12-21)
+
+- Added the ability to add roles to tracked projects to ping members with that role then an update notification is posted
+- Added support for notifications in forum channels
+- Added a check for appropriate permissions to be able to post notifications in a channel
+- Fixed capitalization bug on modrinth project update notifications
+- Fixed project icon not showing on update notifications
+
 ## \[1.2.6] (2022-11-28)
 
 - Fixed Notifications being sent for previous project updates
