@@ -2,7 +2,7 @@
   "name": "modrunner",
   "version": "1.3.0",
   "private": true,
-  "main": "index.js",
+  "main": "bot.js",
   "scripts": {
     "setup-workspace": "npm install && scoop install doppler && doppler login && doppler setup",
     "prettier-check": "prettier --check .",
@@ -25,6 +25,7 @@
     "dayjs": "^1.11.5",
     "discord-api-types": "^0.37.11",
     "discord.js": "^14.7.1",
+    "express": "^4.18.2",
     "ms": "^2.1.3",
     "pino": "^8.6.1",
     "pino-pretty": "^9.1.0",

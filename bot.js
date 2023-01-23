@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const logger = require('./logger');
+const { server, port } = require('./server');
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],
@@ -28,3 +29,5 @@ for (const file of eventFiles) {
 client.login(process.env.DISCORD_TOKEN).then(() => {
   logger.info(`Logged into Discord as ${client.user.tag}`);
 });
+
+server.listen(port, () => logger.info(`Web server is online at http://localhost:${port}`));
