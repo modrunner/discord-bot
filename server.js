@@ -1,6 +1,6 @@
 const express = require('express');
-const port = 3000;
-const { Projects } = require('./database/models');
+const { Guilds, Projects, TrackedProjects } = require('./database/models');
+const logger = require('./logger');
 
 const server = express();
 
@@ -19,8 +19,23 @@ server.get('/projects/:id', async (req, res) => {
   }
 });
 
-server.route('/hello').get((req, res) => {
-  res.json({ hello: 'world' });
+server.route('/guilds/list').get(async (req, res) => {
+  const guilds = await Guilds.findAll();
+  res.status(200).json(guilds);
 });
 
-module.exports = { server, port };
+server.route('/guilds/:id/projects').get(async (req, res) => {
+  logger.info(`Recieved a request for guild ${req.params.id} projects`);
+  const projects = await TrackedProjects.findAll({
+    where: {
+      guildId: req.params.id,
+    },
+  });
+  if (projects) {
+    res.status(200).json(projects);
+  } else {
+    res.status(404);
+  }
+});
+
+module.exports = { server };
