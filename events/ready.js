@@ -140,7 +140,7 @@ async function checkForProjectUpdates(client) {
       if (!requestedProjects) break;
       const requestedProject = requestedProjects.find((project) => project.id === dbProject.id);
       // Check if the project has been updated
-      if (!requestedProject.updated) {
+      if (!requestedProject['updated']) {
         logger.info(
           `Encountered project with no updated field\nID: ${requestedProject.id}\nName: ${requestedProject.name}\n\`updated\` value: ${requestedProject['updated']}`
         );
