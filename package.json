@@ -9,7 +9,7 @@
     "prettier-write": "prettier --write .",
     "eslint": "eslint .",
     "eslint-fix": "eslint fix .",
-    "prestart": "npm run register-globally && npm run alter-db",
+    "notused": "npm run register-globally && npm run alter-db",
     "start": "doppler run --command=\"node .\"",
     "dev": "doppler run --command=\"nodemon .\"",
     "register": "doppler run --command=\"node scripts/register-commands.js\"",
