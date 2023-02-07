@@ -140,10 +140,10 @@ async function checkForProjectUpdates(client) {
       if (!requestedProjects) break;
       const requestedProject = requestedProjects.find((project) => project.id === dbProject.id);
       // Check if the project has been updated
-      if (!requestedProject['updated']) {
-        logger.info(
-          `Encountered project with no updated field\nID: ${requestedProject.id}\nName: ${requestedProject.name}\n\`updated\` value: ${requestedProject['updated']}`
-        );
+      if ('updated' in requestedProject) {
+        0;
+      } else {
+        logger.info(`Encountered project with no updated field\nID: ${requestedProject.id}\nName: ${requestedProject.name}\n`);
       }
       if (dbProject.dateUpdated.getTime() !== new Date(requestedProject['updated']).getTime()) {
         // Verify that this file's ID is not in the database. If it is, it has already been reported as updated
