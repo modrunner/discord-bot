@@ -6,6 +6,7 @@ const getJSONResponse = require('../api/getJSONResponse');
 const { ActivityType } = require('discord.js');
 const { Projects, TrackedProjects } = require('../database/models');
 const { sendUpdateEmbed } = require('../utils');
+const { startServer } = require('../server');
 
 module.exports = {
   name: 'ready',
@@ -31,6 +32,8 @@ module.exports = {
     function runUpdatePresence() {
       updatePresenceData(client);
     }
+
+    startServer(client);
   },
 };
 
