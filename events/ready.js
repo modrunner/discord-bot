@@ -110,11 +110,14 @@ async function checkForProjectUpdates(client) {
           continue;
         }
 				*/
-        // Verify that this latest file's ID is not in the database. If it is, it has already been reported as updated
-        if (dbProject.fileIds.includes(requestedMod.latestFilesIndexes[0].fileId)) {
-          logger.debug(`${dbProject.name}'s latest file has already been reported on.`);
-          await dbProject.updateDate(requestedMod.dateReleased);
-          continue;
+        // Verify the project has files
+        if (requestedMod.latestFilesIndexes.length > 0) {
+          // Verify that this latest file's ID is not in the database. If it is, it has already been reported as updated
+          if (dbProject.fileIds.includes(requestedMod.latestFilesIndexes[0].fileId)) {
+            logger.debug(`${dbProject.name}'s latest file has already been reported on.`);
+            await dbProject.updateDate(requestedMod.dateReleased);
+            continue;
+          }
         }
 
         // If we get here, the project has passed all verification checks and has a legitmate update available
