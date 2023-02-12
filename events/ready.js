@@ -118,6 +118,9 @@ async function checkForProjectUpdates(client) {
             await dbProject.updateDate(requestedMod.dateReleased);
             continue;
           }
+        } else {
+          logger.debug(`Project ${dbProject.name} has no uploaded files.`);
+          continue;
         }
 
         // If we get here, the project has passed all verification checks and has a legitmate update available

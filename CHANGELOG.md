@@ -1,5 +1,9 @@
 # Changelog
 
+## \[1.3.2] (2023-02-11)
+
+- Fixed projects without uploaded files causing an error state
+
 ## \[1.3.1] (2023-02-06)
 
 - Fixed nonexisting Modrinth project causing a restart loop
