@@ -30,7 +30,7 @@
     "pino-pretty": "^9.1.0",
     "sequelize": "^6.23.2",
     "sqlite3": "^5.1.1",
-    "undici": "^5.10.0"
+    "undici": "^5.19.1"
   },
   "devDependencies": {
     "eslint": "^8.24.0",
