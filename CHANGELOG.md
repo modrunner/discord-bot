@@ -1,5 +1,13 @@
 # Changelog
 
+## \[1.3.2] (2023-02-11)
+
+- Fixed projects without uploaded files causing an error state
+
+## \[1.3.1] (2023-02-06)
+
+- Fixed nonexisting Modrinth project causing a restart loop
+
 ## \[1.3.0] (2022-12-21)
 
 - Added the ability to add roles to tracked projects to ping members with that role then an update notification is posted

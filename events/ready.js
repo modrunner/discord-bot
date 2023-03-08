@@ -113,10 +113,16 @@ async function checkForProjectUpdates(client) {
           continue;
         }
 				*/
-        // Verify that this latest file's ID is not in the database. If it is, it has already been reported as updated
-        if (dbProject.fileIds.includes(requestedMod.latestFilesIndexes[0].fileId)) {
-          logger.debug(`${dbProject.name}'s latest file has already been reported on.`);
-          await dbProject.updateDate(requestedMod.dateReleased);
+        // Verify the project has files
+        if (requestedMod.latestFilesIndexes.length > 0) {
+          // Verify that this latest file's ID is not in the database. If it is, it has already been reported as updated
+          if (dbProject.fileIds.includes(requestedMod.latestFilesIndexes[0].fileId)) {
+            logger.debug(`${dbProject.name}'s latest file has already been reported on.`);
+            await dbProject.updateDate(requestedMod.dateReleased);
+            continue;
+          }
+        } else {
+          logger.debug(`Project ${dbProject.name} has no uploaded files.`);
           continue;
         }
 
@@ -199,6 +205,7 @@ async function updatePresenceData(client) {
 }
 
 async function sweepDatabase(client) {
+  // Sweep projects with missing channels
   const tracked = await TrackedProjects.findAll();
   let trackedSwept = 0;
   for (const project of tracked) {
@@ -214,6 +221,7 @@ async function sweepDatabase(client) {
   }
   logger.info(`Swept ${trackedSwept} tracked projects with missing channels from the database.`);
 
+  // Sweep projects not being tracked in any guild
   const projects = await Projects.findAll();
   let projectsSwept = 0;
   for (const project of projects) {
@@ -232,4 +240,32 @@ async function sweepDatabase(client) {
     }
   }
   logger.info(`Swept ${projectsSwept} projects not being tracked in any guild from the database.`);
+
+  // Sweep projects that no longer exist on their platform
+  // Modrinth
+  const dbModrinthProjects = await Projects.findAll({
+    where: {
+      platform: 'modrinth',
+    },
+  });
+
+  const dbModrinthProjectIds = [];
+  for (const dbProject of dbModrinthProjects) {
+    dbModrinthProjectIds.push(dbProject.id);
+  }
+
+  const data = await getProjects(dbModrinthProjectIds);
+  let realModrinthProjects;
+  if (data.statusCode === 200) realModrinthProjects = await getJSONResponse(data.body);
+  for (const project of dbModrinthProjects) {
+    if (!realModrinthProjects.find((prj) => prj.id === project.id)) {
+      logger.info(`Sweeping a project that does not exist on Modrinth: ${project.name} (${project.id})`);
+      await Projects.destroy({
+        where: { id: project.id },
+      });
+      await TrackedProjects.destroy({
+        where: { projectId: project.id },
+      });
+    }
+  }
 }
