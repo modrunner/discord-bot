@@ -6,6 +6,13 @@ const { listProjectVersions } = require('./api/modrinth');
 const { TrackedProjects, Guilds } = require('./database/db');
 const { EmbedBuilder, codeBlock, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionsBitField } = require('discord.js');
 const dayjs = require('dayjs');
+const { Configuration, OpenAIApi } = require('openai');
+
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
+
 module.exports = {
   /**
    * Handles sending update notifications to the appropriate guild channels where a project is tracked
@@ -85,7 +92,7 @@ module.exports = {
       }
 
       // Check to see if Modrunner has permissions to post in the update channel
-      if (!channel.viewable || !channel.permissionsFor(client.user.id).has(PermissionsBitField.Flags.SendMessages)) {
+      if (!channel.viewable || !channel.permissionsFor(client.user.id).has([PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.EmbedLinks])) {
         logger.warn(
           `Could not post notification in channel ${channel.name} (${channel.id}) in guild ${guild.name} (${guild.id}) due to insufficient permissions.`
         );
@@ -139,6 +146,30 @@ module.exports = {
             });
           }
           break;
+        case 'ai': {
+          const response = await openai.createCompletion({
+            model: 'text-davinci-003',
+            prompt: `Create an announcement with a professional tone for an update to ${dbProject.name} on ${dbProject.platform}. 
+						The new version is ${versionData.name}, it's a ${versionData.type} release, and the changelog is: ${versionData.changelog}. 
+						Use markdown formatting to highlight important information`,
+            max_tokens: 1024,
+          });
+          logger.debug(response.data);
+
+          if (channel.type === ChannelType.GuildForum) {
+            await channel.threads.create({
+              name: `${versionData.name}`,
+              message: {
+                content: `${response.data.choices[0].text}\n${rolesString}`,
+              },
+            });
+          } else {
+            await channel.send({
+              content: `${response.data.choices[0].text}\n${rolesString}`,
+            });
+          }
+          break;
+        }
         default:
           if (channel.type === ChannelType.GuildForum) {
             await channel.threads.create({

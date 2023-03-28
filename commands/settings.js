@@ -22,6 +22,10 @@ module.exports = {
         {
           name: 'Compact',
           value: 'compact',
+        },
+        {
+          name: 'AI-Generated (Beta)',
+          value: 'ai',
         }
       )
     ),

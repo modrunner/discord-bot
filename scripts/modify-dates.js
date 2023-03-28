@@ -1,4 +1,4 @@
-const { Projects } = require('../database/db');
+const { Projects } = require('../database/db.js');
 
 modifyDates();
 async function modifyDates() {
