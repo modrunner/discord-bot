@@ -1,7 +1,7 @@
 const { ChannelType } = require('discord-api-types/v10');
 const { PermissionsBitField, SlashCommandBuilder } = require('discord.js');
 const logger = require('../logger');
-const { Projects, TrackedProjects, Guilds } = require('../database/models');
+const { Projects, TrackedProjects, Guilds } = require('../database/db');
 
 module.exports = {
   data: new SlashCommandBuilder()

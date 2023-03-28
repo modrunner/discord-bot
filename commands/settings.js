@@ -1,5 +1,5 @@
 const { PermissionsBitField, SlashCommandBuilder, inlineCode } = require('discord.js');
-const { Guilds } = require('../database/models');
+const { Guilds } = require('../database/db');
 
 module.exports = {
   data: new SlashCommandBuilder()

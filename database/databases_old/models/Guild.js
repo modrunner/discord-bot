@@ -6,11 +6,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         primaryKey: true,
       },
-      changelogLength: {
+      changelogMaxLength: {
         type: DataTypes.INTEGER,
         defaultValue: 4000,
       },
-      maxProjects: {
+      maxTrackedProjects: {
         type: DataTypes.INTEGER,
         defaultValue: 100,
       },
@@ -24,7 +24,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       timestamps: false,
-      underscored: true,
     }
   );
 };

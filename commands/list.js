@@ -1,5 +1,5 @@
 const { Collection, SlashCommandBuilder, EmbedBuilder, inlineCode, ChannelType } = require('discord.js');
-const { Projects, TrackedProjects, Guilds } = require('../database/models');
+const { Projects, TrackedProjects, Guilds } = require('../database/db');
 const logger = require('../logger');
 
 module.exports = {
@@ -75,7 +75,7 @@ module.exports = {
       .setTitle(`Projects currently tracked in ${channel ? channel.name : interaction.guild.name}`)
       .setDescription(
         `**Projects: ${projects.length}${channel ? '' : '/'}${
-          channel ? '' : guildSettings.maxTrackedProjects
+          channel ? '' : guildSettings.maxProjects
         }**\n\nProjects are listed alphabetically.\nTo manage your tracked projects, use the ${inlineCode('/track')} and ${inlineCode('/untrack')} commands.`
       )
       .setFooter({ text: 'Page 1' });

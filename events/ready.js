@@ -4,9 +4,9 @@ const { getProjects } = require('../api/modrinth');
 const ms = require('ms');
 const getJSONResponse = require('../api/getJSONResponse');
 const { ActivityType } = require('discord.js');
-const { Projects, TrackedProjects } = require('../database/models');
+const { Projects, TrackedProjects } = require('../database/db');
 const { sendUpdateEmbed } = require('../utils');
-const { startServer } = require('../server');
+const { startServer } = require('../api/server');
 
 module.exports = {
   name: 'ready',

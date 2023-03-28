@@ -1,38 +1,10 @@
-const fs = require('fs');
 const express = require('express');
-const http = require('http');
-const https = require('https');
-const logger = require('./logger');
-const { Guilds, Projects, TrackedProjects } = require('./database/models');
-const { version } = require('./package.json');
-const { getMods } = require('./api/curseforge');
-const { getProjects } = require('./api/modrinth');
+const router = express.Router();
+const { Guilds, TrackedProjects } = require('../../database/db');
+const { getMods } = require('../curseforge');
+const { getProjects } = require('../modrinth');
 
-const app = express();
-
-app.use(express.json());
-
-app.use((req, res, next) => {
-  logger.info(`Recieved a request from ${req.ip}`);
-  res.append('Access-Control-Allow-Origin', process.env.CORS_ORIGIN);
-  next();
-});
-
-app.get('/', (req, res) => {
-  res.status(200).json({
-    about: 'Welcome Traveller!',
-    name: 'modrunner-api',
-    version: version,
-  });
-});
-
-app.route('/channel/:id').get(async (req, res) => {
-  const channel = app.locals.client.channels.cache.get(req.params.id);
-  if (channel) res.status(200).json(channel);
-  res.status(404);
-});
-
-app.route('/guilds').get(async (req, res) => {
+router.route('/').get(async (request, response) => {
   let guildsWithProjectData = [];
   const guilds = await Guilds.findAll();
   for (const guild of guilds) {
@@ -47,29 +19,29 @@ app.route('/guilds').get(async (req, res) => {
       projects: [...projects],
     });
   }
-  res.status(200).json(guildsWithProjectData);
+  response.status(200).json(guildsWithProjectData);
 });
 
-app.route('/guilds/:id').get(async (req, res) => {
+router.route('/:id').get(async (request, response) => {
   // Get guild settings
-  const guild = await Guilds.findByPk(req.params.id);
+  const guild = await Guilds.findByPk(request.params.id);
   if (!guild) {
-    res.status(404).json({
+    return request.status(404).json({
       error: 'Modrunner is not present in this guild',
     });
   }
 
   const guildResponseData = {
     id: guild.id,
-    changelogMaxLength: guild.changelogMaxLength,
-    maxTrackedProjects: guild.maxTrackedProjects,
+    changelogLength: guild.changelogLength,
+    maxProjects: guild.maxProjects,
     notificationStyle: guild.notificationStyle,
     trackedProjects: [],
   };
 
   // Get guild's tracked projects
   const trackedProjects = await TrackedProjects.findAll({ where: { guildId: guild.id } });
-  if (!trackedProjects.length) return res.status(200).json(guildResponseData);
+  if (!trackedProjects.length) return response.status(200).json(guildResponseData);
 
   // Filter duplicate project IDs
   const uniqueProjects = [];
@@ -95,7 +67,7 @@ app.route('/guilds/:id').get(async (req, res) => {
     const curseforgeIds = curseforgeProjects.map((project) => project.projectId);
     const curseforgeResponse = await getMods(curseforgeIds);
     if (curseforgeResponse.statusCode !== 200) {
-      return res.status(500).json({
+      return response.status(500).json({
         error: 'Failed to retrieve project information from CurseForge',
       });
     }
@@ -111,7 +83,7 @@ app.route('/guilds/:id').get(async (req, res) => {
 
       let channelIds = [];
       for (const channel of projectChannels) {
-        const apiChannel = app.locals.client.channels.cache.get(channel.channelId);
+        const apiChannel = request.app.locals.client.channels.cache.get(channel.channelId);
         channelIds.push({
           id: channel.channelId,
           name: apiChannel.name,
@@ -120,6 +92,7 @@ app.route('/guilds/:id').get(async (req, res) => {
 
       guildResponseData.trackedProjects.push({
         id: project.id,
+        platform: 'curseforge',
         name: project.name,
         icon: project.logo.url,
         channels: channelIds,
@@ -132,7 +105,7 @@ app.route('/guilds/:id').get(async (req, res) => {
     const modrinthIds = modrinthProjects.map((project) => project.projectId);
     const modrinthResponse = await getProjects(modrinthIds);
     if (modrinthResponse.statusCode !== 200) {
-      return res.status(500).json({
+      return response.status(500).json({
         error: 'Failed to retrieve project information from Modrinth',
       });
     }
@@ -148,7 +121,7 @@ app.route('/guilds/:id').get(async (req, res) => {
 
       let channelIds = [];
       for (const channel of projectChannels) {
-        const apiChannel = app.locals.client.channels.cache.get(channel.channelId);
+        const apiChannel = request.app.locals.client.channels.cache.get(channel.channelId);
         channelIds.push({
           id: channel.channelId,
           name: apiChannel.name,
@@ -157,6 +130,7 @@ app.route('/guilds/:id').get(async (req, res) => {
 
       guildResponseData.trackedProjects.push({
         id: project.id,
+        platform: 'modrinth',
         name: project.title,
         icon: project.icon_url,
         channels: channelIds,
@@ -165,10 +139,10 @@ app.route('/guilds/:id').get(async (req, res) => {
   }
 
   guildResponseData.trackedProjects.sort((a, b) => a.name.localeCompare(b.name));
-  res.status(200).json(guildResponseData);
+  response.status(200).json(guildResponseData);
 });
 
-app.route('/guilds/:id/projects').get(async (req, res) => {
+router.route('/:id/projects').get(async (req, res) => {
   const projects = await TrackedProjects.findAll({
     where: {
       guildId: req.params.id,
@@ -181,28 +155,4 @@ app.route('/guilds/:id/projects').get(async (req, res) => {
   }
 });
 
-app.get('/project/:id', async (req, res) => {
-  const project = await Projects.findByPk(req.params.id);
-  if (!project) {
-    res.status(404).json({
-      error: `No project with ID ${req.params.id} found in database.`,
-    });
-  } else {
-    res.status(200).json(project);
-  }
-});
-
-function startServer(client) {
-  app.locals.client = client;
-
-  let server;
-  if (process.env.DOPPLER_ENVIRONMENT === 'prd') {
-    server = https.createServer({ key: fs.readFileSync('./key.pem'), cert: fs.readFileSync('./cert.pem') }, app);
-  } else {
-    server = http.createServer(app);
-  }
-
-  server.listen(process.env.SERVER_PORT, () => logger.info(`Web server is listening on port ${process.env.SERVER_PORT}`));
-}
-
-module.exports = { startServer };
+module.exports = router;

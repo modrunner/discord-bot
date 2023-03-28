@@ -1,9 +1,5 @@
 .fleet
-.vscode
 .idea
 node_modules
-_*
-api/api_config.json
 
-*.log
-database.sqlite
+*.sqlite

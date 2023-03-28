@@ -6,10 +6,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         primaryKey: true,
       },
-      projectPlatform: {
-        type: DataTypes.STRING,
-        primaryKey: true,
-      },
       channelId: {
         type: DataTypes.STRING,
         primaryKey: true,
@@ -25,7 +21,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       timestamps: false,
-      underscored: true,
     }
   );
 };

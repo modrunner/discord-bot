@@ -1,5 +1,5 @@
 const logger = require('../logger');
-const { TrackedProjects, Guilds } = require('../database/models');
+const { TrackedProjects, Guilds } = require('../database/db');
 
 module.exports = {
   name: 'guildDelete',
