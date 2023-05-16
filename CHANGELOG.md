@@ -1,5 +1,9 @@
 # Changelog
 
+## \[1.3.3] (2023-05-16)
+
+- Fixed occasional error when tracking projects
+
 ## \[1.3.2] (2023-02-11)
 
 - Fixed projects without uploaded files causing an error state
