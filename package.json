@@ -24,10 +24,10 @@
     "@discordjs/rest": "^1.2.0",
     "dayjs": "^1.11.5",
     "discord-api-types": "^0.37.11",
-    "discord.js": "^14.7.1",
+    "discord.js": "^14.11.0",
     "ms": "^2.1.3",
     "pino": "^8.6.1",
-    "pino-pretty": "^9.1.0",
+    "pino-pretty": "^10.0.0",
     "sequelize": "^6.23.2",
     "sqlite3": "^5.1.1",
     "undici": "^5.10.0"
