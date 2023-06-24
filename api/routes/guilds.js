@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { Guilds, TrackedProjects } = require('../../database/db');
-const { getMods } = require('../curseforge');
-const { getProjects } = require('../modrinth');
+const { Guilds, TrackedProjects, Projects } = require('../../database/db');
+const { Op } = require('sequelize');
 
 router.route('/').get(async (request, response) => {
   let guildsWithProjectData = [];
@@ -22,124 +21,61 @@ router.route('/').get(async (request, response) => {
   response.status(200).json(guildsWithProjectData);
 });
 
+// Gets a guild's info and tracked projects organized by channel
 router.route('/:id').get(async (request, response) => {
   // Get guild settings
   const guild = await Guilds.findByPk(request.params.id);
-  if (!guild) {
-    return request.status(404).json({
-      error: 'Modrunner is not present in this guild',
-    });
-  }
+  if (!guild) return response.status(404);
 
-  const guildResponseData = {
+  const responseData = {
     id: guild.id,
     changelogLength: guild.changelogLength,
     maxProjects: guild.maxProjects,
     notificationStyle: guild.notificationStyle,
-    trackedProjects: [],
+    channels: [],
   };
 
   // Get guild's tracked projects
-  const trackedProjects = await TrackedProjects.findAll({ where: { guildId: guild.id } });
-  if (!trackedProjects.length) return response.status(200).json(guildResponseData);
+  const trackedProjects = await TrackedProjects.findAll({
+    where: {
+      guildId: guild.id,
+    },
+  });
+  if (!trackedProjects.length) return response.status(200).json(responseData);
 
-  // Filter duplicate project IDs
-  const uniqueProjects = [];
+  // Add channels and channel tracked projects to response data
+  const tempChannels = [];
   for (const project of trackedProjects) {
-    const existingProject = uniqueProjects.find((prj) => prj.projectId === project.projectId);
-    if (existingProject === undefined) {
-      uniqueProjects.push(project);
-    }
-  }
+    if (tempChannels.includes(project.channelId)) continue;
 
-  let curseforgeProjects = [];
-  let modrinthProjects = [];
-  for (const project of uniqueProjects) {
-    if (project.projectId.match(/[A-z]/)) {
-      modrinthProjects.push(project);
-    } else {
-      curseforgeProjects.push(project);
-    }
-  }
+    tempChannels.push(project.channelId);
 
-  // Fetch curseforge project data
-  if (curseforgeProjects.length) {
-    const curseforgeIds = curseforgeProjects.map((project) => project.projectId);
-    const curseforgeResponse = await getMods(curseforgeIds);
-    if (curseforgeResponse.statusCode !== 200) {
-      return response.status(500).json({
-        error: 'Failed to retrieve project information from CurseForge',
-      });
-    }
-
-    const curseforgeProjectData = await curseforgeResponse.body.json();
-    for (const project of curseforgeProjectData.data) {
-      const projectChannels = await TrackedProjects.findAll({
-        where: {
-          projectId: project.id,
-          guildId: guild.id,
-        },
-      });
-
-      let channelIds = [];
-      for (const channel of projectChannels) {
-        const apiChannel = request.app.locals.client.channels.cache.get(channel.channelId);
-        channelIds.push({
-          id: channel.channelId,
-          name: apiChannel.name,
-        });
+    const channelProjectIds = [];
+    for (const prj of trackedProjects) {
+      if (prj.channelId === project.channelId) {
+        channelProjectIds.push(prj.projectId);
       }
-
-      guildResponseData.trackedProjects.push({
-        id: project.id,
-        platform: 'curseforge',
-        name: project.name,
-        icon: project.logo.url,
-        channels: channelIds,
-      });
-    }
-  }
-
-  // Fetch modrinth project data
-  if (modrinthProjects.length) {
-    const modrinthIds = modrinthProjects.map((project) => project.projectId);
-    const modrinthResponse = await getProjects(modrinthIds);
-    if (modrinthResponse.statusCode !== 200) {
-      return response.status(500).json({
-        error: 'Failed to retrieve project information from Modrinth',
-      });
     }
 
-    const modrinthProjectData = await modrinthResponse.body.json();
-    for (const project of modrinthProjectData) {
-      const projectChannels = await TrackedProjects.findAll({
-        where: {
-          projectId: project.id,
-          guildId: guild.id,
+    const projectDetails = await Projects.findAll({
+      where: {
+        id: {
+          [Op.in]: channelProjectIds,
         },
-      });
+      },
+      attributes: {
+        exclude: ['fileIds'],
+      },
+    });
 
-      let channelIds = [];
-      for (const channel of projectChannels) {
-        const apiChannel = request.app.locals.client.channels.cache.get(channel.channelId);
-        channelIds.push({
-          id: channel.channelId,
-          name: apiChannel.name,
-        });
-      }
-
-      guildResponseData.trackedProjects.push({
-        id: project.id,
-        platform: 'modrinth',
-        name: project.title,
-        icon: project.icon_url,
-        channels: channelIds,
-      });
-    }
+    responseData.channels.push({
+      id: project.channelId,
+      name: request.app.locals.client.channels.cache.get(project.channelId).name,
+      projects: projectDetails,
+    });
   }
 
-  guildResponseData.trackedProjects.sort((a, b) => a.name.localeCompare(b.name));
-  response.status(200).json(guildResponseData);
+  return response.status(200).json(responseData);
 });
 
 router.route('/:id/projects').get(async (req, res) => {

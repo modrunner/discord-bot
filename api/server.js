@@ -13,8 +13,14 @@ const app = express();
 app.use(express.json());
 
 app.use((request, response, next) => {
+  const xApiKey = request.get('x-api-key');
+  if (!xApiKey || xApiKey !== process.env.X_API_KEY) {
+    logger.warn(`Rejected an incoming request from ${request.hostname} (${request.ip}), due to missing or invalid API key.`);
+    return response.status(401).end();
+  }
+
   logger.info(`Recieved a request from ${request.hostname} (${request.ip}), at route ${request.method} ${request.originalUrl}`);
-  response.append('Access-Control-Allow-Origin', process.env.CORS_ORIGIN);
+
   next();
 });
 
