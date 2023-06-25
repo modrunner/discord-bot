@@ -13,7 +13,7 @@
     "start": "node .",
     "dev": "doppler run --command=\"nodemon .\"",
     "register": "doppler run --command=\"node scripts/register-commands.js\"",
-    "register-globally": "doppler run --command=\"node scripts/register-commands.js --global\"",
+    "register-globally": "node scripts/register-commands.js --global",
     "create-db": "node scripts/initialize-database.js",
     "reset-db": "node scripts/initialize-database.js --force",
     "alter-db": "node scripts/initialize-database.js --alter",
