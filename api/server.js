@@ -7,6 +7,7 @@ const { version } = require('../package.json');
 const channelsRoute = require('./routes/channels');
 const guildsRoute = require('./routes/guilds');
 const projectsRoute = require('./routes/projects');
+const statsRoute = require('./routes/stats');
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use((request, response, next) => {
 app.use('/channels', channelsRoute);
 app.use('/guilds', guildsRoute);
 app.use('/projects', projectsRoute);
+app.use('/stats', statsRoute);
 
 app.get('/', (request, response) => {
   response.status(200).json({
