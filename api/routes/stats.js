@@ -8,7 +8,7 @@ router.get('/', async (request, response) => {
 
   const uptimeData = await fetch('https://uptime.betterstack.com/api/v2/status-pages/161181/resources/2650613', {
     headers: {
-      authorization: `Bearer ${process.env.BS_API_KEY}`,
+      authorization: `Bearer ${process.env.BETTERSTACK_API_KEY}`,
     },
   })
     .then((res) => res.json())

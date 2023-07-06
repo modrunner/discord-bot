@@ -15,7 +15,7 @@ app.use(express.json());
 
 app.use((request, response, next) => {
   const xApiKey = request.get('x-api-key');
-  if (!xApiKey || xApiKey !== process.env.X_API_KEY) {
+  if (!xApiKey || xApiKey !== process.env.MODRUNNER_API_KEY) {
     logger.warn(`Rejected an incoming request from ${request.hostname} (${request.ip}), due to missing or invalid API key.`);
     return response.status(401).end();
   }

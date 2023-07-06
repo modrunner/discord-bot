@@ -3,7 +3,7 @@ const logger = require('../logger');
 
 const config = {
   baseUrl: `https://api.curseforge.com`,
-  apiKey: process.env.CF_API_KEY,
+  apiKey: process.env.CURSEFORGE_API_KEY,
   maxRetries: 3,
   version: '1',
 };
