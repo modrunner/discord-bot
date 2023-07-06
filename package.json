@@ -10,7 +10,7 @@
     "eslint": "eslint .",
     "eslint-fix": "eslint fix .",
     "build": "npm run register-globally && npm run alter-db",
-    "start": "doppler run -- start .",
+    "start": "doppler run -- node .",
     "dev": "doppler run --command=\"nodemon .\"",
     "register": "doppler run --command=\"node scripts/register-commands.js\"",
     "register-globally": "node scripts/register-commands.js --global",
