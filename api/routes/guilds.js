@@ -25,10 +25,15 @@ router.route('/').get(async (request, response) => {
 router.route('/:id').get(async (request, response) => {
   // Get guild settings
   const guild = await Guilds.findByPk(request.params.id);
-  if (!guild) return response.status(404);
+  if (!guild)
+    return response.status(404).json({
+      id: request.params.id,
+      isBotPresent: false,
+    });
 
   const responseData = {
     id: guild.id,
+    isBotPresent: true,
     changelogLength: guild.changelogLength,
     maxProjects: guild.maxProjects,
     notificationStyle: guild.notificationStyle,
@@ -91,4 +96,39 @@ router.route('/:id/projects').get(async (req, res) => {
   }
 });
 
+// Get a guild's channels
+router.route('/:id/channels').get(async (request, response) => {
+  const guild = request.app.locals.client.guilds.cache.get(request.params.id);
+  if (!guild) return response.status(404).json();
+
+  const guildChannels = guild.channels.cache;
+
+  // Remove any channel that is not a text or forum channel channels
+  guildChannels.sweep((channel) => {
+    return channel.type !== 0 && channel.type !== 15;
+  });
+
+  // Convert Collection to Array to only needed properties
+  const guildChannelsArray = guildChannels.map((channel) => {
+    return {
+      id: channel.id,
+      name: channel.name,
+      type: getChannelTypeEnum(channel.type),
+      position: channel.rawPosition,
+    };
+  });
+
+  return response.status(200).json(guildChannelsArray);
+});
+
 module.exports = router;
+
+function getChannelTypeEnum(type) {
+  if (type === 0) {
+    return 'text';
+  } else if (type === 15) {
+    return 'forum';
+  } else {
+    return 'unknown';
+  }
+}
