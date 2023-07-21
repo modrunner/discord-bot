@@ -5,7 +5,8 @@ const logger = pino({
   transport: {
     target: 'pino-pretty',
     options: {
-      ignore: process.env.DOPPLER_ENVIRONMENT === 'dev' ? 'pid,hostname' : 'pid,hostname,time',
+      ignore: process.env.DOPPLER_ENVIRONMENT === 'dev' ? 'pid,hostname' : 'pid,hostname',
+      translateTime: 'SYS:yyyy-mm-dd hh:MM:s:l TT',
     },
   },
 });
