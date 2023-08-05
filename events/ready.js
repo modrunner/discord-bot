@@ -145,6 +145,11 @@ async function checkForProjectUpdates(client) {
       // If the initial API call failed
       if (!requestedProjects) break;
       const requestedProject = requestedProjects.find((project) => project.id === dbProject.id);
+      // Check if the project was actually returned by the API
+      if (!requestedProject) {
+        logger.warn(`Detected a project that does not exist during Modrinth update check: ${dbProject.name} (${dbProject.id})`);
+        continue;
+      }
       // Check if the project has been updated
       if (dbProject.dateUpdated.getTime() !== new Date(requestedProject.updated).getTime()) {
         // Verify that this file's ID is not in the database. If it is, it has already been reported as updated
@@ -256,13 +261,13 @@ async function sweepDatabase(client) {
   if (data.statusCode === 200) realModrinthProjects = await getJSONResponse(data.body);
   for (const project of dbModrinthProjects) {
     if (!realModrinthProjects.find((prj) => prj.id === project.id)) {
-      logger.info(`Sweeping a project that does not exist on Modrinth: ${project.name} (${project.id})`);
-      await Projects.destroy({
-        where: { id: project.id },
-      });
-      await TrackedProjects.destroy({
-        where: { projectId: project.id },
-      });
+      logger.info(`Detected a project that does not exist on Modrinth: ${project.name} (${project.id})`);
+      // await Projects.destroy({
+      //   where: { id: project.id },
+      // });
+      // await TrackedProjects.destroy({
+      //   where: { projectId: project.id },
+      // });
     }
   }
 }
