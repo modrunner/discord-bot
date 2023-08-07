@@ -147,7 +147,7 @@ async function checkForProjectUpdates(client) {
       const requestedProject = requestedProjects.find((project) => project.id === dbProject.id);
       // Check if the project was actually returned by the API
       if (!requestedProject) {
-        logger.warn(`Detected a project that does not exist during Modrinth update check: ${dbProject.name} (${dbProject.id})`);
+        // logger.warn(`Detected a project that does not exist during Modrinth update check: ${dbProject.name} (${dbProject.id})`);
         continue;
       }
       // Check if the project has been updated
