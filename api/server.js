@@ -41,12 +41,13 @@ app.get('/', (request, response) => {
 function startServer(client) {
   app.locals.client = client;
 
-  let server;
-  if (process.env.DOPPLER_ENVIRONMENT === 'prd') {
-    server = https.createServer({ key: fs.readFileSync('./key.pem'), cert: fs.readFileSync('./cert.pem') }, app);
-  } else {
-    server = http.createServer(app);
-  }
+  let server = https.createServer(
+    {
+      key: fs.readFileSync('../etc/letsencrypt/live/staging-api.modrunner.net/fullchain.pem'),
+      cert: fs.readFileSync('../etc/letsencrypt/live/staging-api.modrunner.net/privkey.pem'),
+    },
+    app
+  );
 
   server.listen(process.env.SERVER_PORT, () => logger.info(`Web server is listening on port ${process.env.SERVER_PORT}`));
 }
