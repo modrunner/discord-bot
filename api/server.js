@@ -1,6 +1,6 @@
 const fs = require('fs');
 const express = require('express');
-const http = require('http');
+// const http = require('http');
 const https = require('https');
 const logger = require('../logger');
 const { version } = require('../package.json');
@@ -43,8 +43,8 @@ function startServer(client) {
 
   let server = https.createServer(
     {
-      key: fs.readFileSync('../etc/letsencrypt/live/staging-api.modrunner.net/fullchain.pem'),
-      cert: fs.readFileSync('../etc/letsencrypt/live/staging-api.modrunner.net/privkey.pem'),
+      key: fs.readFileSync('../../../etc/letsencrypt/live/staging-api.modrunner.net/fullchain.pem'),
+      cert: fs.readFileSync('../../../etc/letsencrypt/live/staging-api.modrunner.net/privkey.pem'),
     },
     app
   );
