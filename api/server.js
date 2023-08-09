@@ -43,8 +43,8 @@ function startServer(client) {
 
   let server = https.createServer(
     {
-      key: fs.readFileSync('../../../etc/letsencrypt/live/staging-api.modrunner.net/fullchain.pem'),
-      cert: fs.readFileSync('../../../etc/letsencrypt/live/staging-api.modrunner.net/privkey.pem'),
+      key: fs.readFileSync('../../../etc/letsencrypt/live/staging-api.modrunner.net/privkey.pem'),
+      cert: fs.readFileSync('../../../etc/letsencrypt/live/staging-api.modrunner.net/fullchain.pem'),
     },
     app
   );
