@@ -94,7 +94,7 @@ module.exports = {
         .setAuthor({ name: 'From modrinth.com', iconURL: 'https://i.imgur.com/2XDguyk.png', url: 'https://modrinth.com' })
         .setTitle(result.title)
         .setDescription(result.description)
-        .setThumbnail(result.icon_url ? result.icon_url !== '' : null)
+        .setThumbnail(result.icon_url !== '' ? result.icon_url : null)
         .setImage(result.gallery[Math.floor(Math.random() * result.gallery.length)])
         .setFields(
           { name: 'Project Type', value: `${result.project_type}` },
