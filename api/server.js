@@ -1,6 +1,6 @@
 const fs = require('fs');
 const express = require('express');
-// const http = require('http');
+const http = require('http');
 const https = require('https');
 const logger = require('../logger');
 const { version } = require('../package.json');
@@ -41,13 +41,18 @@ app.get('/', (request, response) => {
 function startServer(client) {
   app.locals.client = client;
 
-  let server = https.createServer(
-    {
-      key: fs.readFileSync('../../../etc/letsencrypt/live/staging-api.modrunner.net/privkey.pem'),
-      cert: fs.readFileSync('../../../etc/letsencrypt/live/staging-api.modrunner.net/fullchain.pem'),
-    },
-    app
-  );
+  let server;
+  if (process.env.DOPPLER_ENVIRONMENT === 'dev') {
+    server = http.createServer(app);
+  } else {
+    server = https.createServer(
+      {
+        key: fs.readFileSync('../../../etc/letsencrypt/live/staging-api.modrunner.net/privkey.pem'),
+        cert: fs.readFileSync('../../../etc/letsencrypt/live/staging-api.modrunner.net/fullchain.pem'),
+      },
+      app
+    );
+  }
 
   server.listen(process.env.SERVER_PORT, () => logger.info(`Web server is listening on port ${process.env.SERVER_PORT}`));
 }

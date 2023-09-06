@@ -26,7 +26,7 @@ router.route('/:id').get(async (request, response) => {
   // Get guild settings
   const guild = await Guilds.findByPk(request.params.id);
   if (!guild)
-    return response.status(404).json({
+    return response.status(200).json({
       id: request.params.id,
       isBotPresent: false,
     });
