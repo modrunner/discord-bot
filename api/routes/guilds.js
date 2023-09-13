@@ -38,7 +38,21 @@ router.route('/:id').get(async (request, response) => {
     maxProjects: guild.maxProjects,
     notificationStyle: guild.notificationStyle,
     channels: [],
+		roles: [],
   };
+
+	// Get guild's roles
+  const discordGuild = request.app.locals.client.guilds.cache.get(request.params.id);
+	const guildRoles = discordGuild.roles.cache;
+
+  // Convert Collection to Array to only needed properties
+  responseData.roles = guildRoles.map((role) => {
+    return {
+      id: role.id,
+      name: role.name,
+      color: role.hexColor,
+    };
+  });
 
   // Get guild's tracked projects
   const trackedProjects = await TrackedProjects.findAll({
@@ -119,6 +133,25 @@ router.route('/:id/channels').get(async (request, response) => {
   });
 
   return response.status(200).json(guildChannelsArray);
+});
+
+// Get a guild's roles
+router.route('/:id/roles').get(async (request, response) => {
+  const guild = request.app.locals.client.guilds.cache.get(request.params.id);
+  if (!guild) return response.status(404).json();
+
+  const guildRoles = guild.roles.cache;
+
+  // Convert Collection to Array to only needed properties
+  const guildRolesArray = guildRoles.map((role) => {
+    return {
+      id: role.id,
+      name: role.name,
+      color: role.hexColor,
+    };
+  });
+
+	return response.status(200).json(guildRolesArray);
 });
 
 module.exports = router;
