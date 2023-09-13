@@ -38,12 +38,12 @@ router.route('/:id').get(async (request, response) => {
     maxProjects: guild.maxProjects,
     notificationStyle: guild.notificationStyle,
     channels: [],
-		roles: [],
+    roles: [],
   };
 
-	// Get guild's roles
+  // Get guild's roles
   const discordGuild = request.app.locals.client.guilds.cache.get(request.params.id);
-	const guildRoles = discordGuild.roles.cache;
+  const guildRoles = discordGuild.roles.cache;
 
   // Convert Collection to Array to only needed properties
   responseData.roles = guildRoles.map((role) => {
@@ -76,7 +76,7 @@ router.route('/:id').get(async (request, response) => {
       }
     }
 
-    const projectDetails = await Projects.findAll({
+    let projectDetails = await Projects.findAll({
       where: {
         id: {
           [Op.in]: channelProjectIds,
@@ -87,10 +87,28 @@ router.route('/:id').get(async (request, response) => {
       },
     });
 
+		const channelProjects = [];
+		for (const detail of projectDetails) {
+			const trackedProject = await TrackedProjects.findOne({
+        where: {
+          channelId: project.channelId,
+          projectId: detail.id,
+        },
+      });
+
+			channelProjects.push({
+				id: detail.id,
+				platform: detail.platform,
+				name: detail.name,
+				dateUpdated: detail.dateUpdated,
+				roleIds: trackedProject.roleIds,
+			})
+		}
+
     responseData.channels.push({
       id: project.channelId,
       name: request.app.locals.client.channels.cache.get(project.channelId).name,
-      projects: projectDetails,
+      projects: channelProjects,
     });
   }
 
@@ -151,7 +169,7 @@ router.route('/:id/roles').get(async (request, response) => {
     };
   });
 
-	return response.status(200).json(guildRolesArray);
+  return response.status(200).json(guildRolesArray);
 });
 
 module.exports = router;
