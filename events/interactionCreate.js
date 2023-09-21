@@ -4,7 +4,7 @@ const { inlineCode } = require('@discordjs/builders');
 const { searchMods } = require('../api/curseforge');
 const { searchProjects } = require('../api/modrinth');
 const logger = require('../logger');
-const { Projects, Guilds, TrackedProjects } = require('../database/models');
+const { Projects, Guilds, TrackedProjects } = require('../database/db');
 
 module.exports = {
   name: 'interactionCreate',

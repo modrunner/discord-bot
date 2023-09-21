@@ -1,31 +1,25 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    'trackedProject',
+    'project',
     {
-      projectId: {
+      id: {
         type: DataTypes.STRING,
         primaryKey: true,
       },
-      projectPlatform: {
-        type: DataTypes.STRING,
-        primaryKey: true,
-      },
-      channelId: {
-        type: DataTypes.STRING,
-        primaryKey: true,
-      },
-      guildId: {
+      name: {
         type: DataTypes.STRING,
       },
-      roleIds: {
+      dateUpdated: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      fileIds: {
         type: DataTypes.JSON,
         defaultValue: [],
-        allowNull: true,
       },
     },
     {
       timestamps: false,
-      underscored: true,
     }
   );
 };

@@ -7,7 +7,7 @@ const sequelize = new Sequelize('database', 'user', 'password', {
   host: 'localhost',
   dialect: 'sqlite',
   logging: false,
-  storage: './database/database.sqlite',
+  storage: './database/db_v4.sqlite',
 });
 
 // Tables
@@ -91,11 +91,13 @@ Reflect.defineProperty(Projects.prototype, 'track', {
     return await TrackedProjects.findOrCreate({
       where: {
         projectId: this.id,
+        projectPlatform: this.platform,
         guildId: guildId,
         channelId: channelId,
       },
       defaults: {
         projectId: this.id,
+        projectPlatform: this.platform,
         guildId: guildId,
         channelId: channelId,
       },

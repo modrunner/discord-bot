@@ -1,4 +1,4 @@
-const { Guilds } = require('../database/models');
+const { Guilds } = require('../database/db');
 const logger = require('../logger');
 
 module.exports = {

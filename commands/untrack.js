@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
-const { Projects, TrackedProjects } = require('../database/models');
+const { Projects, TrackedProjects } = require('../database/db');
 const logger = require('../logger');
 
 module.exports = {

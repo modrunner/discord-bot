@@ -4,13 +4,13 @@ const sequelize = new Sequelize('database', 'username', 'password', {
   host: 'localhost',
   dialect: 'sqlite',
   logging: false,
-  storage: './database/database.sqlite',
+  storage: './database/db_v4.sqlite',
 });
 
 // Tables
-const Guilds = require('../database/models/Guild')(sequelize, Sequelize.DataTypes);
-const Projects = require('../database/models/Project')(sequelize, Sequelize.DataTypes);
-const TrackedProjects = require('../database/models/TrackedProject')(sequelize, Sequelize.DataTypes);
+require('../database/models/Guild')(sequelize, Sequelize.DataTypes);
+require('../database/models/Project')(sequelize, Sequelize.DataTypes);
+require('../database/models/TrackedProject')(sequelize, Sequelize.DataTypes);
 
 // Initialization
 const force = process.argv.includes('--force') || process.argv.includes('-f');

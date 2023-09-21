@@ -1,5 +1,5 @@
 const readline = require('node:readline');
-const { Guilds } = require('../database/models');
+const { Guilds } = require('../database/db');
 
 (async () => {
   const rl = readline.createInterface({

@@ -6,13 +6,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         primaryKey: true,
       },
-      name: {
-        type: DataTypes.STRING,
-      },
       platform: {
         type: DataTypes.ENUM,
-        values: ['curseforge', 'modrinth'],
-        allowNull: false,
+        values: ['curseforge', 'ftb', 'modrinth'],
+        primaryKey: true,
+      },
+      name: {
+        type: DataTypes.STRING,
       },
       dateUpdated: {
         type: DataTypes.DATE,
@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       timestamps: false,
+			underscored: true,
     }
   );
 };

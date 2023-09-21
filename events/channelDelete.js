@@ -1,4 +1,4 @@
-const { TrackedProjects } = require('../database/models');
+const { TrackedProjects } = require('../database/db');
 const logger = require('../logger');
 
 module.exports = {
