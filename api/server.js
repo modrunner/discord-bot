@@ -47,8 +47,8 @@ function startServer(client) {
   } else {
     server = https.createServer(
       {
-        key: fs.readFileSync('../../../etc/letsencrypt/live/staging-api.modrunner.net/privkey.pem'),
-        cert: fs.readFileSync('../../../etc/letsencrypt/live/staging-api.modrunner.net/fullchain.pem'),
+        key: fs.readFileSync(process.env.HTTPS_KEY_PATH),
+        cert: fs.readFileSync(process.env.HTTPS_CERT_PATH),
       },
       app
     );
