@@ -6,11 +6,14 @@ const logger = require('../../logger');
 router.get('/', async (request, response) => {
   const projectCount = await Projects.count();
 
-  const uptimeData = await fetch('https://uptime.betterstack.com/api/v2/status-pages/161181/resources/2650613', {
-    headers: {
-      authorization: `Bearer ${process.env.BETTERSTACK_API_KEY}`,
-    },
-  })
+  const uptimeData = await fetch(
+    `https://uptime.betterstack.com/api/v2/status-pages/${process.env.BETTERSTACK_STATUS_PAGE_ID}/resources/${process.env.BETTERSTACK_RESOURCE_ID}`,
+    {
+      headers: {
+        authorization: `Bearer ${process.env.BETTERSTACK_API_KEY}`,
+      },
+    }
+  )
     .then((res) => res.json())
     .catch((error) => logger.error(error));
 
