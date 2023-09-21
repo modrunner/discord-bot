@@ -20,7 +20,7 @@ app.use((request, response, next) => {
     return response.status(401).end();
   }
 
-  logger.info(`Recieved a request from ${request.hostname} (${request.ip}), at route ${request.method} ${request.originalUrl}`);
+  logger.debug(`Recieved a request from ${request.hostname} (${request.ip}), at route ${request.method} ${request.originalUrl}`);
 
   next();
 });
