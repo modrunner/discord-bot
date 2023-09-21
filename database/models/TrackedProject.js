@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       projectPlatform: {
         type: DataTypes.STRING,
-        primaryKey: true,
+        defaultValue: '---',
       },
       channelId: {
         type: DataTypes.STRING,
