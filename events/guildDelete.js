@@ -12,12 +12,12 @@ module.exports = {
     });
 
     // Remove this guild's tracked projects
-    await TrackedProjects.destroy({
+    const untrackedProjects = await TrackedProjects.destroy({
       where: {
         guildId: guild.id,
       },
     });
 
-    logger.info(`Client left guild ${guild.name} (${guild.id}). Removed settings and tracked projects.`);
+    logger.info(`Client left guild ${guild.name} (${guild.id}). Removed settings and removed ${untrackedProjects} projects from tracking.`);
   },
 };

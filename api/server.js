@@ -20,7 +20,7 @@ app.use((request, response, next) => {
     return response.status(401).end();
   }
 
-  logger.info(`Recieved a request from ${request.hostname} (${request.ip}), at route ${request.method} ${request.originalUrl}`);
+  logger.debug(`Recieved a request from ${request.hostname} (${request.ip}), at route ${request.method} ${request.originalUrl}`);
 
   next();
 });
@@ -47,8 +47,8 @@ function startServer(client) {
   } else {
     server = https.createServer(
       {
-        key: fs.readFileSync('../../../etc/letsencrypt/live/staging-api.modrunner.net/privkey.pem'),
-        cert: fs.readFileSync('../../../etc/letsencrypt/live/staging-api.modrunner.net/fullchain.pem'),
+        key: fs.readFileSync(process.env.HTTPS_KEY_PATH),
+        cert: fs.readFileSync(process.env.HTTPS_CERT_PATH),
       },
       app
     );
