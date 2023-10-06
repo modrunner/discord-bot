@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const { getMod } = require('../api/curseforge');
 const { getProject, validateIdOrSlug } = require('../api/modrinth');
 const getJSONResponse = require('../api/getJSONResponse');
+const logger = require('../logger');
 
 const sequelize = new Sequelize('database', 'user', 'password', {
   host: 'localhost',
@@ -18,28 +19,28 @@ const TrackedProjects = require('./models/TrackedProject')(sequelize, Sequelize.
 Reflect.defineProperty(Guilds.prototype, 'setChangelogMaxLength', {
   value: async function (length) {
     this.changelogMaxLength = length;
-    await this.save();
+    await this.save().catch((error) => logger.error(error));
   },
 });
 
 Reflect.defineProperty(Guilds.prototype, 'setMaxTrackedProjects', {
   value: async function (max) {
     this.maxTrackedProjects = max;
-    await this.save();
+    await this.save().catch((error) => logger.error(error));
   },
 });
 
 Reflect.defineProperty(Guilds.prototype, 'setNotificationStyle', {
   value: async function (style) {
     this.notificationStyle = style;
-    await this.save();
+    await this.save().catch((error) => logger.error(error));
   },
 });
 
 Reflect.defineProperty(Projects.prototype, 'updateDate', {
   value: async function (date) {
     this.dateUpdated = date;
-    await this.save();
+    await this.save().catch((error) => logger.error(error));
   },
 });
 
@@ -61,7 +62,7 @@ Reflect.defineProperty(Projects.prototype, 'addFiles', {
           id: this.id,
         },
       }
-    );
+    ).catch((error) => logger.error(error));
   },
 });
 
@@ -82,7 +83,7 @@ Reflect.defineProperty(TrackedProjects.prototype, 'addRoles', {
           channelId: this.channelId,
         },
       }
-    );
+    ).catch((error) => logger.error(error));
   },
 });
 
@@ -101,7 +102,7 @@ Reflect.defineProperty(Projects.prototype, 'track', {
         guildId: guildId,
         channelId: channelId,
       },
-    });
+    }).catch((error) => logger.error(error));
   },
 });
 
@@ -114,7 +115,7 @@ Reflect.defineProperty(Projects, 'fetch', {
       const validatedData = await getJSONResponse(validationResponse.body);
       const validatedId = validatedData.id;
 
-      const project = await this.findByPk(validatedId);
+      const project = await this.findByPk(validatedId).catch((error) => logger.error(error));
       if (project) return project;
 
       const response = await getProject(validatedId);
@@ -127,9 +128,9 @@ Reflect.defineProperty(Projects, 'fetch', {
         platform: 'modrinth',
         dateUpdated: data.updated,
         fileIds: data.versions,
-      });
+      }).catch((error) => logger.error(error));
     } else {
-      const project = await this.findByPk(projectId);
+      const project = await this.findByPk(projectId).catch((error) => logger.error(error));
       if (project) return project;
 
       const response = await getMod(projectId);
@@ -146,7 +147,7 @@ Reflect.defineProperty(Projects, 'fetch', {
         platform: 'curseforge',
         dateUpdated: data.data.dateReleased,
         fileIds: fileIds,
-      });
+      }).catch((error) => logger.error(error));
     }
   },
 });
