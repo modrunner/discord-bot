@@ -20,6 +20,9 @@ module.exports = {
     // setInterval(runSweepDatabase, ms('24h'));
     setInterval(runUpdateCheck, ms('1m'));
     setInterval(runUpdatePresence, ms('10m'));
+    setInterval(() => {
+      fetch(process.env.BETTERSTACK_HEARTBEAT_URL).catch((error) => logger.error(error));
+    }, ms('5m'));
 
     async function runSweepDatabase() {
       await sweepDatabase(client);
