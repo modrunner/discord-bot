@@ -13,11 +13,11 @@ module.exports = {
   async execute(client) {
     logger.info('Ready status reported.');
 
-    await sweepDatabase(client);
+    // await sweepDatabase(client);
     await checkForProjectUpdates(client);
     await updatePresenceData(client);
 
-    setInterval(runSweepDatabase, ms('24h'));
+    // setInterval(runSweepDatabase, ms('24h'));
     setInterval(runUpdateCheck, ms('1m'));
     setInterval(runUpdatePresence, ms('10m'));
 
