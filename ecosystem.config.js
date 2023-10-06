@@ -1,7 +1,7 @@
 module.exports = {
 	apps: [
 		{
-			name: 'modrunner-staging',
+			name: 'modrunner-bot',
 			script: 'npm run start',
 			watch: true,
 			ignore_watch: ['node_modules', 'db_v4.sqlite'],
