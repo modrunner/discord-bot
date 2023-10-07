@@ -4,7 +4,7 @@ module.exports = {
 			name: 'modrunner-bot',
 			script: 'npm run start',
 			watch: true,
-			ignore_watch: ['node_modules', 'database'],
+			ignore_watch: ['node_modules', 'discord-bot/database'],
 			min_uptime: '30s',
 			max_restarts: 5,
 		}
