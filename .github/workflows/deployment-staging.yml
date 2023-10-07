@@ -1,14 +1,17 @@
-name: Deploy
+name: Deployment (Staging)
 
 on:
   push:
+    branches:
+      - staging
 
 jobs:
-  push:
-    name: Push to Production
+  deployment:
+    name: Deployment to staging server
     runs-on: ubuntu-latest
+    environment: staging
     steps:
-      - name: Executing remote SSH commands using password
+      - name: Remote command execution
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST_IP }}
