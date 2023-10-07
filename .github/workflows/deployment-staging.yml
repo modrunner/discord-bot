@@ -1,23 +1,23 @@
-name: Push to Production
+name: Deployment (Staging)
 
 on:
   push:
     branches:
-      - main
-  workflow_dispatch:
+      - staging
 
 jobs:
-  push:
-    name: Push to Production
+  deployment:
+    name: Deployment to staging server
     runs-on: ubuntu-latest
+    environment: staging
     steps:
-      - name: Executing remote SSH commands using password
+      - name: Remote command execution
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
+          host: ${{ secrets.HOST_IP }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            cd ${{ secrets.PRODUCTION_PATH }}
+            cd ${{ secrets.PATH }}
             git pull
