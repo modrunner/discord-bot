@@ -1,0 +1,23 @@
+name: Deployment (Production)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deployment:
+    name: Deployment to production server
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Remote command execution
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_IP }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd ${{ secrets.PATH }}
+            git pull
