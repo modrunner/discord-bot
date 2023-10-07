@@ -37,7 +37,14 @@ module.exports = {
 
     // Find how many projects this guild is already tracking
     // If greater than the guild's max allowed tracked projects (usually 100), don't allow this project to be tracked
-    const guildSettings = await Guilds.findByPk(interaction.guild.id);
+    let guildSettings = await Guilds.findByPk(interaction.guild.id);
+    if (!guildSettings) {
+      guildSettings = await Guilds.create({
+        id: interaction.guild.id,
+      });
+      logger.info(`Initialized settings for guild ${interaction.guild.name} (${interaction.guild.id})`);
+    }
+
     const currentlyTracked = await TrackedProjects.count({
       where: {
         guildId: interaction.guild.id,
