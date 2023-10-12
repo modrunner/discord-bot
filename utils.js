@@ -206,7 +206,7 @@ module.exports = {
                 components: [
                   new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
-                      .setLabel(`View on ${capitalize(dbProject.platform)}`)
+                      .setLabel(`View on ${dbProject.platform}`)
                       .setStyle(ButtonStyle.Link)
                       .setURL(versionData.url)
                   ),
@@ -246,7 +246,7 @@ module.exports = {
               components: [
                 new ActionRowBuilder().addComponents(
                   new ButtonBuilder()
-                    .setLabel(`View on ${capitalize(dbProject.platform)}`)
+                    .setLabel(`View on ${dbProject.platform}`)
                     .setStyle(ButtonStyle.Link)
                     .setURL(versionData.url)
                 ),

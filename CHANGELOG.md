@@ -1,5 +1,11 @@
 # Changelog
 
+## \[1.4.2] (2023-10-12)
+
+- Added "AI" type notifications (beta release) ([#c227d1a](https://github.com/modrunner/discord-bot/commit/c227d1a1ececd117233eb956a28c927aef4f42de))
+- Fixed incorrect spelling of "CurseForge on update notification embeds ([#93](https://github.com/modrunner/discord-bot/issues/93))"
+- Fixed several critical bugs
+
 ## \[1.3.3] (2023-05-16)
 
 - Fixed occasional error when tracking projects
