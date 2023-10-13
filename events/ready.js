@@ -51,10 +51,10 @@ async function checkForProjectUpdates(client) {
 
   // Get all projects from the database. We seperate them by platform so we can call the appropriate API and read the returned data correctly
   const dbCurseforgeProjects = await Projects.findAll({
-    where: { platform: 'curseforge' },
+    where: { platform: 'CurseForge' },
   });
   const dbModrinthProjects = await Projects.findAll({
-    where: { platform: 'modrinth' },
+    where: { platform: 'Modrinth' },
   });
 
   const dbCurseforgeProjectsIds = [];
@@ -256,7 +256,7 @@ async function sweepDatabase(client) {
   // Modrinth
   const dbModrinthProjects = await Projects.findAll({
     where: {
-      platform: 'modrinth',
+      platform: 'Modrinth',
     },
   });
 

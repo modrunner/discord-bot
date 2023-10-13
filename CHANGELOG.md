@@ -1,5 +1,9 @@
 # Changelog
 
+## \[1.4.3] (2023-10-12)
+
+- Fixed an issue preventing the update check cycle from reading the database correctly
+
 ## \[1.4.2] (2023-10-12)
 
 - Added "AI" type notifications (beta release) ([#c227d1a](https://github.com/modrunner/discord-bot/commit/c227d1a1ececd117233eb956a28c927aef4f42de))
