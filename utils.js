@@ -24,7 +24,7 @@ module.exports = {
 
     // Behavior is slightly different depending on platform, mostly dependent on the data returned from the initial earlier API call
     switch (dbProject.platform) {
-      case 'curseforge': {
+      case 'CurseForge': {
         // Call the CurseForge API to get this file's changelog
         const response = await getModFileChangelog(requestedProject.id, requestedProject.latestFiles[requestedProject.latestFiles.length - 1].id);
         if (!response) return logger.warn("A request to CurseForge timed out while getting a project file's changelog");
@@ -47,7 +47,7 @@ module.exports = {
 
         break;
       }
-      case 'modrinth': {
+      case 'Modrinth': {
         // Call the Modrinth API to get this version's information
         const response = await listProjectVersions(requestedProject.id);
         if (!response) return logger.warn("A request to Modrinth timed out while getting a project's version information");
@@ -298,13 +298,13 @@ function capitalize(string) {
 
 function embedAuthorData(platform) {
   switch (platform) {
-    case 'curseforge':
+    case 'CurseForge':
       return {
         name: 'From curseforge.com',
         iconURL: 'https://i.imgur.com/uA9lFcz.png',
         url: 'https://curseforge.com',
       };
-    case 'modrinth':
+    case 'Modrinth':
       return {
         name: 'From modrinth.com',
         iconURL: 'https://i.imgur.com/2XDguyk.png',
@@ -319,9 +319,9 @@ function embedAuthorData(platform) {
 
 function embedColorData(platform) {
   switch (platform) {
-    case 'curseforge':
+    case 'CurseForge':
       return '#f87a1b';
-    case 'modrinth':
+    case 'Modrinth':
       return '#1bd96a';
     default:
       return 'DarkGreen';
