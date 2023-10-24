@@ -7,7 +7,7 @@ const { Projects, TrackedProjects } = require('../database/db');
     let newPlatform = '';
     if (project.platform === 'curseforge') {
       newPlatform = 'CurseForge';
-    } else {
+    } else if (project.platform === 'modrinth') {
       newPlatform = 'Modrinth';
     }
 

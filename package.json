@@ -1,6 +1,6 @@
 {
   "name": "modrunner",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "private": true,
   "main": "bot.js",
   "scripts": {

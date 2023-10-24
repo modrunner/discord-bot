@@ -124,7 +124,7 @@ Reflect.defineProperty(Projects, 'fetch', {
       return await this.create({
         id: data.id,
         name: data.title,
-        platform: 'modrinth',
+        platform: 'Modrinth',
         dateUpdated: data.updated,
         fileIds: data.versions,
       });
@@ -143,7 +143,7 @@ Reflect.defineProperty(Projects, 'fetch', {
       return await this.create({
         id: data.data.id,
         name: data.data.name,
-        platform: 'curseforge',
+        platform: 'CurseForge',
         dateUpdated: data.data.dateReleased,
         fileIds: fileIds,
       });

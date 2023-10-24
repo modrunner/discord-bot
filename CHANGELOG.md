@@ -1,5 +1,9 @@
 # Changelog
 
+## \[1.4.4] (2023-10-24)
+
+- Fixed an issue that prevented the bot from sending update notifications for some projects
+
 ## \[1.4.3] (2023-10-12)
 
 - Fixed an issue preventing the update check cycle from reading the database correctly
