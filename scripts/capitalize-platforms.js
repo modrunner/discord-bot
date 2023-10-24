@@ -9,7 +9,13 @@ const { Projects, TrackedProjects } = require('../database/db');
       newPlatform = 'CurseForge';
     } else if (project.platform === 'modrinth') {
       newPlatform = 'Modrinth';
-    }
+    } else {
+			if (project.id.match(/[A-z]/)) {
+				newPlatform = 'Modrinth'
+			} else {
+				newPlatform = 'CurseForge'
+			}
+		}
 
     await Projects.update(
       {
