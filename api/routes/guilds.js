@@ -5,21 +5,7 @@ const { Op } = require('sequelize');
 const logger = require('../../logger');
 
 router.route('/').get(async (request, response) => {
-  let guildsWithProjectData = [];
-  const guilds = await Guilds.findAll();
-  for (const guild of guilds) {
-    const projects = await TrackedProjects.findAll({
-      where: { guildId: guild.id },
-    });
-    guildsWithProjectData.push({
-      id: guild.id,
-      changelogMaxLength: guild.changelogMaxLength,
-      maxTrackedProjects: guild.maxTrackedProjects,
-      notificationStyle: guild.notificationStyle,
-      projects: [...projects],
-    });
-  }
-  response.status(200).json(guildsWithProjectData);
+  response.status(200).json(request.app.locals.client.guilds.cache.map((guild) => guild.id));
 });
 
 // Gets a guild's info and tracked projects organized by channel

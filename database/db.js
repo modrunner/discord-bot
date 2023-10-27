@@ -86,6 +86,23 @@ Reflect.defineProperty(TrackedProjects.prototype, 'addRoles', {
   },
 });
 
+Reflect.defineProperty(TrackedProjects.prototype, 'addRolesUsingIds', {
+  value: async function (roleIds) {
+    return await TrackedProjects.update(
+      {
+        roleIds: roleIds,
+      },
+      {
+        where: {
+          projectId: this.projectId,
+          guildId: this.guildId,
+          channelId: this.channelId,
+        },
+      }
+    );
+  },
+});
+
 Reflect.defineProperty(Projects.prototype, 'track', {
   value: async function (guildId, channelId) {
     return await TrackedProjects.findOrCreate({
