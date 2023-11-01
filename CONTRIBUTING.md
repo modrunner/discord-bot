@@ -11,17 +11,15 @@ make a new issue for them (though we will still respond if you do).
 
 There also a few community resources that may help to point you in the right direction if you are confused:
 
-- [Modrunner Docs](https://modrunner.net/docs/intro/)
-- [Modrunner FAQs](https://modrunner.net/docs/faq/)
-- [Modrunner Getting-Started](https://modrunner.net/docs/setting-up/)
+- [Modrunner Docs](https://modrunner.net/introduction)
+- [Modrunner FAQs](https://modrunner.net/faq)
+- [Modrunner Getting-Started](https://modrunner.net/introduction#quick-start)
 
 ## Things to know/do before getting started
 
 ### The term "Modrunner"
 
-When we refer to "Modrunner" in the context of this repository, we are talking about both the bot application (which
-resides at the root) and the website, which is situated in the `website` folder. Both of these are open for contribution,
-but just be sure which one you want to be working on before you start.
+When we refer to "Modrunner" in the context of this repository, we are talking about the discord bot application. If you want to contribute to other parts of "Modrunner", be sure to check out the contributing guidelines in their respective repositories. All of these are open for contribution, but just be sure which one you want to be working on before you start.
 
 ### Design choices and development
 
@@ -64,7 +62,7 @@ it in our [Discord](https://discord.gg/HZMCRNUd5Z) are both valid ways to get us
 
 ## Your first code contribution
 
-If you're unsure of where to start, consult [Modrunner Roadmap](https://trello.com/b/tNrFYngk). There we have listed
+If you're unsure of where to start, consult [Modrunner Roadmap](https://github.com/users/smcmo/projects/11). There we have listed
 tasks that are currently in the backlog, planned for implementation, currently being implemented and tasks which have been
 finished. **It is highly recommended that you check this project to avoid performing work on a task that has already been done,
 or currently being worked on**, particularly if you are implementing new features or fixing bugs.
@@ -89,12 +87,16 @@ To get started ensure you have [Node.js](https://nodejs.org/en/) and [npm](https
 6. You will need a system for storing secrets. I use [Doppler](https://www.doppler.com/) but a simpler solution like
    [Dotenv](https://www.npmjs.com/package/dotenv) will also work. You will need five different secret fields:
 
-   - `BOT_TOKEN`: This is the token from the Discord developer dashboard that you copied earlier.
-   - `CF_API_KEY`: See [obtaining a CurseForge API key](#obtaining-a-curseforge-api-key).
-   - `CLIENT_ID`: The ID of your bot application. You can get this from the developer dashboard under General Information.
-   - `DEV_GUILD_ID`: A Discord server ID to use for testing the bot. You can get this by enabling Developer Mode in settings,
+   - `CURSEFORGE_API_KEY`: See [obtaining a CurseForge API key](#obtaining-a-curseforge-api-key).
+   - `DISCORD_APPLICATION_ID`: The ID of your bot application. You can get this from the developer dashboard under General Information.
+   - `DISCORD_DEVELOPMENT_GUILD_ID`: A Discord server ID to use for testing the bot. You can get this by enabling Developer Mode in settings,
      then right-clicking on the server icon and choosing Copy ID.
-   - `LOGGING`: When set to `dev` it will set the bot's logging output level to `trace`. For more information see [the pino docs](https://getpino.io/#/).
+   - `DISCORD_TOKEN`: This is the token from the Discord developer dashboard that you copied earlier.
+	 - `LOGGING`: When set to `dev` it will set the bot's logging output level to `trace`. For more information see [the pino docs](https://getpino.io/#/).
+   - `MODRUNNER_API_KEY`: A string used to access the API. I recommend using a randomly generated string at least 16 characters in length.
+	 - `OPENAI_API_KEY`: See [obtaining an OpenAI API key](#obtaining-an-openai-api-key)
+	 - `SERVER_PORT`: The port number you want the API server hosted on. Something like **3000** will work.
+   
 
 7. Now you're ready to being testing your changes! Here's a quick overview of the npm scripts.
    1. Before starting the bot for the first time, type `npm run register` and `npm run dbInit` into your console. This will register the bot's commands to all guilds listed under `guildIds` in your `config.json`, and will create the `database.sqlite` file in the project's root directory.
@@ -107,48 +109,12 @@ To get started ensure you have [Node.js](https://nodejs.org/en/) and [npm](https
 2. Go to **API keys**.
 3. Copy the key listed under your username. Be sure to keep this a secret!
 
-#### Modrunner Website
+##### Obtaining an OpenAI API Key
 
-The Modrunner website is built using [Docusaurus](https://docusaurus.io/) and resides in the `website` folder. It primarily serves as the documentation for the Modrunner bot, but it also contains several utility links, as well as the Modrunner blog.
-
-For a complete picture, see the [Docusaurus documentation](https://docusaurus.io/docs) to get started. If you're just looking to make changes to the docs:
-
-1. Create a markdown page (`.md`) under the `docs` folder. Title it however you want, but know that the filename will appear in the url bar as such (`docs/my_super_cool_doc.md` will show up in the search bar as `https://modrunner.net/docs/my_super_cool_doc`). You can also create doc categories by placing your markdown files within a folder in `docs`, as seen with the `commands` folder.
-2. Once you're done with a page, add an object for it in `sidebars.js`.
-
-   - For single doc pages, format it like so:
-
-   ```JS
-   	{
-   		type: 'doc',
-   		label: 'My Super Cool Doc',
-   		id: 'my_super_cool_doc',
-   	}
-   ```
-
-   `id` is the file name of the page (minus the extension)
-
-   - For categories, format it like so:
-
-   ```JS
-   	{
-   		type: 'category',
-   		label: 'My Super Cool Category',
-   		items: [
-   			{
-   				type: 'autogenerated',
-   				dirName: 'supercoolfoldername',
-   			},
-   		],
-   	}
-   ```
-
-   `dirName` is the name of the folder in `docs` where you placed your page.
-
-   You can leave the `type` as **autogenerated** and Docusaurus will automatically generate the sidebar for all your pages
-   in that folder. If you want to customize the order or labeling then remove the autogenerated and place objects for each page in `items` instead.
-
-3. When you're done making your desired changes, run `npm run start`. This will open the website in your browser so you can preview your changes.
+1. Log into the [OpenAI Dev Portal](https://platform.openai.com/login).
+2. Go to **API**.
+3. Click on your profile icon in the top right and go to **View API Keys**
+4. Click **Create New Secret Key**, give the key a name, then copy it.
 
 ### Style guide
 
