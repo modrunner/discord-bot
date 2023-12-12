@@ -17,14 +17,14 @@ const TrackedProjects = require('./models/TrackedProject')(sequelize, Sequelize.
 
 Reflect.defineProperty(Guilds.prototype, 'setChangelogMaxLength', {
   value: async function (length) {
-    this.changelogMaxLength = length;
+    this.changelogLength = length;
     await this.save();
   },
 });
 
 Reflect.defineProperty(Guilds.prototype, 'setMaxTrackedProjects', {
   value: async function (max) {
-    this.maxTrackedProjects = max;
+    this.maxProjects = max;
     await this.save();
   },
 });

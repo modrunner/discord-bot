@@ -180,7 +180,7 @@ module.exports = {
                   new EmbedBuilder()
                     .setAuthor(embedAuthorData(dbProject.platform))
                     .setColor(embedColorData(dbProject.platform))
-                    .setDescription(`**Changelog**: ${codeBlock(trimChangelog(versionData.changelog, guildSettings.changelogMaxLength))}`)
+                    .setDescription(`**Changelog**: ${codeBlock(trimChangelog(versionData.changelog, guildSettings.changelogLength))}`)
                     .setFields(
                       {
                         name: 'Version Name',
@@ -220,7 +220,7 @@ module.exports = {
                 new EmbedBuilder()
                   .setAuthor(embedAuthorData(dbProject.platform))
                   .setColor(embedColorData(dbProject.platform))
-                  .setDescription(`**Changelog**: ${codeBlock(trimChangelog(versionData.changelog, guildSettings.changelogMaxLength))}`)
+                  .setDescription(`**Changelog**: ${codeBlock(trimChangelog(versionData.changelog, guildSettings.changelogLength))}`)
                   .setFields(
                     {
                       name: 'Version Name',

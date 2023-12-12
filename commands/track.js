@@ -50,7 +50,7 @@ module.exports = {
         guildId: interaction.guild.id,
       },
     });
-    if (currentlyTracked >= guildSettings.maxTrackedProjects)
+    if (currentlyTracked >= guildSettings.maxProjects)
       return await interaction.editReply(':x: Your server has reached its maximum limit of tracked projects and cannot track any more.');
 
     // Track the project
