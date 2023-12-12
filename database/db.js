@@ -43,6 +43,13 @@ Reflect.defineProperty(Projects.prototype, 'updateDate', {
   },
 });
 
+Reflect.defineProperty(Projects.prototype, 'updateName', {
+  value: async function (name) {
+    this.name = name;
+    await this.save();
+  },
+});
+
 Reflect.defineProperty(Projects.prototype, 'addFiles', {
   value: async function (files) {
     const fileIds = this.fileIds;
