@@ -1,5 +1,13 @@
 # Changelog
 
+## \[1.4.5] (2023-12-12)
+
+- Added a temporary fix for a crash caused by the bot attempting to post notifications to a forum channel that requires tags to post ([#109](https://github.com/modrunner/discord-bot/issues/109))
+	- Notifications will not work in forum channels unless the tag requirement for new posts is disabled
+- Added a check that updates project names in the database during the update checking cycle ([#115](https://github.com/modrunner/discord-bot/issues/115))
+- Fixed a crash caused by the bot not properly truncating excessively long changelogs ([#111](https://github.com/modrunner/discord-bot/issues/111))
+- Fixed a bug that allowed users to track more projects than their server's tracked project limit
+
 ## \[1.4.4] (2023-10-24)
 
 - Fixed an issue that prevented the bot from sending update notifications for some projects
