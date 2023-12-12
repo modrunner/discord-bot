@@ -172,47 +172,46 @@ module.exports = {
         }
         default:
           if (channel.type === ChannelType.GuildForum) {
-            await channel.threads.create({
-              name: `${versionData.name}`,
-              message: {
-                content: roleIds ? `${rolesString}` : null,
-                embeds: [
-                  new EmbedBuilder()
-                    .setAuthor(embedAuthorData(dbProject.platform))
-                    .setColor(embedColorData(dbProject.platform))
-                    .setDescription(`**Changelog**: ${codeBlock(trimChangelog(versionData.changelog, guildSettings.changelogLength))}`)
-                    .setFields(
-                      {
-                        name: 'Version Name',
-                        value: versionData.name,
-                      },
-                      {
-                        name: 'Version Number',
-                        value: `${versionData.number}`,
-                      },
-                      {
-                        name: 'Release Type',
-                        value: `${versionData.type}`,
-                      },
-                      {
-                        name: 'Date Published',
-                        value: `<t:${dayjs(versionData.date).unix()}:f>`,
-                      }
-                    )
-                    .setThumbnail(versionData.iconURL)
-                    .setTimestamp()
-                    .setTitle(`${dbProject.name} has been updated`),
-                ],
-                components: [
-                  new ActionRowBuilder().addComponents(
-                    new ButtonBuilder()
-                      .setLabel(`View on ${dbProject.platform}`)
-                      .setStyle(ButtonStyle.Link)
-                      .setURL(versionData.url)
-                  ),
-                ],
-              },
-            });
+            await channel.threads
+              .create({
+                name: `${versionData.name}`,
+                message: {
+                  content: roleIds ? `${rolesString}` : null,
+                  embeds: [
+                    new EmbedBuilder()
+                      .setAuthor(embedAuthorData(dbProject.platform))
+                      .setColor(embedColorData(dbProject.platform))
+                      .setDescription(`**Changelog**: ${codeBlock(trimChangelog(versionData.changelog, guildSettings.changelogLength))}`)
+                      .setFields(
+                        {
+                          name: 'Version Name',
+                          value: versionData.name,
+                        },
+                        {
+                          name: 'Version Number',
+                          value: `${versionData.number}`,
+                        },
+                        {
+                          name: 'Release Type',
+                          value: `${versionData.type}`,
+                        },
+                        {
+                          name: 'Date Published',
+                          value: `<t:${dayjs(versionData.date).unix()}:f>`,
+                        }
+                      )
+                      .setThumbnail(versionData.iconURL)
+                      .setTimestamp()
+                      .setTitle(`${dbProject.name} has been updated`),
+                  ],
+                  components: [
+                    new ActionRowBuilder().addComponents(
+                      new ButtonBuilder().setLabel(`View on ${dbProject.platform}`).setStyle(ButtonStyle.Link).setURL(versionData.url)
+                    ),
+                  ],
+                },
+              })
+              .catch((error) => logger.error(error));
           } else {
             await channel.send({
               content: roleIds ? `${rolesString}` : null,
@@ -245,10 +244,7 @@ module.exports = {
               ],
               components: [
                 new ActionRowBuilder().addComponents(
-                  new ButtonBuilder()
-                    .setLabel(`View on ${dbProject.platform}`)
-                    .setStyle(ButtonStyle.Link)
-                    .setURL(versionData.url)
+                  new ButtonBuilder().setLabel(`View on ${dbProject.platform}`).setStyle(ButtonStyle.Link).setURL(versionData.url)
                 ),
               ],
             });
