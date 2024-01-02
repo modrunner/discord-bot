@@ -1,5 +1,9 @@
 # Changelog
 
+## \[1.4.6] (2024-01-02)
+
+- Fix a security exploit that allowed any user to manage tracked projects and settings for servers they don't have server management permissions in
+
 ## \[1.4.5] (2023-12-12)
 
 - Added a temporary fix for a crash caused by the bot attempting to post notifications to a forum channel that requires tags to post ([#109](https://github.com/modrunner/discord-bot/issues/109))
