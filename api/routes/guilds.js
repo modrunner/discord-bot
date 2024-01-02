@@ -3,6 +3,7 @@ const router = express.Router();
 const { Guilds, TrackedProjects, Projects } = require('../../database/db');
 const { Op } = require('sequelize');
 const logger = require('../../logger');
+const checkPermissionsMiddleware = require('../middleware/checkUserPermissions');
 
 router.route('/').get(async (request, response) => {
   response.status(200).json(request.app.locals.client.guilds.cache.map((guild) => guild.id));
@@ -103,7 +104,7 @@ router
 
     return response.status(200).json(responseData);
   })
-  .patch(async (request, response) => {
+  .patch(checkPermissionsMiddleware, async (request, response) => {
     const guild = await Guilds.findByPk(request.params.id);
 
     let data = {};

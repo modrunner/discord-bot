@@ -39,7 +39,7 @@ module.exports = {
     if (notificationStyle) await guildSettings.setNotificationStyle(notificationStyle);
 
     return await interaction.editReply(`:white_check_mark: Saved your server's settings as:
-			:gear: Maximum changelog length: ${inlineCode(changelogLength ?? guildSettings.changelogMaxLength)}
+			:gear: Maximum changelog length: ${inlineCode(changelogLength ?? guildSettings.changelogLength)}
 			:gear: Notification style: ${inlineCode(notificationStyle ?? guildSettings.notificationStyle)}
 			`);
   },

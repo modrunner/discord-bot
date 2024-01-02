@@ -21,7 +21,7 @@ module.exports = {
     setInterval(runUpdateCheck, ms('1m'));
     setInterval(runUpdatePresence, ms('10m'));
 
-		// Send heartbeat to better stack
+    // Send heartbeat to better stack
     fetch(process.env.BETTERSTACK_HEARTBEAT_URL).catch((error) => logger.error(error));
     setInterval(() => {
       fetch(process.env.BETTERSTACK_HEARTBEAT_URL).catch((error) => logger.error(error));
@@ -51,10 +51,10 @@ async function checkForProjectUpdates(client) {
 
   // Get all projects from the database. We seperate them by platform so we can call the appropriate API and read the returned data correctly
   const dbCurseforgeProjects = await Projects.findAll({
-    where: { platform: 'curseforge' },
+    where: { platform: 'CurseForge' },
   });
   const dbModrinthProjects = await Projects.findAll({
-    where: { platform: 'modrinth' },
+    where: { platform: 'Modrinth' },
   });
 
   const dbCurseforgeProjectsIds = [];
@@ -139,6 +139,7 @@ async function checkForProjectUpdates(client) {
 
         await dbProject.updateDate(requestedMod.dateReleased);
         await dbProject.addFiles([requestedMod.latestFilesIndexes[0].fileId]);
+        await dbProject.updateName(requestedMod.name);
 
         await sendUpdateEmbed(requestedMod, dbProject, client);
       } else {
@@ -176,6 +177,7 @@ async function checkForProjectUpdates(client) {
 
         await dbProject.updateDate(requestedProject.updated);
         await dbProject.addFiles(requestedProject.versions);
+        await dbProject.updateName(requestedProject.title);
 
         await sendUpdateEmbed(requestedProject, dbProject, client);
       } else {
@@ -256,7 +258,7 @@ async function sweepDatabase(client) {
   // Modrinth
   const dbModrinthProjects = await Projects.findAll({
     where: {
-      platform: 'modrinth',
+      platform: 'Modrinth',
     },
   });
 

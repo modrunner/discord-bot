@@ -1,5 +1,31 @@
 # Changelog
 
+## \[1.4.6] (2024-01-02)
+
+- Fix a security exploit that allowed any user to manage tracked projects and settings for servers they don't have server management permissions in
+
+## \[1.4.5] (2023-12-12)
+
+- Added a temporary fix for a crash caused by the bot attempting to post notifications to a forum channel that requires tags to post ([#109](https://github.com/modrunner/discord-bot/issues/109))
+	- Notifications will not work in forum channels unless the tag requirement for new posts is disabled
+- Added a check that updates project names in the database during the update checking cycle ([#115](https://github.com/modrunner/discord-bot/issues/115))
+- Fixed a crash caused by the bot not properly truncating excessively long changelogs ([#111](https://github.com/modrunner/discord-bot/issues/111))
+- Fixed a bug that allowed users to track more projects than their server's tracked project limit
+
+## \[1.4.4] (2023-10-24)
+
+- Fixed an issue that prevented the bot from sending update notifications for some projects
+
+## \[1.4.3] (2023-10-12)
+
+- Fixed an issue preventing the update check cycle from reading the database correctly
+
+## \[1.4.2] (2023-10-12)
+
+- Added "AI" type notifications (beta release) ([#c227d1a](https://github.com/modrunner/discord-bot/commit/c227d1a1ececd117233eb956a28c927aef4f42de))
+- Fixed incorrect spelling of "CurseForge on update notification embeds ([#93](https://github.com/modrunner/discord-bot/issues/93))"
+- Fixed several critical bugs
+
 ## \[1.3.3] (2023-05-16)
 
 - Fixed occasional error when tracking projects

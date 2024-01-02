@@ -17,14 +17,14 @@ const TrackedProjects = require('./models/TrackedProject')(sequelize, Sequelize.
 
 Reflect.defineProperty(Guilds.prototype, 'setChangelogMaxLength', {
   value: async function (length) {
-    this.changelogMaxLength = length;
+    this.changelogLength = length;
     await this.save();
   },
 });
 
 Reflect.defineProperty(Guilds.prototype, 'setMaxTrackedProjects', {
   value: async function (max) {
-    this.maxTrackedProjects = max;
+    this.maxProjects = max;
     await this.save();
   },
 });
@@ -39,6 +39,13 @@ Reflect.defineProperty(Guilds.prototype, 'setNotificationStyle', {
 Reflect.defineProperty(Projects.prototype, 'updateDate', {
   value: async function (date) {
     this.dateUpdated = date;
+    await this.save();
+  },
+});
+
+Reflect.defineProperty(Projects.prototype, 'updateName', {
+  value: async function (name) {
+    this.name = name;
     await this.save();
   },
 });
@@ -141,7 +148,7 @@ Reflect.defineProperty(Projects, 'fetch', {
       return await this.create({
         id: data.id,
         name: data.title,
-        platform: 'modrinth',
+        platform: 'Modrinth',
         dateUpdated: data.updated,
         fileIds: data.versions,
       });
@@ -160,7 +167,7 @@ Reflect.defineProperty(Projects, 'fetch', {
       return await this.create({
         id: data.data.id,
         name: data.data.name,
-        platform: 'curseforge',
+        platform: 'CurseForge',
         dateUpdated: data.data.dateReleased,
         fileIds: fileIds,
       });
