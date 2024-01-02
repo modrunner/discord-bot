@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Guilds, Projects, TrackedProjects } = require('../../database/db');
 const logger = require('../../logger');
+const checkPermissionsMiddleware = require('../middleware/checkUserPermissions');
 
 router.get('/:id', async (request, response) => {
   const project = await Projects.findByPk(request.params.id);
@@ -14,7 +15,7 @@ router.get('/:id', async (request, response) => {
   }
 });
 
-router.post('/track', async (request, response) => {
+router.post('/track', checkPermissionsMiddleware, async (request, response) => {
   if (!request.body.projectId || !request.body.guildId || !request.body.channelId || !request.body.roleIds) {
     return response.status(400).json({
       error: `Missing required body parameters: ${!request.body.projectId ? 'projectId' : ''} ${!request.body.guildId ? 'guildId' : ''} ${
@@ -43,11 +44,11 @@ router.post('/track', async (request, response) => {
     await trackedProject.addRolesUsingIds(request.body.roleIds);
   }
 
-	if (created) return response.status(201).end();
-	return response.status(204).end();
+  if (created) return response.status(201).end();
+  return response.status(204).end();
 });
 
-router.delete('/untrack', async (request, response) => {
+router.delete('/untrack', checkPermissionsMiddleware, async (request, response) => {
   let deleted = 0;
   try {
     deleted = await TrackedProjects.destroy({
@@ -68,7 +69,7 @@ router.delete('/untrack', async (request, response) => {
   }
 });
 
-router.patch('/edit', async (request, response) => {
+router.patch('/edit', checkPermissionsMiddleware, async (request, response) => {
   let updated = [];
   try {
     updated = await TrackedProjects.update(
