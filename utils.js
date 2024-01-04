@@ -147,12 +147,18 @@ module.exports = {
           }
           break;
         case 'ai': {
-          const response = await openai.createCompletion({
-            model: 'text-davinci-003',
-            prompt: `Create an announcement with a professional tone for an update to ${dbProject.name} on ${dbProject.platform}. 
-						The new version is ${versionData.name}, it's a ${versionData.type} release, and the changelog is: ${versionData.changelog}. 
-						Use markdown formatting to highlight important information`,
+          const response = await openai.createChatCompletion({
+            model: 'gpt-3.5-turbo',
+            messages: [
+              {
+                role: 'user',
+                content: `Create an announcement with a professional tone for an update to ${dbProject.name} on ${dbProject.platform}. 
+								The new version is ${versionData.name}, it's a ${versionData.type} release, and the changelog is: ${trimChangelog(versionData.changelog)}. 
+								Use markdown formatting to highlight important information`,
+              },
+            ],
             max_tokens: 1024,
+            n: 1,
           });
           logger.debug(response.data);
 
@@ -160,12 +166,12 @@ module.exports = {
             await channel.threads.create({
               name: `${versionData.name}`,
               message: {
-                content: `${response.data.choices[0].text}\n${rolesString}`,
+                content: `${response.data.choices[0].message.content}\n${rolesString}`,
               },
             });
           } else {
             await channel.send({
-              content: `${response.data.choices[0].text}\n${rolesString}`,
+              content: `${response.data.choices[0].message.content}\n${rolesString}`,
             });
           }
           break;

@@ -1,5 +1,9 @@
 # Changelog
 
+## \[1.4.7] (2024-01-04) 
+
+- Migrate the AI model used for AI-generated notifications from `text-davinci-003` to `gpt-3.5-turbo` ([#126](https://github.com/modrunner/discord-bot/issues/126))
+
 ## \[1.4.6] (2024-01-02)
 
 - Fix a security exploit that allowed any user to manage tracked projects and settings for servers they don't have server management permissions in
