@@ -7,9 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
       },
       platform: {
-        type: DataTypes.ENUM,
-        values: ['curseforge', 'ftb', 'modrinth'],
-        primaryKey: true,
+        type: DataTypes.STRING,
       },
       name: {
         type: DataTypes.STRING,
@@ -21,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
       fileIds: {
         type: DataTypes.JSON,
         defaultValue: [],
+      },
+      gameId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
     },
     {
