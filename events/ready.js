@@ -109,7 +109,7 @@ async function checkForProjectUpdates(client) {
       if (!requestedMods) break;
       const requestedMod = requestedMods.data.find((element) => element.id.toString() === dbProject.id);
       if (!requestedMod) {
-        logger.warn(`Modrunner failed to locate a database project ${dbProject.name}'s (${dbProject.id}) information in the response data.`);
+        // logger.warn(`Modrunner failed to locate a database project ${dbProject.name}'s (${dbProject.id}) information in the response data.`);
         continue;
       }
       // Check if this project has been updated
