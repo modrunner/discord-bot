@@ -61,7 +61,7 @@ module.exports = {
           name: rawData[0].name,
           number: rawData[0].version_number,
           type: capitalize(rawData[0].version_type),
-          url: `https://modrinth.com/${requestedProject.project_type}/${requestedProject.slug}/version/${rawData[0].version_number}`,
+          url: `https://modrinth.com/${requestedProject.project_type}/${requestedProject.slug}/version/${rawData[0].id}`,
         };
 
         logger.debug(versionData);
