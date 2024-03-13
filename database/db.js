@@ -170,6 +170,7 @@ Reflect.defineProperty(Projects, 'fetch', {
         platform: 'CurseForge',
         dateUpdated: data.data.dateReleased,
         fileIds: fileIds,
+        gameId: data.data.gameId,
       });
     }
   },

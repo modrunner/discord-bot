@@ -59,6 +59,8 @@ async function checkForProjectUpdates(client) {
 
   const dbCurseforgeProjectsIds = [];
   for (const dbProject of dbCurseforgeProjects) {
+    // Temporarily prevent any non-Minecraft project on CurseForge from being checked for updates until I implement better support
+    if (dbProject.gameId !== 432) continue;
     dbCurseforgeProjectsIds.push(dbProject.id);
   }
 
@@ -107,7 +109,7 @@ async function checkForProjectUpdates(client) {
       if (!requestedMods) break;
       const requestedMod = requestedMods.data.find((element) => element.id.toString() === dbProject.id);
       if (!requestedMod) {
-        logger.warn(`Modrunner failed to locate a database project ${dbProject.name}'s (${dbProject.id}) information in the response data.`);
+        // logger.warn(`Modrunner failed to locate a database project ${dbProject.name}'s (${dbProject.id}) information in the response data.`);
         continue;
       }
       // Check if this project has been updated
