@@ -1,7 +1,6 @@
-const logger = require('../logger');
-const { TrackedProjects, Guilds } = require('../database/db');
+import { logger } from '../logger.js'
 
-module.exports = {
+export default {
   name: 'guildDelete',
   async execute(guild) {
     // Remove this guild's settings from the database

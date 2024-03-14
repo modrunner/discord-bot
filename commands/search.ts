@@ -1,11 +1,7 @@
-const { SlashCommandBuilder, inlineCode } = require('@discordjs/builders');
-const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
-const dayjs = require('dayjs');
-const getJSONResponse = require('../api/getJSONResponse');
-const { searchMods } = require('../api/curseforge');
-const { searchProjects } = require('../api/modrinth');
+import { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
+import dayjs from 'dayjs'
 
-module.exports = {
+export default {
   data: new SlashCommandBuilder()
     .setName('search')
     .setDescription('Search for a project on popular mod hosting sites')

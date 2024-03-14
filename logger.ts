@@ -1,14 +1,12 @@
-const pino = require('pino');
+import pino from 'pino'
 
-const logger = pino({
+export const logger = pino({
   level: process.env.LOGGING_LEVEL ?? 'info',
   transport: {
     target: 'pino-pretty',
     options: {
-      ignore: process.env.DOPPLER_ENVIRONMENT === 'dev' ? 'pid,hostname' : 'pid,hostname',
+      ignore: 'pid,hostname',
       translateTime: 'SYS:yyyy-mm-dd hh:MM:s:l TT',
     },
   },
 });
-
-module.exports = logger;

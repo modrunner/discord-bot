@@ -2,10 +2,9 @@ import fs from 'fs'
 import express from 'express'
 import http from 'http'
 import https from 'https'
-import logger from '../logger'
+import { logger } from '../logger.js'
 import dayjs from 'dayjs'
 import { EmbedBuilder, PermissionsBitField, codeBlock } from 'discord.js'
-import { Guild } from '../database/db'
 
 const app = express()
 
@@ -80,7 +79,7 @@ export function startServer(client) {
   server.listen(process.env.SERVER_PORT, () => logger.info(`Web server is listening on port ${process.env.SERVER_PORT}`))
 }
 
-function embedColorData(platform) {
+function embedColorData(platform: string) {
   switch (platform) {
     case 'CurseForge':
       return '#f87a1b'
@@ -91,7 +90,7 @@ function embedColorData(platform) {
   }
 }
 
-function embedAuthorData(platform) {
+function embedAuthorData(platform: string) {
   switch (platform) {
     case 'CurseForge':
       return {
@@ -112,6 +111,6 @@ function embedAuthorData(platform) {
   }
 }
 
-function trimChangelog(changelog, maxLength) {
+function trimChangelog(changelog: string, maxLength: number) {
   return changelog.length > maxLength ? `${changelog.slice(0, maxLength - 3)}...` : changelog
 }

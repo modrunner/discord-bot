@@ -1,7 +1,6 @@
-const { TrackedProjects } = require('../database/db');
-const logger = require('../logger');
+import { logger } from '../logger.js'
 
-module.exports = {
+export default {
   name: 'channelDelete',
   async execute(channel) {
     const deleted = await TrackedProjects.destroy({
@@ -9,10 +8,10 @@ module.exports = {
         guildId: channel.guild.id,
         channelId: channel.id,
       },
-    });
+    })
 
     logger.info(
       `Channel #${channel.name} (${channel.id}) was deleted in guild ${channel.guild.name} (${channel.guild.id}). Removed ${deleted} projects from tracking as a result.`
-    );
+    )
   },
-};
+}

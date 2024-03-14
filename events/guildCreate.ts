@@ -1,7 +1,6 @@
-const { Guilds } = require('../database/db');
-const logger = require('../logger');
+import { logger } from '../logger.js'
 
-module.exports = {
+export default {
   name: 'guildCreate',
   async execute(guild) {
     logger.info(`Client was invited to guild ${guild.name} (${guild.id}).`);

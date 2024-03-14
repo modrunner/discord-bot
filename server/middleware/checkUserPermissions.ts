@@ -1,6 +1,6 @@
-const { PermissionsBitField } = require('discord.js');
+import { PermissionsBitField } from 'discord.js'
 
-const middleware = async (request, response, next) => {
+export const middleware = async (request, response, next) => {
   if (!request.body.guildId || !request.body.userId) {
     return response.status(400).json({
       error: 'A guild and/or user ID was not provided with this request',
@@ -19,5 +19,3 @@ const middleware = async (request, response, next) => {
   }
   next();
 };
-
-module.exports = middleware;

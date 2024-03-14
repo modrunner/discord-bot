@@ -1,7 +1,6 @@
-const { PermissionsBitField, SlashCommandBuilder, inlineCode } = require('discord.js');
-const { Guilds } = require('../database/db');
+import { PermissionsBitField, SlashCommandBuilder, inlineCode } from 'discord.js'
 
-module.exports = {
+export default {
   data: new SlashCommandBuilder()
     .setName('settings')
     .setDescription("Modify Modrunner's settings for your server.")
