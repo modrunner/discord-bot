@@ -2,7 +2,8 @@
   "name": "modrunner",
   "version": "1.4.7",
   "private": true,
-  "main": "bot.js",
+  "main": "index.js",
+	"type": "module",
   "scripts": {
     "setup-workspace": "npm install && scoop install doppler && doppler login && doppler setup",
     "prettier-check": "prettier --check .",
