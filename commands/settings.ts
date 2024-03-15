@@ -1,4 +1,4 @@
-import { PermissionsBitField, SlashCommandBuilder, inlineCode } from 'discord.js'
+import { ChatInputCommandInteraction, PermissionsBitField, SlashCommandBuilder, inlineCode } from 'discord.js'
 
 export default {
   data: new SlashCommandBuilder()
@@ -28,7 +28,7 @@ export default {
         }
       )
     ),
-  async execute(interaction) {
+  async execute(interaction: ChatInputCommandInteraction) {
     await interaction.deferReply();
     const changelogLength = interaction.options.getInteger('changelog_length');
     const notificationStyle = interaction.options.getString('notification_style');

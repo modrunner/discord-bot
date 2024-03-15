@@ -1,4 +1,4 @@
-import { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
+import { ChatInputCommandInteraction, EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
 import dayjs from 'dayjs'
 
 export default {
@@ -17,7 +17,7 @@ export default {
         .setDescription('Search for a project on Modrinth')
         .addStringOption((option) => option.setName('query').setDescription('The project to search for').setRequired(true))
     ),
-  async execute(interaction) {
+  async execute(interaction: ChatInputCommandInteraction) {
     if (interaction.options.getSubcommand() === 'curseforge') {
       await interaction.deferReply();
 

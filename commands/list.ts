@@ -1,4 +1,4 @@
-import { Collection, SlashCommandBuilder, EmbedBuilder, inlineCode, ChannelType } from 'discord.js'
+import { Collection, ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder, inlineCode, ChannelType } from 'discord.js'
 import { logger } from '../logger.js'
 
 export default {
@@ -11,7 +11,7 @@ export default {
         .setDescription('Filter projects to those tracked in a specific channel.')
         .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement)
     ),
-  async execute(interaction) {
+  async execute(interaction: ChatInputCommandInteraction) {
     await interaction.deferReply()
     const channel = interaction.options.getChannel('channel')
 

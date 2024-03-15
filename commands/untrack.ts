@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } from 'discord.js'
+import { ChatInputCommandInteraction, SlashCommandBuilder, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } from 'discord.js'
 import { logger } from '../logger.js'
 
 export default {
@@ -8,7 +8,7 @@ export default {
     .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
     .addStringOption((option) => option.setName('projectid').setDescription('The ID of the project to stop tracking.'))
     .addChannelOption((option) => option.setName('channel').setDescription('The channel to stop updates being posted to.')),
-  async execute(interaction) {
+  async execute(interaction: ChatInputCommandInteraction) {
     const projectId = interaction.options.getString('projectid')
     const channel = interaction.options.getChannel('channel')
 

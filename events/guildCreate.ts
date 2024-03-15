@@ -1,14 +1,10 @@
+import { Guild } from 'discord.js'
 import { logger } from '../logger.js'
 
 export default {
   name: 'guildCreate',
-  async execute(guild) {
-    logger.info(`Client was invited to guild ${guild.name} (${guild.id}).`);
-
-    // Add settings to database for guild
-    await Guilds.create({
-      id: guild.id,
-    });
-    logger.info(`Initialized settings for guild ${guild.name} (${guild.id})`);
+  async execute(guild: Guild) {
+    logger.info(`Client joined guild ${guild.name} (${guild.id})`);
+		// TODO request engine intitalize settings for guild
   },
 };

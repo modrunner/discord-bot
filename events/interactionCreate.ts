@@ -1,9 +1,9 @@
-import { PermissionsBitField, ApplicationCommandType, ComponentType, EmbedBuilder } from 'discord.js'
+import { BaseInteraction, PermissionsBitField, ApplicationCommandType, ComponentType, EmbedBuilder } from 'discord.js'
 import { logger } from '../logger.js'
 
-module.exports = {
+export default {
   name: 'interactionCreate',
-  async execute(interaction) {
+  async execute(interaction: BaseInteraction) {
     // Slash command interactions
     if (interaction.commandType === ApplicationCommandType.ChatInput) {
       const command = interaction.client.commands.get(interaction.commandName)

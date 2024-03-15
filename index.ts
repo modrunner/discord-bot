@@ -2,9 +2,13 @@ import fs from 'fs'
 import { Client, GatewayIntentBits, Collection } from 'discord.js'
 import { logger } from './logger.js'
 
+interface CustomClient extends Client {
+  commands: Collection<string, any>
+}
+
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],
-})
+}) as CustomClient
 
 client.commands = new Collection()
 const commandFiles = fs.readdirSync('./commands').filter((file) => file.endsWith('.js'))
@@ -25,6 +29,6 @@ for (const file of eventFiles) {
   }
 }
 
-client.login(process.env.DISCORD_TOKEN).then(() => {
-  logger.info(`Logged into Discord as ${client.user.tag}`)
+await client.login(process.env.DISCORD_TOKEN).then(() => {
+  if (client.user) logger.info(`Logged into Discord as ${client.user.tag}`)
 })

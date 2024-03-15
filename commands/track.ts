@@ -1,5 +1,5 @@
 import { ChannelType } from 'discord-api-types/v10'
-import { PermissionsBitField, SlashCommandBuilder } from 'discord.js'
+import { ChatInputCommandInteraction, PermissionsBitField, SlashCommandBuilder } from 'discord.js'
 import { logger } from '../logger.js'
 
 export default {
@@ -15,7 +15,7 @@ export default {
         .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement, ChannelType.GuildForum)
     )
     .addRoleOption((option) => option.setName('role').setDescription('A role that you want to mention when this project sends an update notification.')),
-  async execute(interaction) {
+  async execute(interaction: ChatInputCommandInteraction) {
     const projectId = interaction.options.getString('projectid')
     const channel = interaction.options.getChannel('channel') ?? interaction.channel
     const role = interaction.options.getRole('role')

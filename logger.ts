@@ -1,4 +1,4 @@
-import pino from 'pino'
+import { pino } from 'pino'
 
 export const logger = pino({
   level: process.env.LOGGING_LEVEL ?? 'info',
@@ -9,4 +9,4 @@ export const logger = pino({
       translateTime: 'SYS:yyyy-mm-dd hh:MM:s:l TT',
     },
   },
-});
+})
