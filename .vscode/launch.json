@@ -7,9 +7,9 @@
     {
       "type": "node-terminal",
       "request": "launch",
-      "name": "Start Bot",
+      "name": "Start bot",
       "skipFiles": ["<node_internals>/**"],
-      "command": "doppler run -- node .",
+      "command": "npm run dev",
       "outputCapture": "std"
     },
     {

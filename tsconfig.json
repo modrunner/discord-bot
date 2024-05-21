@@ -13,5 +13,10 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node16"
+  },
+
+  "ts-node": {
+    "transpileOnly": true,
+    "esm": true
   }
 }

@@ -49,11 +49,13 @@ interface NotifyRequest {
 }
 
 app.post('/notify', async (request, response) => {
-  if (!request.body) return response.status(400).end()
+  const body: NotifyRequest[] = request.body
 
-  const data: NotifyRequest[] = request.body
+	for (const notifRequest of body) {
+		
+	}
 
-  for (const notification of data) {
+  for (const notification of body) {
     const embed = new EmbedBuilder()
       .setAuthor(embedAuthorData(notification.project.platform))
       .setColor(embedColorData(notification.project.platform))
@@ -87,30 +89,9 @@ app.post('/notify', async (request, response) => {
         default:
       }
     }
+
+    response.status(100).end()
   }
-
-  // if (!request.body.destination) return response.status(400).end()
-
-  // if (request.body.destination === 'channel') {
-  //   if (!request.body.channelId && !request.body.guildId) return response.status(400).end()
-
-  //   const channel = app.locals.client.channels.cache.get(request.body.channelId)
-  //   const guild = app.locals.client.guilds.cache.get(request.body.guildId)
-
-  //   if (!channel || !guild) return response.status(500).end()
-
-  //   if (
-  //     !channel.viewable ||
-  //     !channel.permissionsFor(app.locals.client.user.id).has([PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.EmbedLinks])
-  //   ) {
-  //     logger.warn(
-  //       `Could not post notification in channel ${channel.name} (${channel.id}) in guild ${guild.name} (${guild.id}) due to insufficient permissions.`
-  //     )
-  //     return response.status(403).end()
-  //   }
-  // } else if (request.body.destination === 'user') {
-  //   if (!request.body.userId) return response.status(400).end()
-  // }
 })
 
 export function startServer(client: Client) {

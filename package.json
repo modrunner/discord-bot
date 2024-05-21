@@ -2,18 +2,12 @@
   "name": "modrunner",
   "version": "1.4.7",
   "private": true,
-  "main": "index.js",
+  "main": "index.ts",
   "type": "module",
   "scripts": {
-    "setup-workspace": "npm install && scoop install doppler && doppler login && doppler setup",
-    "prettier-check": "prettier --check .",
-    "prettier-write": "prettier --write .",
-    "eslint": "eslint .",
-    "eslint-fix": "eslint fix .",
-    "build": "npm run register-globally && npm run alter-db",
     "start": "doppler run -- node .",
-    "dev": "doppler run --command=\"nodemon .\"",
-    "register": "doppler run --command=\"node scripts/register-commands.js\"",
+    "dev": "doppler run -- npx ts-node index.ts",
+    "register": "doppler run -- node scripts/register-commands.js",
     "register-globally": "node scripts/register-commands.js --global",
     "create-db": "node scripts/initialize-database.js",
     "reset-db": "node scripts/initialize-database.js --force",
@@ -28,20 +22,15 @@
     "discord-api-types": "^0.37.37",
     "discord.js": "^14.8.0",
     "express": "^4.18.2",
-    "ms": "^2.1.3",
-    "openai": "^3.2.1",
     "pino": "^8.11.0",
-    "pino-pretty": "^9.4.0",
-    "sequelize": "^6.30.0",
-    "sqlite3": "^5.1.6",
-    "undici": "^5.21.0"
+    "pino-pretty": "^9.4.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.8.0",
-    "nodemon": "^2.0.22",
     "prettier": "^2.8.7",
+    "ts-node": "^10.9.2",
     "typescript": "^5.4.2"
   }
 }
