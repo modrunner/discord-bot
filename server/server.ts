@@ -39,7 +39,6 @@ interface NotifyRequest {
   }
   destinations: [
     {
-      type: 'channel' | 'user'
       channelId?: string
       guildId?: string
       userId?: string
@@ -48,49 +47,83 @@ interface NotifyRequest {
   ]
 }
 
-app.post('/notify', async (request, response) => {
-  const body: NotifyRequest[] = request.body
+interface NotificationResult {
+	id: number
+	success: boolean
+}
 
-	for (const notifRequest of body) {
-		
-	}
+app.post('/notify', async (request, response) => {
+	// TODO checking the body to make sure it matches the shape of NotifyRequest[]
+  const body: NotifyRequest[] = request.body
+	const notificationResults: NotificationResult[] = []
 
   for (const notification of body) {
-    const embed = new EmbedBuilder()
-      .setAuthor(embedAuthorData(notification.project.platform))
-      .setColor(embedColorData(notification.project.platform))
-      .setDescription(`**Changelog**: ${codeBlock(trimChangelog(notification.version.changelog, 4000))}`)
-      .setFields(
-        {
-          name: 'Version Name',
-          value: notification.version.name,
-        },
-        {
-          name: 'Version Number',
-          value: `${notification.version.number}`,
-        },
-        {
-          name: 'Release Type',
-          value: `${notification.version.type}`,
-        },
-        {
-          name: 'Date Published',
-          value: `<t:${dayjs(notification.version.date).unix()}:f>`,
-        }
-      )
-      .setThumbnail(notification.project.logoUrl)
-      .setTimestamp()
-      .setTitle(`${notification.project.name} has been updated`)
-
     for (const destination of notification.destinations) {
-      switch (destination.type) {
-        case 'channel':
-        case 'user':
-        default:
+      if (destination.userId) {
+        // TODO
+      } else if (destination.channelId && destination.guildId) {
+        const channel = app.locals.client.channels.cache.get(destination.channelId)
+        const guild = app.locals.client.guilds.cache.get(destination.guildId)
+
+        if (!channel || !guild) {
+          logger.warn(`Received a notification request with ID "${destination.notificationId}" with either no valid channel ID or guild ID`)
+					notificationResults.push({
+						id: destination.notificationId,
+						success: false,
+					})
+					continue
+        }
+
+        // TODO: modify notification based on guild settings
+        const embed = new EmbedBuilder()
+          .setAuthor(embedAuthorData(notification.project.platform))
+          .setColor(embedColorData(notification.project.platform))
+          .setDescription(`**Changelog**: ${codeBlock(trimChangelog(notification.version.changelog, 4000))}`)
+          .setFields(
+            {
+              name: 'Version Name',
+              value: notification.version.name,
+            },
+            {
+              name: 'Version Number',
+              value: `${notification.version.number}`,
+            },
+            {
+              name: 'Release Type',
+              value: `${notification.version.type}`,
+            },
+            {
+              name: 'Date Published',
+              value: `<t:${dayjs(notification.version.date).unix()}:f>`,
+            }
+          )
+          .setThumbnail(notification.project.logoUrl)
+          .setTimestamp()
+          .setTitle(`${notification.project.name} has been updated`)
+
+					try {
+						await channel.send({ embeds: [embed] })
+						notificationResults.push({
+							id: destination.notificationId,
+							success: true,
+						})
+					} catch (error) {
+						logger.warn(`Error sending message to guild channel ${error}`)
+						notificationResults.push({
+							id: destination.notificationId,
+							success: false,
+						})
+					}
+      } else {
+        logger.warn(`Received a notification request with ID "${destination.notificationId}" with no valid destination ID`)
+				notificationResults.push({
+					id: destination.notificationId,
+					success: false,
+				})
       }
     }
 
-    response.status(100).end()
+    response.status(200).json(notificationResults)
   }
 })
 
