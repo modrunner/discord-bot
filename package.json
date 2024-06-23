@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "doppler run -- node .",
-    "dev": "doppler run -- npx ts-node index.ts",
+    "dev": "doppler run -- npx tsx index.ts",
     "register": "doppler run -- node scripts/register-commands.js",
     "register-globally": "node scripts/register-commands.js --global",
     "create-db": "node scripts/initialize-database.js",

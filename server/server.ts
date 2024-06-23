@@ -143,7 +143,7 @@ export function startServer(client: Client) {
     server = http.createServer(app)
   }
 
-  server.listen(process.env.SERVER_PORT, () => logger.info(`Web server is listening on port ${process.env.SERVER_PORT}`))
+  server.listen(process.env.SERVER_PORT, () => logger.info(`Web server is online and listening for incoming requests on port ${process.env.SERVER_PORT}`))
 }
 
 function embedColorData(platform: string) {

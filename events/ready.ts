@@ -5,7 +5,7 @@ import { logger } from './../logger.js'
 export default {
   name: 'ready',
   async execute(client: Client) {
-    logger.info('Client is ready to work')
+    logger.info('Bot is online and ready to work!')
     new CronJob(
       '* */10 * * * *',
       () => {
