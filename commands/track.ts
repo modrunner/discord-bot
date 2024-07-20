@@ -1,5 +1,5 @@
 import { ChannelType } from 'discord-api-types/v10'
-import { ChatInputCommandInteraction, PermissionsBitField, SlashCommandBuilder } from 'discord.js'
+import { ChatInputCommandInteraction, DMChannel, PermissionsBitField, SlashCommandBuilder } from 'discord.js'
 import { logger } from '../logger.js'
 
 export default {
@@ -8,6 +8,13 @@ export default {
     .setDescription('Track a Modrinth or CurseForge project and get notified when it gets updated.')
     .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
     .addStringOption((option) => option.setName('projectid').setDescription("The project's ID.").setRequired(true))
+    .addStringOption((option) =>
+      option
+        .setName('platform')
+        .setDescription("The project's platform.")
+        .setRequired(true)
+        .setChoices({ name: 'CurseForge', value: 'CurseForge' }, { name: 'Modrinth', value: 'Modrinth' })
+    )
     .addChannelOption((option) =>
       option
         .setName('channel')
@@ -17,40 +24,57 @@ export default {
     .addRoleOption((option) => option.setName('role').setDescription('A role that you want to mention when this project sends an update notification.')),
   async execute(interaction: ChatInputCommandInteraction) {
     const projectId = interaction.options.getString('projectid')
+    const platform = interaction.options.getString('platform')
     const channel = interaction.options.getChannel('channel') ?? interaction.channel
     const role = interaction.options.getRole('role')
 
     await interaction.deferReply()
 
-    // Check if the client can see the channel to post updates to
-    if (!channel.viewable) {
-      return await interaction.editReply(`:x: ${channel} cannot be seen or used by Modrunner. Please check to ensure the bot has the appropriate permissions.`)
+    logger.info(`User ${interaction.user.username} made a tracking request for project with ID ${projectId} on ${platform}`)
+
+    let result
+    if (channel && projectId && platform) {
+      if (channel.type === ChannelType.DM) {
+        const body: TrackProjectBody = {
+          project: {
+            id: projectId,
+            platform: platform,
+          },
+          discord: {
+            channel: {
+              id: channel.id,
+            },
+          },
+        }
+
+        const result = await fetch(`${process.env.MODRUNNER_API_KEY}/project`, {
+          method: 'POST',
+          body: JSON.stringify(body),
+        })
+      } else if (channel.type === ChannelType.GuildAnnouncement || channel.type === ChannelType.GuildForum || channel.type === ChannelType.GuildText) {
+        const body: TrackProjectBody = {
+          project: {
+            id: projectId,
+            platform: platform,
+          },
+          discord: {
+            channel: {
+              id: channel.id,
+              name: channel.name ?? '',
+							guild: {
+								id: channel.guild.id,
+								name: channel.guild.name,
+							}
+            },
+          },
+        }
+
+        const result = await fetch(`${process.env.MODRUNNER_API_KEY}/project`, {
+          method: 'POST',
+          body: JSON.stringify(body),
+        })
+      }
     }
-
-    // Fetch the project from the database
-    // If the project isn't there, it calls the API and adds it
-    const project = await Projects.fetch(projectId)
-    if (!project) return await interaction.editReply(`:warning: No project exists with ID **${projectId}**.`)
-
-    logger.info(`User ${interaction.user.tag} made a tracking request for project ${project.name} (${project.id}).`)
-
-    // Find how many projects this guild is already tracking
-    // If greater than the guild's max allowed tracked projects (usually 100), don't allow this project to be tracked
-    let guildSettings = await Guilds.findByPk(interaction.guild.id)
-    if (!guildSettings) {
-      guildSettings = await Guilds.create({
-        id: interaction.guild.id,
-      })
-      logger.info(`Initialized settings for guild ${interaction.guild.name} (${interaction.guild.id})`)
-    }
-
-    const currentlyTracked = await TrackedProjects.count({
-      where: {
-        guildId: interaction.guild.id,
-      },
-    })
-    if (currentlyTracked >= guildSettings.maxProjects)
-      return await interaction.editReply(':x: Your server has reached its maximum limit of tracked projects and cannot track any more.')
 
     // Track the project
     // This #track method returns an array with the model as the first element and a boolean indicating if a new entry
@@ -78,4 +102,22 @@ export default {
       }
     }
   },
+}
+
+interface TrackProjectBody {
+  project: {
+    id: string
+    platform: string
+  }
+  discord?: {
+    channel: {
+      id: string
+      name?: string
+      guild?: {
+        id: string
+        name: string
+      }
+    }
+  }
+  webhook?: {}
 }
