@@ -145,6 +145,9 @@ module.exports = {
               ],
             });
           }
+					logger.info(
+            `Sent ${guildSettings.notificationStyle} notification for project ${dbProject.name} (${dbProject.id}) in guild ${channel.guild.name} (${channel.guild.id}) in channel ${channel.name} (${channel.id}) for version ${versionData.name} (${versionData.number})`
+          );
           break;
         case 'ai': {
           const response = await openai.createChatCompletion({
@@ -174,6 +177,9 @@ module.exports = {
               content: `${response.data.choices[0].message.content}\n${rolesString}`,
             });
           }
+					logger.info(
+            `Sent ${guildSettings.notificationStyle} notification for project ${dbProject.name} (${dbProject.id}) in guild ${channel.guild.name} (${channel.guild.id}) in channel ${channel.name} (${channel.id}) for version ${versionData.name} (${versionData.number})`
+          );
           break;
         }
         default:
@@ -255,6 +261,9 @@ module.exports = {
               ],
             });
           }
+          logger.info(
+            `Sent ${guildSettings.notificationStyle} notification for project ${dbProject.name} (${dbProject.id}) in guild ${channel.guild.name} (${channel.guild.id}) in channel ${channel.name} (${channel.id}) for version ${versionData.name} (${versionData.number})`
+          );
       }
     }
   },
