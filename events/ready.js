@@ -169,6 +169,7 @@ async function checkForProjectUpdates(client) {
         for (const fileId of requestedProject.versions) {
           if (dbProject.fileIds.includes(fileId)) {
             await dbProject.updateDate(requestedProject.updated);
+						reported = true
             break;
           }
         }
