@@ -17,4 +17,6 @@ jobs:
           host: ${{ secrets.HOST_IP }}
           username: root
           key: ${{ secrets.KEY }}
-          script: ls
+          script: |
+            cd discord-bot
+            git pull
