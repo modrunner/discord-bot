@@ -16,7 +16,7 @@ jobs:
         with:
           host: ${{ secrets.HOST_IP }}
           username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
+          key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
             cd ${{ secrets.PATH }}

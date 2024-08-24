@@ -1,5 +1,9 @@
 # Changelog
 
+## \[1.4.8] (2024-08-24)
+
+- Fix notifications being sent for incorrect Modrinth versions
+
 ## \[1.4.7] (2024-01-04) 
 
 - Migrate the AI model used for AI-generated notifications from `text-davinci-003` to `gpt-3.5-turbo` ([#126](https://github.com/modrunner/discord-bot/issues/126))
