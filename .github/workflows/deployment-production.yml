@@ -15,6 +15,6 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST_IP }}
-          username: root\discord-bot
+          username: root/discord-bot
           key: ${{ secrets.KEY }}
           script: ls
