@@ -1,5 +1,9 @@
 # Changelog
 
+## \[1.4.9] (2024-09-16)
+
+- Possible fix for notifications not being sent for Modrinth projects
+
 ## \[1.4.8] (2024-08-24)
 
 - Fix notifications being sent for incorrect Modrinth versions
