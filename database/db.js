@@ -55,9 +55,9 @@ Reflect.defineProperty(Projects.prototype, 'addFiles', {
     const fileIds = this.fileIds;
     for (const file of files) {
       fileIds.push(file);
-      if (fileIds.length > 10) {
-        fileIds.shift();
-      }
+      // if (fileIds.length > 10) {
+      //   fileIds.shift();
+      // }
     }
     return await Projects.update(
       {

@@ -7,7 +7,6 @@ async function modifyDates() {
   for (const project of projects) {
     await Projects.update(
       {
-				name: 'YEEEEEEEEEEEEEEEEEEEET',
         dateUpdated: new Date('1970-01-01'),
         fileIds: [],
       },

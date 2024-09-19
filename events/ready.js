@@ -163,29 +163,43 @@ async function checkForProjectUpdates(client) {
         continue;
       }
       // Check if the project has been updated
-      if (dbProject.dateUpdated.getTime() !== new Date(requestedProject.updated).getTime()) {
-        // Verify that this file's ID is not in the database. If it is, it has already been reported as updated
-        let reported = false;
-        for (const fileId of requestedProject.versions) {
-          if (dbProject.fileIds.includes(fileId)) {
-            // await dbProject.updateDate(requestedProject.updated);
-						reported = true
-            break;
-          }
+      for (const fileId of requestedProject.versions) {
+        if (dbProject.fileIds.includes(fileId)) {
+          continue;
+        } else {
+          logger.info(`Update detected for Modrinth project ${dbProject.name} (${dbProject.id})`);
+
+          await dbProject.updateDate(requestedProject.updated);
+          await dbProject.addFiles(requestedProject.versions);
+          await dbProject.updateName(requestedProject.title);
+
+          await sendUpdateEmbed(requestedProject, dbProject, client);
         }
-        if (reported) continue;
-
-        // If we get here, the project has passed all verification checks and has a legitmate update available
-        logger.info(`Update detected for Modrinth project ${dbProject.name} (${dbProject.id})`);
-
-        await dbProject.updateDate(requestedProject.updated);
-        await dbProject.addFiles(requestedProject.versions);
-        await dbProject.updateName(requestedProject.title);
-
-        await sendUpdateEmbed(requestedProject, dbProject, client);
-      } else {
-        logger.debug(`No update detected for ${dbProject.name}.`);
       }
+
+      // if (dbProject.dateUpdated.getTime() !== new Date(requestedProject.updated).getTime()) {
+      //   // Verify that this file's ID is not in the database. If it is, it has already been reported as updated
+      //   let reported = false;
+      //   for (const fileId of requestedProject.versions) {
+      //     if (dbProject.fileIds.includes(fileId)) {
+      //       // await dbProject.updateDate(requestedProject.updated);
+      //       reported = true;
+      //       break;
+      //     }
+      //   }
+      //   if (reported) continue;
+
+      //   // If we get here, the project has passed all verification checks and has a legitmate update available
+      //   logger.info(`Update detected for Modrinth project ${dbProject.name} (${dbProject.id})`);
+
+      //   await dbProject.updateDate(requestedProject.updated);
+      //   await dbProject.addFiles(requestedProject.versions);
+      //   await dbProject.updateName(requestedProject.title);
+
+      //   await sendUpdateEmbed(requestedProject, dbProject, client);
+      // } else {
+      //   logger.debug(`No update detected for ${dbProject.name}.`);
+      // }
     }
   }
   logger.debug('Modrinth update check complete.');
