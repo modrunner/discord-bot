@@ -61,9 +61,9 @@ it in our [Discord](https://discord.gg/HZMCRNUd5Z) are both valid ways to get us
 
 ## Your first code contribution
 
-If you're unsure of where to start, consult [Modrunner Roadmap](https://github.com/users/smcmo/projects/11). There we have listed
+If you're unsure of where to start, take a look at [the repo issues](https://github.com/modrunner/discord-bot/issues). There we have listed
 tasks that are currently in the backlog, planned for implementation, currently being implemented and tasks which have been
-finished. **It is highly recommended that you check this project to avoid performing work on a task that has already been done,
+finished. **It is highly recommended that you check the issues to avoid performing work on a task that has already been done,
 or currently being worked on**, particularly if you are implementing new features or fixing bugs.
 
 ### Setting up your local development environment
