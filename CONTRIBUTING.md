@@ -11,9 +11,8 @@ make a new issue for them (though we will still respond if you do).
 
 There also a few community resources that may help to point you in the right direction if you are confused:
 
-- [Modrunner Docs](https://modrunner.net/introduction)
-- [Modrunner FAQs](https://modrunner.net/faq)
-- [Modrunner Getting-Started](https://modrunner.net/introduction#quick-start)
+- [Modrunner Docs](https://modrunner.net/docs)
+- [Modrunner FAQs](https://modrunner.net/docs/faq)
 
 ## Things to know/do before getting started
 
@@ -43,7 +42,7 @@ development.
 
 This probably the number one way issues with Modrunner get solved. Oftentimes, issues can go unnoticed during development,
 and due to the nature of Modrunner's functionality and its small dev team, covering all cases can be a challenge. Letting
-us know of issues you have encountred, along with any additional information you can provide, will assist the Modrunner
+us know of issues you have encountered, along with any additional information you can provide, will assist the Modrunner
 team immensely in dealing with bugs as they pop up.
 
 The best way to submit reports is to open a new issue. This allows the team to easily keep track of new bugs and related
@@ -92,16 +91,16 @@ To get started ensure you have [Node.js](https://nodejs.org/en/) and [npm](https
    - `DISCORD_DEVELOPMENT_GUILD_ID`: A Discord server ID to use for testing the bot. You can get this by enabling Developer Mode in settings,
      then right-clicking on the server icon and choosing Copy ID.
    - `DISCORD_TOKEN`: This is the token from the Discord developer dashboard that you copied earlier.
-	 - `LOGGING`: When set to `dev` it will set the bot's logging output level to `trace`. For more information see [the pino docs](https://getpino.io/#/).
+	 - `LOGGING_LEVEL`: Sets the bot's logging level. For more information see [the pino docs](https://getpino.io/#/).
    - `MODRUNNER_API_KEY`: A string used to access the API. I recommend using a randomly generated string at least 16 characters in length.
 	 - `OPENAI_API_KEY`: See [obtaining an OpenAI API key](#obtaining-an-openai-api-key)
 	 - `SERVER_PORT`: The port number you want the API server hosted on. Something like **3000** will work.
    
 
 7. Now you're ready to being testing your changes! Here's a quick overview of the npm scripts.
-   1. Before starting the bot for the first time, type `npm run register` and `npm run dbInit` into your console. This will register the bot's commands to all guilds listed under `guildIds` in your `config.json`, and will create the `database.sqlite` file in the project's root directory.
-   2. Now you can run `npm run start`. This will start the bot and log it into Discord.
-8. Once you're satisfied with your changes, commit your changes and open a pull request to `big7star/modrunner-bot` to merge your changes.
+   1. Before starting the bot for the first time, type `npm run register` and `npm run create-db` into your console. This will register the bot's commands to the development guild listed for `DISCORD_DEVELOPMENT_GUILD_ID`, and will create the database file in `/database`.
+   2. Now you can run `npm run start`. This will start the bot and log it into Discord. You can also use `npm run dev`, which will auto-restart the bot when any code changes are detected.
+8. Once you're satisfied with your changes, commit your changes and open a pull request to `modrunner/discord-bot` to merge your changes.
 
 ##### Obtaining a CurseForge API Key
 
