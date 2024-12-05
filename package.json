@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@discordjs/rest": "^1.6.0",
+    "@logtail/pino": "^0.5.2",
     "dayjs": "^1.11.7",
     "discord-api-types": "^0.37.37",
     "discord.js": "^14.8.0",
