@@ -110,79 +110,7 @@ module.exports = {
       }
 
       switch (guildSettings.notificationStyle) {
-        case 'compact':
-          if (channel.type === ChannelType.GuildForum) {
-            await channel.threads.create({
-              name: `${versionData.name}`,
-              message: {
-                content: roleIds ? `${rolesString}` : null,
-                embeds: [
-                  new EmbedBuilder()
-                    .setColor(embedColorData(dbProject.platform))
-                    .setDescription(`${versionData.number} (${versionData.type})`)
-                    .setFooter({
-                      text: `${dayjs(versionData.date).format('MMM D, YYYY')}`,
-                      iconURL: embedAuthorData(dbProject.platform).iconURL ?? null,
-                    })
-                    .setTitle(`${dbProject.name} ${versionData.name}`)
-                    .setURL(versionData.url),
-                ],
-              },
-            });
-          } else {
-            await channel.send({
-              content: roleIds ? `${rolesString}` : null,
-              embeds: [
-                new EmbedBuilder()
-                  .setColor(embedColorData(dbProject.platform))
-                  .setDescription(`${versionData.number} (${versionData.type})`)
-                  .setFooter({
-                    text: `${dayjs(versionData.date).format('MMM D, YYYY')}`,
-                    iconURL: embedAuthorData(dbProject.platform).iconURL ?? null,
-                  })
-                  .setTitle(`${dbProject.name} ${versionData.name}`)
-                  .setURL(versionData.url),
-              ],
-            });
-          }
-					logger.info(
-            `Sent ${guildSettings.notificationStyle} notification for project ${dbProject.name} (${dbProject.id}) in guild ${channel.guild.name} (${channel.guild.id}) in channel ${channel.name} (${channel.id}) for version ${versionData.name} (${versionData.number})`
-          );
-          break;
-        case 'ai': {
-          const response = await openai.createChatCompletion({
-            model: 'gpt-3.5-turbo',
-            messages: [
-              {
-                role: 'user',
-                content: `Create an announcement with a professional tone for an update to ${dbProject.name} on ${dbProject.platform}. 
-								The new version is ${versionData.name}, it's a ${versionData.type} release, and the changelog is: ${trimChangelog(versionData.changelog)}. 
-								Use markdown formatting to highlight important information`,
-              },
-            ],
-            max_tokens: 1024,
-            n: 1,
-          });
-          logger.debug(response.data);
-
-          if (channel.type === ChannelType.GuildForum) {
-            await channel.threads.create({
-              name: `${versionData.name}`,
-              message: {
-                content: `${response.data.choices[0].message.content}\n${rolesString}`,
-              },
-            });
-          } else {
-            await channel.send({
-              content: `${response.data.choices[0].message.content}\n${rolesString}`,
-            });
-          }
-					logger.info(
-            `Sent ${guildSettings.notificationStyle} notification for project ${dbProject.name} (${dbProject.id}) in guild ${channel.guild.name} (${channel.guild.id}) in channel ${channel.name} (${channel.id}) for version ${versionData.name} (${versionData.number})`
-          );
-          break;
-        }
-        default:
+        case 'alt':
           if (channel.type === ChannelType.GuildForum) {
             await channel.threads
               .create({
@@ -193,7 +121,7 @@ module.exports = {
                     new EmbedBuilder()
                       .setAuthor(embedAuthorData(dbProject.platform))
                       .setColor(embedColorData(dbProject.platform))
-                      .setDescription(`**Changelog**: ${codeBlock(trimChangelog(versionData.changelog, guildSettings.changelogLength))}`)
+                      .setDescription(`${trimChangelog(versionData.changelog, guildSettings.changelogLength)}`)
                       .setFields(
                         {
                           name: 'Version Name',
@@ -231,7 +159,162 @@ module.exports = {
                 new EmbedBuilder()
                   .setAuthor(embedAuthorData(dbProject.platform))
                   .setColor(embedColorData(dbProject.platform))
-                  .setDescription(`**Changelog**: ${codeBlock(trimChangelog(versionData.changelog, guildSettings.changelogLength))}`)
+                  .setDescription(`${trimChangelog(versionData.changelog, guildSettings.changelogLength)}`)
+                  .setFields(
+                    {
+                      name: 'Version Name',
+                      value: versionData.name,
+                    },
+                    {
+                      name: 'Version Number',
+                      value: `${versionData.number}`,
+                    },
+                    {
+                      name: 'Release Type',
+                      value: `${versionData.type}`,
+                    },
+                    {
+                      name: 'Date Published',
+                      value: `<t:${dayjs(versionData.date).unix()}:f>`,
+                    }
+                  )
+                  .setThumbnail(versionData.iconURL)
+                  .setTimestamp()
+                  .setTitle(`${dbProject.name} has been updated`),
+              ],
+              components: [
+                new ActionRowBuilder().addComponents(
+                  new ButtonBuilder().setLabel(`View on ${dbProject.platform}`).setStyle(ButtonStyle.Link).setURL(versionData.url)
+                ),
+              ],
+            });
+          }
+          logger.info(
+            `Sent ${guildSettings.notificationStyle} notification for project ${dbProject.name} (${dbProject.id}) in guild ${channel.guild.name} (${channel.guild.id}) in channel ${channel.name} (${channel.id}) for version ${versionData.name} (${versionData.number})`
+          );
+          break;
+        case 'compact':
+          if (channel.type === ChannelType.GuildForum) {
+            await channel.threads.create({
+              name: `${versionData.name}`,
+              message: {
+                content: roleIds ? `${rolesString}` : null,
+                embeds: [
+                  new EmbedBuilder()
+                    .setColor(embedColorData(dbProject.platform))
+                    .setDescription(`${versionData.number} (${versionData.type})`)
+                    .setFooter({
+                      text: `${dayjs(versionData.date).format('MMM D, YYYY')}`,
+                      iconURL: embedAuthorData(dbProject.platform).iconURL ?? null,
+                    })
+                    .setTitle(`${dbProject.name} ${versionData.name}`)
+                    .setURL(versionData.url),
+                ],
+              },
+            });
+          } else {
+            await channel.send({
+              content: roleIds ? `${rolesString}` : null,
+              embeds: [
+                new EmbedBuilder()
+                  .setColor(embedColorData(dbProject.platform))
+                  .setDescription(`${versionData.number} (${versionData.type})`)
+                  .setFooter({
+                    text: `${dayjs(versionData.date).format('MMM D, YYYY')}`,
+                    iconURL: embedAuthorData(dbProject.platform).iconURL ?? null,
+                  })
+                  .setTitle(`${dbProject.name} ${versionData.name}`)
+                  .setURL(versionData.url),
+              ],
+            });
+          }
+          logger.info(
+            `Sent ${guildSettings.notificationStyle} notification for project ${dbProject.name} (${dbProject.id}) in guild ${channel.guild.name} (${channel.guild.id}) in channel ${channel.name} (${channel.id}) for version ${versionData.name} (${versionData.number})`
+          );
+          break;
+        case 'ai': {
+          const response = await openai.createChatCompletion({
+            model: 'gpt-3.5-turbo',
+            messages: [
+              {
+                role: 'user',
+                content: `Create an announcement with a professional tone for an update to ${dbProject.name} on ${dbProject.platform}. 
+								The new version is ${versionData.name}, it's a ${versionData.type} release, and the changelog is: ${trimChangelog(versionData.changelog)}. 
+								Use markdown formatting to highlight important information`,
+              },
+            ],
+            max_tokens: 1024,
+            n: 1,
+          });
+          logger.debug(response.data);
+
+          if (channel.type === ChannelType.GuildForum) {
+            await channel.threads.create({
+              name: `${versionData.name}`,
+              message: {
+                content: `${response.data.choices[0].message.content}\n${rolesString}`,
+              },
+            });
+          } else {
+            await channel.send({
+              content: `${response.data.choices[0].message.content}\n${rolesString}`,
+            });
+          }
+          logger.info(
+            `Sent ${guildSettings.notificationStyle} notification for project ${dbProject.name} (${dbProject.id}) in guild ${channel.guild.name} (${channel.guild.id}) in channel ${channel.name} (${channel.id}) for version ${versionData.name} (${versionData.number})`
+          );
+          break;
+        }
+        default:
+          if (channel.type === ChannelType.GuildForum) {
+            await channel.threads
+              .create({
+                name: `${versionData.name}`,
+                message: {
+                  content: roleIds ? `${rolesString}` : null,
+                  embeds: [
+                    new EmbedBuilder()
+                      .setAuthor(embedAuthorData(dbProject.platform))
+                      .setColor(embedColorData(dbProject.platform))
+                      .setDescription(`**Changelog:** ${codeBlock(trimChangelog(versionData.changelog, guildSettings.changelogLength))}`)
+                      .setFields(
+                        {
+                          name: 'Version Name',
+                          value: versionData.name,
+                        },
+                        {
+                          name: 'Version Number',
+                          value: `${versionData.number}`,
+                        },
+                        {
+                          name: 'Release Type',
+                          value: `${versionData.type}`,
+                        },
+                        {
+                          name: 'Date Published',
+                          value: `<t:${dayjs(versionData.date).unix()}:f>`,
+                        }
+                      )
+                      .setThumbnail(versionData.iconURL)
+                      .setTimestamp()
+                      .setTitle(`${dbProject.name} has been updated`),
+                  ],
+                  components: [
+                    new ActionRowBuilder().addComponents(
+                      new ButtonBuilder().setLabel(`View on ${dbProject.platform}`).setStyle(ButtonStyle.Link).setURL(versionData.url)
+                    ),
+                  ],
+                },
+              })
+              .catch((error) => logger.error(error));
+          } else {
+            await channel.send({
+              content: roleIds ? `${rolesString}` : null,
+              embeds: [
+                new EmbedBuilder()
+                  .setAuthor(embedAuthorData(dbProject.platform))
+                  .setColor(embedColorData(dbProject.platform))
+                  .setDescription(`**Changelog:** ${codeBlock(trimChangelog(versionData.changelog, guildSettings.changelogLength))}`)
                   .setFields(
                     {
                       name: 'Version Name',

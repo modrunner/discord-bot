@@ -19,6 +19,10 @@ module.exports = {
           name: 'Normal',
           value: 'normal',
         },
+				{
+          name: 'Normal - Alternate',
+          value: 'alt',
+        },
         {
           name: 'Compact',
           value: 'compact',

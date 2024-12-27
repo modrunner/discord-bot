@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: 'normal',
         validate: {
-          isIn: [['normal', 'compact', 'custom', 'ai']],
+          isIn: [['normal', 'alt', 'compact', 'custom', 'ai']],
         },
       },
     },

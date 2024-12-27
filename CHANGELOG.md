@@ -1,5 +1,9 @@
 # Changelog
 
+## \[1.5.0] (2024-12-23)
+
+- Added a new "alt" notification style which displays changelogs in plaintext in the notification embed
+
 ## \[1.4.10] (2024-09-19)
 
 - Another possible fix for Modrinth project notifications not being sent
@@ -12,7 +16,7 @@
 
 - Fix notifications being sent for incorrect Modrinth versions
 
-## \[1.4.7] (2024-01-04) 
+## \[1.4.7] (2024-01-04)
 
 - Migrate the AI model used for AI-generated notifications from `text-davinci-003` to `gpt-3.5-turbo` ([#126](https://github.com/modrunner/discord-bot/issues/126))
 
@@ -23,7 +27,7 @@
 ## \[1.4.5] (2023-12-12)
 
 - Added a temporary fix for a crash caused by the bot attempting to post notifications to a forum channel that requires tags to post ([#109](https://github.com/modrunner/discord-bot/issues/109))
-	- Notifications will not work in forum channels unless the tag requirement for new posts is disabled
+  - Notifications will not work in forum channels unless the tag requirement for new posts is disabled
 - Added a check that updates project names in the database during the update checking cycle ([#115](https://github.com/modrunner/discord-bot/issues/115))
 - Fixed a crash caused by the bot not properly truncating excessively long changelogs ([#111](https://github.com/modrunner/discord-bot/issues/111))
 - Fixed a bug that allowed users to track more projects than their server's tracked project limit
