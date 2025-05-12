@@ -8,6 +8,8 @@ const { Projects, TrackedProjects } = require('../database/db');
 const { sendUpdateEmbed } = require('../utils');
 const { startServer } = require('../api/server');
 
+const MAX_BATCH_CALL_SIZE_MR = 500;
+
 module.exports = {
   name: 'ready',
   async execute(client) {
@@ -70,7 +72,7 @@ async function checkForProjectUpdates(client) {
   }
 
   // Call the CurseForge API
-  let requestedMods, requestedProjects;
+  let requestedMods;
   if (dbCurseforgeProjectsIds.length) {
     var curseforgeResponseData = await getMods(dbCurseforgeProjectsIds);
     if (curseforgeResponseData) {
@@ -86,17 +88,32 @@ async function checkForProjectUpdates(client) {
     logger.info('No CurseForge projects in database. Skipping.');
   }
 
-  // Call the Modrinth API
+  const requestedProjects = [];
   if (dbModrinthProjectIds.length) {
-    var modrinthResponseData = await getProjects(dbModrinthProjectIds);
-    if (modrinthResponseData) {
-      if (modrinthResponseData.statusCode === 200) {
-        requestedProjects = await getJSONResponse(modrinthResponseData.body);
-      } else {
-        logger.warn(`Unexpected ${modrinthResponseData.statusCode} status code while checking Modrinth projects for updates.`);
+    // Split into batches
+    let batches = [];
+    if (dbModrinthProjectIds.length > MAX_BATCH_CALL_SIZE_MR) {
+      for (let i = 0; i <= Math.ceil(dbModrinthProjectIds.length / MAX_BATCH_CALL_SIZE_MR); i++) {
+        batches.push(dbModrinthProjectIds.slice(0, MAX_BATCH_CALL_SIZE_MR));
+        dbModrinthProjectIds.splice(0, MAX_BATCH_CALL_SIZE_MR);
       }
     } else {
-      logger.warn('A request to Modrinth timed out while checking projects for updates.');
+      batches.push(dbModrinthProjectIds);
+    }
+
+    // Grab the data from Modrinth
+    for (const batch of batches) {
+      const response = await getProjects(batch);
+      if (response) {
+        if (response.statusCode === 200) {
+          const data = await getJSONResponse(response.body);
+          for (const project of data) {
+            requestedProjects.push(project);
+          }
+        } else {
+          logger.warn(`Unexpected ${response.statusCode} status code while checking Modrinth projects for updates.`);
+        }
+      }
     }
   } else {
     logger.info('No Modrinth projects in database. Skipping.');

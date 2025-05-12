@@ -1,5 +1,9 @@
 # Changelog
 
+## \[1.5.1] (2025-05-09)
+
+- Fixed notifications for tracked Modrinth projects sometimes not showing or not showing at the correct time
+
 ## \[1.5.0] (2024-12-23)
 
 - Added a new "alt" notification style which displays changelogs in plaintext in the notification embed
